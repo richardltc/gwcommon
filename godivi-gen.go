@@ -64,6 +64,7 @@ const (
 	CAppServerFile          string = "godivis"
 	CAppServerFileWin       string = "godivis.exe"
 	CAppUpdaterFile         string = "update-godivi"
+	CAppUpdaterFileCompiled string = "updater"
 	CAppUpdaterFileWin      string = "update-godivi.exe"
 	CAppCLILogfile          string = "godivi.log"
 	CWalletSeedFile         string = "unsecure-divi-seed.txt"
