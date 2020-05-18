@@ -55,7 +55,8 @@ const (
 	CDiviTxFile     string = "divi-tx"
 	CDiviTxFileWin  string = "divi-tx.exe"
 
-	// GoDivi file constants - Should be types
+	// GoDivi file constants
+	CAppCLIFileCompiled     string = "cli"
 	CAppCLIFile             string = "godivi"
 	CAppCLIFileWin          string = "godivi.exe"
 	CAppCLIFileInstaller    string = "godivi-installer"
