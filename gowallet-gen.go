@@ -22,9 +22,6 @@ import (
 
 const (
 	// General Constants
-	CAppNameUpdater string = "GoDivi Updater"
-	CAppNameCLI     string = "GoDivi CLI"
-	CAppNameServer  string = "GoDivi Server"
 	CAppVersion     string = "0.21.1" // All of the individual apps will have the same version to make it easier for the user
 	CDiviAppVersion string = "1.08"
 	cUnknown        string = "Unknown"
@@ -47,6 +44,11 @@ const (
 	cDFileWindows             string = "divi-1.0.8-win64.zip"
 
 	// Divi project file constants
+	CAppNameGoDivi  string = "GoDivi"
+	CAppNameUpdater string = "GoDivi Updater"
+	CAppNameCLI     string = "GoDivi CLI"
+	CAppNameServer  string = "GoDivi Server"
+
 	CDiviConfFile   string = "divi.conf"
 	CDiviCliFile    string = "divi-cli"
 	CDiviCliFileWin string = "divi-cli.exe"
