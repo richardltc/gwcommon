@@ -388,17 +388,17 @@ func DoRequiredFiles() error {
 		srcFileCLI = CDiviCliFileWin
 		srcFileD = CDiviDFileWin
 		srcFileTX = CDiviTxFileWin
-		srcFileGD = CAppCLIFileWin
-		srcFileGDS = CAppServerFileWin
+		srcFileGD = CAppCLIFileWinGoDivi
+		srcFileGDS = CAppServerFileWinGoDivi
 	} else {
 		srcPath = "./divi-1.0.8/bin/"
 		srcRoot = "./divi-1.0.8/"
 		srcFileCLI = CDiviCliFile
 		srcFileD = CDiviDFile
 		srcFileTX = CDiviTxFile
-		srcFileGD = CAppCLIFile
-		srcFileUGD = CAppUpdaterFile
-		srcFileGDS = CAppServerFile
+		srcFileGD = CAppCLIFileGoDivi
+		srcFileUGD = CAppUpdaterFileGoDivi
+		srcFileGDS = CAppServerFileGoDivi
 	}
 
 	// divi-cli
@@ -446,7 +446,7 @@ func DoRequiredFiles() error {
 	}
 
 	// Copy the update-godivi file
-	err = FileCopy("./"+CAppUpdaterFile, dbf+srcFileUGD, false)
+	err = FileCopy("./"+CAppUpdaterFileGoDivi, dbf+srcFileUGD, false)
 	if err != nil {
 		return fmt.Errorf("Unable to copyFile: %v - %v", dbf+srcFileUGD, err)
 	}
@@ -456,7 +456,7 @@ func DoRequiredFiles() error {
 	}
 
 	// Copy the godivis file
-	err = FileCopy("./"+CAppServerFile, dbf+srcFileGDS, false)
+	err = FileCopy("./"+CAppServerFileGoDivi, dbf+srcFileGDS, false)
 	if err != nil {
 		return fmt.Errorf("Unable to copyFile: %v - %v", dbf+srcFileGDS, err)
 	}
@@ -523,11 +523,11 @@ Please confirm that you understand the risks: `
 		}
 
 		// Now store the info in file
-		err = WriteTextToFile(dbf+CWalletSeedFile, s)
+		err = WriteTextToFile(dbf+CWalletSeedFileGoDivi, s)
 		if err != nil {
 			return fmt.Errorf("error writing to file %s", err)
 		}
-		fmt.Println("Now please store the privte seed file somewhere safe. The file has been saved to: " + dbf + CWalletSeedFile)
+		fmt.Println("Now please store the privte seed file somewhere safe. The file has been saved to: " + dbf + CWalletSeedFileGoDivi)
 	}
 	return nil
 }
@@ -913,13 +913,14 @@ func IsGoDiviInstalled() bool {
 	return false
 }
 
+// IsGoDiviCLIRunning
 func IsGoDiviCLIRunning() (bool, int, error) {
 	var pid int
 	var err error
 	if runtime.GOOS == "windows" {
-		pid, _, err = findProcess(CAppCLIFileWin)
+		pid, _, err = findProcess(CAppCLIFileWinGoDivi)
 	} else {
-		pid, _, err = findProcess(CAppCLIFile)
+		pid, _, err = findProcess(CAppCLIFileGoDivi)
 	}
 
 	//pid, _, err := FindProcess(cDiviDFile)
@@ -937,9 +938,9 @@ func IsGoDiviSRunning() (bool, int, error) {
 	var pid int
 	var err error
 	if runtime.GOOS == "windows" {
-		pid, _, err = findProcess(CAppServerFileWin)
+		pid, _, err = findProcess(CAppServerFileWinGoDivi)
 	} else {
-		pid, _, err = findProcess(CAppServerFile)
+		pid, _, err = findProcess(CAppServerFileGoDivi)
 	}
 
 	//pid, _, err := FindProcess(cDiviDFile)
@@ -1055,7 +1056,7 @@ func RunGoDiviS(displayOutput bool) error {
 
 	if runtime.GOOS == "windows" {
 		dbf, _ := GetAppsBinFolder()
-		fp := dbf + CAppServerFileWin
+		fp := dbf + CAppServerFileWinGoDivi
 		cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
 		if err := cmd.Run(); err != nil {
 			return err
@@ -1067,7 +1068,7 @@ func RunGoDiviS(displayOutput bool) error {
 		}
 
 		dbf, _ := GetAppsBinFolder()
-		cmdRun := exec.Command(dbf + CAppServerFile)
+		cmdRun := exec.Command(dbf + CAppServerFileGoDivi)
 		if err := cmdRun.Start(); err != nil {
 			return fmt.Errorf("Failed to start cmd: %v", err)
 		}
