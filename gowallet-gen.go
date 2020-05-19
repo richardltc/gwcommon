@@ -29,7 +29,8 @@ const (
 	CDownloadURLDP  string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
 	CDownloadURLGD  string = "https://bitbucket.org/rmace/godivi/downloads/"
 
-	// Directorys
+	// Divi Wallet Constants
+	CCoinDivi       string = "Divi"
 	CDiviHomeDir    string = ".divi"
 	CDiviHomeDirWin string = "DIVI"
 	cDiviBinDir     string = "godivi"
@@ -687,6 +688,17 @@ func GetCoinHomeFolder() (string, error) {
 		}
 	}
 	return s, nil
+}
+
+func GetCoinName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return
+	}
 }
 
 func GetMNSyncStatus() (MNSyncStatus, error) {
