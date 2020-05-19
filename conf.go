@@ -1,23 +1,21 @@
-package gdcommon
+package gwcommon
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
-
-	gdc "richardmace.co.uk/godivi/gdcommon"
 )
 
 const (
-	cConfFile string = "config.json"
+	CConfFile string = "config.json"
 )
 
-type confStruct struct {
+type ConfStruct struct {
 	AppName string
 }
 
-func CreateDefaultConfFile(confDir string, pt gdc.ProjectType) error {
+func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 	var conf = newConfStruct()
 
 	jssb, err := json.MarshalIndent(conf, "", "  ")
@@ -39,25 +37,25 @@ func CreateDefaultConfFile(confDir string, pt gdc.ProjectType) error {
 	return nil
 }
 
-func getConfigStruct(confDir string, refreshFields bool) (confStruct, error) {
+func getConfigStruct(confDir string, refreshFields bool, pt ProjectType) (ConfStruct, error) {
 
 	// Create the file if it doesn't already exist
 	dir := AddTrailingSlash(confDir)
-	if _, err := os.Stat(dir + cConfFile); os.IsNotExist(err) {
-		createDefaultConfFile(confDir)
+	if _, err := os.Stat(dir + CConfFile); os.IsNotExist(err) {
+		CreateDefaultConfFile(confDir, pt)
 	}
 
 	// Get the config file
-	file, err := ioutil.ReadFile(dir + cConfFile)
+	file, err := ioutil.ReadFile(dir + CConfFile)
 	if err != nil {
-		return confStruct{}, err
+		return ConfStruct{}, err
 	}
 
-	cs := confStruct{}
+	cs := ConfStruct{}
 
 	err = json.Unmarshal([]byte(file), &cs)
 	if err != nil {
-		return confStruct{}, err
+		return ConfStruct{}, err
 	}
 
 	// Now, let's write the file back because it may have some new fields
@@ -68,17 +66,17 @@ func getConfigStruct(confDir string, refreshFields bool) (confStruct, error) {
 	return cs, nil
 }
 
-func newConfStruct(pt gdc.ProjectType) confStruct {
-	cnf := confStruct{}
+func newConfStruct(pt ProjectType) ConfStruct {
+	cnf := ConfStruct{}
 	cnf.AppName = "Enter SendGrid Key here"
 
 	return cnf
 }
 
-func setConfigStruct(dir string, cs confStruct) error {
+func setConfigStruct(dir string, cs ConfStruct) error {
 	jssb, _ := json.MarshalIndent(cs, "", "  ")
 	dir = AddTrailingSlash(dir)
-	sFile := dir + cConfFile
+	sFile := dir + CConfFile
 
 	f, err := os.Create(sFile)
 	if err != nil {
