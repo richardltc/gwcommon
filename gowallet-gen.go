@@ -664,7 +664,7 @@ func GetAppsBinFolder() (string, error) {
 
 func GetCoinHomeFolder() (string, error) {
 	var s string
-	gwconf, err := GetConfigStruct()
+	gwconf, err := GetConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
