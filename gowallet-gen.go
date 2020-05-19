@@ -28,9 +28,9 @@ const (
 	CAddNodeURL     string = "https://api.diviproject.org/v1/addnode"
 	CDownloadURLDP  string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
 	CDownloadURLGD  string = "https://bitbucket.org/rmace/godivi/downloads/"
+	CCoinNameDivi   string = "Divi"
 
 	// Divi Wallet Constants
-	CCoinDivi       string = "Divi"
 	CDiviHomeDir    string = ".divi"
 	CDiviHomeDirWin string = "DIVI"
 	cDiviBinDir     string = "godivi"
@@ -697,7 +697,7 @@ func GetCoinName() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return
+		return CCoinNameDivi
 	}
 }
 
