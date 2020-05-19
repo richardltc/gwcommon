@@ -16,7 +16,7 @@ type ConfStruct struct {
 	ProjectType ProjectType
 }
 
-func createDefaultConfFile(confDir string, pt ProjectType) error {
+func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 	var conf = newConfStruct(pt)
 
 	jssb, err := json.MarshalIndent(conf, "", "  ")
@@ -38,15 +38,17 @@ func createDefaultConfFile(confDir string, pt ProjectType) error {
 	return nil
 }
 
-func GetConfigStruct(confDir string, refreshFields bool, pt ProjectType) (ConfStruct, error) {
+func GetConfigStruct(confDir string, refreshFields bool) (ConfStruct, error) {
 
+	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
 	// Create the file if it doesn't already exist
-	dir := AddTrailingSlash(confDir)
-	if _, err := os.Stat(dir + cConfFile); os.IsNotExist(err) {
-		createDefaultConfFile(confDir, pt)
-	}
+	// dir := AddTrailingSlash(confDir)
+	// if _, err := os.Stat(dir + cConfFile); os.IsNotExist(err) {
+	// 	createDefaultConfFile(confDir, pt)
+	// }
 
 	// Get the config file
+	dir := AddTrailingSlash(confDir)
 	file, err := ioutil.ReadFile(dir + cConfFile)
 	if err != nil {
 		return ConfStruct{}, err

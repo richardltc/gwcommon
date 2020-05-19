@@ -635,6 +635,7 @@ func GetBlockchainInfo() (BlockchainInfo, error) {
 
 func GetAppsBinFolder() (string, error) {
 	var s string
+	//gwconf := GetConfigStruct()
 	u, err := user.Current()
 	if err != nil {
 		return "", err
