@@ -141,9 +141,9 @@ const (
 type ProjectType int
 
 const (
-	ptDivi ProjectType = iota
-	ptPIVX
-	ptTrezar
+	PTDivi ProjectType = iota
+	PTPIVX
+	PTTrezar
 )
 
 type progressBarType int
