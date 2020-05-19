@@ -1104,7 +1104,7 @@ func RunDiviD(displayOutput bool) error {
 
 // RunGoDiviS - Runs the GoDivi Server
 func RunGoDiviS(displayOutput bool) error {
-	idr, _, _ := IsGoDiviSRunning()
+	idr, _, _ := IsAppServerRunning()
 	if idr == true {
 		// Already running...
 		return nil
@@ -1120,7 +1120,7 @@ func RunGoDiviS(displayOutput bool) error {
 
 	} else {
 		if displayOutput {
-			fmt.Println("Attempting to run " + CAppNameServer + "...")
+			fmt.Println("Attempting to run " + CAppNameServerGoDivi + "...")
 		}
 
 		dbf, _ := GetAppsBinFolder()
