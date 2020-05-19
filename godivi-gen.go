@@ -46,7 +46,7 @@ const (
 	cDFileUbuntu              string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
 	cDFileWindows             string = "divi-1.0.8-win64.zip"
 
-	// Divi project file constants - Should be types
+	// Divi project file constants
 	CDiviConfFile   string = "divi.conf"
 	CDiviCliFile    string = "divi-cli"
 	CDiviCliFileWin string = "divi-cli.exe"
@@ -55,19 +55,25 @@ const (
 	CDiviTxFile     string = "divi-tx"
 	CDiviTxFileWin  string = "divi-tx.exe"
 
+	// GoWallet file constants
+	CAppCLIFileCompiled        string = "cli"
+	CAppCLIFileCompiledWin     string = "cli.exe"
+	CAppServerFileCompiled     string = "web"
+	CAppServerFileCompiledWin  string = "web.exe"
+	CAppUpdaterFileCompiled    string = "updater"
+	CAppUpdaterFileCompiledWin string = "updater.exe"
+
 	// GoDivi file constants
-	CAppCLIFileCompiled     string = "cli"
-	CAppCLIFile             string = "godivi"
-	CAppCLIFileWin          string = "godivi.exe"
-	CAppCLIFileInstaller    string = "godivi-installer"
-	CAppCLIFileInstallerWin string = "godivi-installer.exe"
-	CAppServerFile          string = "godivis"
-	CAppServerFileWin       string = "godivis.exe"
-	CAppUpdaterFile         string = "update-godivi"
-	CAppUpdaterFileCompiled string = "updater"
-	CAppUpdaterFileWin      string = "update-godivi.exe"
-	CAppCLILogfile          string = "godivi.log"
-	CWalletSeedFile         string = "unsecure-divi-seed.txt"
+	CAppCLIFileGoDivi             string = "godivi"
+	CAppCLIFileWinGoDivi          string = "godivi.exe"
+	CAppCLIFileInstallerGoDivi    string = "godivi-installer"
+	CAppCLIFileInstallerWinGoDivi string = "godivi-installer.exe"
+	CAppServerFileGoDivi          string = "godivis"
+	CAppServerFileWinGoDivi       string = "godivis.exe"
+	CAppUpdaterFileGoDivi         string = "update-godivi"
+	CAppUpdaterFileWinGoDivi      string = "update-godivi.exe"
+	CAppCLILogfileGoDivi          string = "godivi.log"
+	CWalletSeedFileGoDivi         string = "unsecure-divi-seed.txt"
 
 	// Divi-cli command constants
 	cCommandGetBCInfo     string = "GetBlockchainInfo"
