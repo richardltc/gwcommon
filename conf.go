@@ -11,11 +11,13 @@ const (
 	cConfFile string = "config.json"
 )
 
+// ConfStruct - The global application config struct
 type ConfStruct struct {
 	AppName     string
 	ProjectType ProjectType
 }
 
+// CreateDefaultConfFile - Only to be used by GoDeploy
 func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 	var conf = newConfStruct(pt)
 
