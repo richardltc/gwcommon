@@ -672,6 +672,7 @@ func GetAppCLIName() (string, error) {
 	case PTDivi:
 		return CAppNameCLIGoDivi, nil
 	}
+	return "", nil
 }
 
 func GetCoinHomeFolder() (string, error) {
@@ -710,6 +711,7 @@ func GetCoinName() (string, error) {
 	case PTDivi:
 		return CCoinNameDivi, nil
 	}
+	return "", nil
 }
 
 func GetMNSyncStatus() (MNSyncStatus, error) {
@@ -982,16 +984,22 @@ func IsGoDiviCLIRunning() (bool, int, error) {
 	}
 }
 
-func IsGoDiviSRunning() (bool, int, error) {
+// IsAppServerRunning - Will then work out what wallet this relates to, and return accurate info
+func IsAppServerRunning() (bool, int, error) {
 	var pid int
-	var err error
-	if runtime.GOOS == "windows" {
-		pid, _, err = findProcess(CAppServerFileWinGoDivi)
-	} else {
-		pid, _, err = findProcess(CAppServerFileGoDivi)
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return false, pid, err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppServerFileWinGoDivi)
+		} else {
+			pid, _, err = findProcess(CAppServerFileGoDivi)
+		}
 	}
 
-	//pid, _, err := FindProcess(cDiviDFile)
 	if err == nil {
 		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
 	} else if err.Error() == "not found" {
