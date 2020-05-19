@@ -304,6 +304,16 @@ func extractTarGz(gzipStream io.Reader) error {
 	return nil
 }
 
+// GetRunningDir - Return the directory of the running binary
+func GetRunningDir() (string, error) {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	sdir := AddTrailingSlash(dir)
+	return sdir, err
+}
+
 func gZipIt(sourceFile, targetDir string, deleteOrig bool) (gzFile string, err error) {
 	log.Print("GZipping file " + sourceFile + "...")
 	reader, err := os.Open(sourceFile)
