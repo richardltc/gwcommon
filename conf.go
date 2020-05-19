@@ -16,14 +16,14 @@ type ConfStruct struct {
 }
 
 func CreateDefaultConfFile(confDir string, pt ProjectType) error {
-	var conf = newConfStruct()
+	var conf = newConfStruct(pt)
 
 	jssb, err := json.MarshalIndent(conf, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	f, err := os.Create(confDir + cConfFile)
+	f, err := os.Create(confDir + CConfFile)
 	if err != nil {
 		return err
 	}
