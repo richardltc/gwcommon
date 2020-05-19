@@ -633,9 +633,10 @@ func GetBlockchainInfo() (BlockchainInfo, error) {
 	return bci, nil
 }
 
+// GetAppsBinFolder - Returns the directory of which the coin is
 func GetAppsBinFolder() (string, error) {
 	var s string
-	gwconf, err := GetConfigStruct()
+	gwconf, err := GetConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
