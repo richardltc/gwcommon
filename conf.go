@@ -68,7 +68,13 @@ func GetConfigStruct(confDir string, refreshFields bool, pt ProjectType) (ConfSt
 
 func newConfStruct(pt ProjectType) ConfStruct {
 	cnf := ConfStruct{}
-	cnf.AppName = "Enter SendGrid Key here"
+
+	switch pt {
+	case PTDivi:
+		cnf.AppName = CAppNameGoDivi
+	case PTPIVX:
+		//TODO Populate with PIVX and Trezar
+	}
 
 	return cnf
 }
