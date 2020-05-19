@@ -635,7 +635,10 @@ func GetBlockchainInfo() (BlockchainInfo, error) {
 
 func GetAppsBinFolder() (string, error) {
 	var s string
-	//gwconf := GetConfigStruct()
+	gwconf, err := GetConfigStruct()
+	if err != nil {
+		return "", err
+	}
 	u, err := user.Current()
 	if err != nil {
 		return "", err
@@ -644,15 +647,26 @@ func GetAppsBinFolder() (string, error) {
 	hd := u.HomeDir
 	if runtime.GOOS == "windows" {
 		// add the "appdata\roaming" part.
-		s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+		switch gwconf.ProjectType {
+		case PTDivi:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+		}
+
 	} else {
-		s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+		switch gwconf.ProjectType {
+		case PTDivi:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+		}
 	}
 	return s, nil
 }
 
-func GetDiviHomeFolder() (string, error) {
+func GetCoinHomeFolder() (string, error) {
 	var s string
+	gwconf, err := GetConfigStruct()
+	if err != nil {
+		return "", err
+	}
 	u, err := user.Current()
 	if err != nil {
 		return "", err
@@ -661,9 +675,15 @@ func GetDiviHomeFolder() (string, error) {
 	hd := u.HomeDir
 	if runtime.GOOS == "windows" {
 		// add the "appdata\roaming" part.
-		s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CDiviHomeDirWin)
+		switch gwconf.ProjectType {
+		case PTDivi:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CDiviHomeDirWin)
+		}
 	} else {
-		s = AddTrailingSlash(hd) + AddTrailingSlash(CDiviHomeDir)
+		switch gwconf.ProjectType {
+		case PTDivi:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(CDiviHomeDir)
+		}
 	}
 	return s, nil
 }
