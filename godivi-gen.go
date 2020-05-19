@@ -140,6 +140,7 @@ type ProjectType int
 
 const (
 	ptDivi ProjectType = iota
+	ptPIVX
 	ptTrezar
 )
 
