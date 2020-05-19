@@ -697,7 +697,7 @@ func GetCoinName() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return CCoinNameDivi
+		return CCoinNameDivi, nil
 	}
 }
 
