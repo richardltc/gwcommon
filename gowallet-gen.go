@@ -45,10 +45,10 @@ const (
 	cDFileWindows             string = "divi-1.0.8-win64.zip"
 
 	// Divi project file constants
-	CAppNameGoDivi  string = "GoDivi"
-	CAppNameUpdater string = "GoDivi Updater"
-	CAppNameCLI     string = "GoDivi CLI"
-	CAppNameServer  string = "GoDivi Server"
+	CAppNameGoDivi        string = "GoDivi"
+	CAppNameUpdaterGoDivi string = "GoDivi Updater"
+	CAppNameCLIGoDivi     string = "GoDivi CLI"
+	CAppNameServerGoDivi  string = "GoDivi Server"
 
 	CDiviConfFile   string = "divi.conf"
 	CDiviCliFile    string = "divi-cli"
@@ -670,7 +670,7 @@ func GetAppCLIName() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return CAppNameCLI, nil
+		return CAppNameCLIGoDivi, nil
 	}
 }
 
