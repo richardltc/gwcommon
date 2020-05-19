@@ -12,7 +12,8 @@ const (
 )
 
 type ConfStruct struct {
-	AppName string
+	AppName     string
+	ProjectType ProjectType
 }
 
 func createDefaultConfFile(confDir string, pt ProjectType) error {
