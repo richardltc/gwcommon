@@ -663,6 +663,17 @@ func GetAppsBinFolder() (string, error) {
 	return s, nil
 }
 
+func GetAppCLIName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppNameCLI, nil
+	}
+}
+
 func GetCoinHomeFolder() (string, error) {
 	var s string
 	gwconf, err := GetConfigStruct(false)
