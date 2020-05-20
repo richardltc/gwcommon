@@ -103,7 +103,7 @@ const (
 	cDividRespWalletEncrypted string = "wallet encrypted"
 
 	cGoDiviExportPath         string = "export PATH=$PATH:"
-	cUninstallConfirmationStr string = "Confirm"
+	CUninstallConfirmationStr string = "Confirm"
 	cSeedStoredSafelyStr      string = "Confirm"
 
 	// CMinRequiredMemoryMB - Needed by install command
