@@ -675,6 +675,19 @@ func GetAppCLIName() (string, error) {
 	return "", nil
 }
 
+// GetAppName - Returns the application name
+func GetAppName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppNameGoDivi, nil
+	}
+	return "", nil
+}
+
 func GetCoinHomeFolder() (string, error) {
 	var s string
 	gwconf, err := GetConfigStruct(false)
