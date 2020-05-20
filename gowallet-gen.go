@@ -613,9 +613,9 @@ func doUpdate(url string) error {
 }
 
 func doWalletAdressDisplay() error {
-	err := RunDiviD(false)
+	err := RunCoinDaemon(false)
 	if err != nil {
-		return fmt.Errorf("Unable to RunDiviD: %v ", err)
+		return fmt.Errorf("Unable to RunCoinDaemon: %v ", err)
 	}
 
 	dbf, err := GetAppsBinFolder()
@@ -1035,6 +1035,7 @@ func GetWalletSeedRecoveryConfirmationResp() bool {
 	return false
 }
 
+// GetWalletUnlockPassword - Retrieves the wallet unlock password that the user has entered
 func GetWalletUnlockPassword() string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\nPlease enter your wallet encryption password: ")
@@ -1052,16 +1053,22 @@ func getYesNoResp(msg string) string {
 	return resp
 }
 
-func IsDiviDRunning() (bool, int, error) {
+// IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
+func IsCoinDaemonRunning() (bool, int, error) {
 	var pid int
-	var err error
-	if runtime.GOOS == "windows" {
-		pid, _, err = findProcess(CDiviDFileWin)
-	} else {
-		pid, _, err = findProcess(CDiviDFile)
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return false, pid, err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CDiviDFileWin)
+		} else {
+			pid, _, err = findProcess(CDiviDFile)
+		}
 	}
 
-	//pid, _, err := FindProcess(cDiviDFile)
 	if err == nil {
 		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
 	} else {
@@ -1170,49 +1177,56 @@ func RunDCCommandWithValue(cmdBaseStr, cmdStr, valueStr, waitingStr string, atte
 	return "", err
 }
 
-func RunDiviD(displayOutput bool) error {
+// RunCoinDaemon - Run the coins Daemon e.g. Run divid
+func RunCoinDaemon(displayOutput bool) error {
 	idr, _, _ := IsDiviDRunning()
 	if idr == true {
 		// Already running...
 		return nil
 	}
 
-	if runtime.GOOS == "windows" {
-		//_ = exec.Command(GetAppsBinFolder() + cDiviDFileWin)
-		dbf, _ := GetAppsBinFolder()
-		fp := dbf + CDiviDFileWin
-		cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return err
+	}
+	abf, _ := GetAppsBinFolder()
 
-	} else {
-		if displayOutput {
-			fmt.Println("Attempting to run the divid daemon...")
-		}
-
-		dbf, _ := GetAppsBinFolder()
-		cmdRun := exec.Command(dbf + CDiviDFile)
-		stdout, err := cmdRun.StdoutPipe()
-		if err != nil {
-			return err
-		}
-		cmdRun.Start()
-
-		buf := bufio.NewReader(stdout) // Notice that this is not in a loop
-		num := 1
-		for {
-			line, _, _ := buf.ReadLine()
-			if num > 3 {
-				os.Exit(0)
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			//_ = exec.Command(GetAppsBinFolder() + cDiviDFileWin)
+			fp := abf + CDiviDFileWin
+			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+			if err := cmd.Run(); err != nil {
+				return err
 			}
-			num++
-			if string(line) == "DIVI server starting" {
-				return nil
-			} else {
-				return errors.New("Unable to start Divi server")
+
+		} else {
+			if displayOutput {
+				fmt.Println("Attempting to run the divid daemon...")
 			}
-			//fmt.Println(string(line))
+
+			cmdRun := exec.Command(abf + CDiviDFile)
+			stdout, err := cmdRun.StdoutPipe()
+			if err != nil {
+				return err
+			}
+			cmdRun.Start()
+
+			buf := bufio.NewReader(stdout) // Notice that this is not in a loop
+			num := 1
+			for {
+				line, _, _ := buf.ReadLine()
+				if num > 3 {
+					os.Exit(0)
+				}
+				num++
+				if string(line) == "DIVI server starting" {
+					return nil
+				} else {
+					return errors.New("Unable to start Divi server")
+				}
+			}
 		}
 	}
 
