@@ -1178,31 +1178,36 @@ func RunDiviD(displayOutput bool) error {
 	return nil
 }
 
-// RunGoDiviS - Runs the GoDivi Server
-func RunGoDiviS(displayOutput bool) error {
+// RunAppServer - Runs the App Server
+func RunAppServer(displayOutput bool) error {
 	idr, _, _ := IsAppServerRunning()
 	if idr == true {
 		// Already running...
 		return nil
 	}
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return err
+	}
+	abf, _ := GetAppsBinFolder()
 
-	if runtime.GOOS == "windows" {
-		dbf, _ := GetAppsBinFolder()
-		fp := dbf + CAppServerFileWinGoDivi
-		cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-		if err := cmd.Run(); err != nil {
-			return err
-		}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			fp := abf + CAppServerFileWinGoDivi
+			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+			if err := cmd.Run(); err != nil {
+				return err
+			}
+		} else {
+			if displayOutput {
+				fmt.Println("Attempting to run " + CAppNameServerGoDivi + "...")
+			}
 
-	} else {
-		if displayOutput {
-			fmt.Println("Attempting to run " + CAppNameServerGoDivi + "...")
-		}
-
-		dbf, _ := GetAppsBinFolder()
-		cmdRun := exec.Command(dbf + CAppServerFileGoDivi)
-		if err := cmdRun.Start(); err != nil {
-			return fmt.Errorf("Failed to start cmd: %v", err)
+			cmdRun := exec.Command(abf + CAppServerFileGoDivi)
+			if err := cmdRun.Start(); err != nil {
+				return fmt.Errorf("Failed to start cmd: %v", err)
+			}
 		}
 	}
 
