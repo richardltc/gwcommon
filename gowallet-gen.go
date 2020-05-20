@@ -1347,7 +1347,8 @@ func RunInitialDaemon() error {
 	return nil
 }
 
-func StopDiviD() error {
+// StopCoinDaemon - Stops the coin daemon (e.g. divid) from running
+func StopCoinDaemon() error {
 	idr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
 	if idr != true {
 		// Not running anyway ...
@@ -1355,20 +1356,32 @@ func StopDiviD() error {
 	}
 
 	dbf, _ := GetAppsBinFolder()
-	cRun := exec.Command(dbf+cDiviCliFile, "stop")
-	if err := cRun.Run(); err != nil {
-		return fmt.Errorf("Unable to StopDiviD:%v", err)
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return err
 	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			// TODO Complete for Windows
+		} else {
+			cRun := exec.Command(dbf+cDiviCliFile, "stop")
+			if err := cRun.Run(); err != nil {
+				return fmt.Errorf("Unable to StopDiviD:%v", err)
+			}
 
-	for i := 0; i < 50; i++ {
-		sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
-		if !sr {
-			return nil
+			for i := 0; i < 50; i++ {
+				sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
+				if !sr {
+					return nil
+				}
+				fmt.Printf("\rWaiting for divid server to stop %d/"+strconv.Itoa(50), i+1)
+				time.Sleep(3 * time.Second)
+
+			}
 		}
-		fmt.Printf("\rWaiting for divid server to stop %d/"+strconv.Itoa(50), i+1)
-		time.Sleep(3 * time.Second)
-
 	}
+
 	return nil
 }
 
