@@ -739,6 +739,19 @@ func GetAppCLIFileName() (string, error) {
 	return "", nil
 }
 
+// GetAppServerFileName - Returns the name of the app server binary file e.g. godivis
+func GetAppServerFileName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppServerFileGoDivi, nil
+	}
+	return "", nil
+}
+
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
@@ -752,7 +765,20 @@ func GetAppCLIName() (string, error) {
 	return "", nil
 }
 
-// GetAppName - Returns the application name
+// GetAppServerName - Returns the application Server name e.g. GoDivi Server
+func GetAppServerName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppNameServerGoDivi, nil
+	}
+	return "", nil
+}
+
+// GetAppName - Returns the application name e.g. GoDivi
 func GetAppName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
@@ -765,6 +791,7 @@ func GetAppName() (string, error) {
 	return "", nil
 }
 
+// GetCoinHomeFolder - Returns the ome folder for the coin e.g. .divi
 func GetCoinHomeFolder() (string, error) {
 	var s string
 	gwconf, err := GetConfigStruct(false)
