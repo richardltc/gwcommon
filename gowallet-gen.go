@@ -341,20 +341,27 @@ func ConvertBCVerification(verificationPG float64) string {
 // DoRequiredFiles - Download and install required files
 func DoRequiredFiles() error {
 	var filePath, fileURL string
-	dbf, err := GetAppsBinFolder()
+	abf, err := GetAppsBinFolder()
 	if err != nil {
 		return fmt.Errorf("Unable to perform GetAppsBinFolder: %v ", err)
 	}
 
-	if runtime.GOOS == "windows" {
-		filePath = dbf + cDFileWindows
-		fileURL = CDownloadURLDP + cDFileWindows
-	} else if runtime.GOARCH == "arm" {
-		filePath = dbf + cDFileRPi
-		fileURL = CDownloadURLDP + cDFileRPi
-	} else {
-		filePath = dbf + cDFileUbuntu
-		fileURL = CDownloadURLDP + cDFileUbuntu
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return fmt.Errorf("Unable to get ConfigStruct: %v ", err)
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			filePath = abf + cDFileWindows
+			fileURL = CDownloadURLDP + cDFileWindows
+		} else if runtime.GOARCH == "arm" {
+			filePath = abf + cDFileRPi
+			fileURL = CDownloadURLDP + cDFileRPi
+		} else {
+			filePath = abf + cDFileUbuntu
+			fileURL = CDownloadURLDP + cDFileUbuntu
+		}
 	}
 
 	log.Print("Downloading required files...")
@@ -369,16 +376,23 @@ func DoRequiredFiles() error {
 
 	// Now, uncompress the files...
 	log.Print("Uncompressing files...")
-
-	if runtime.GOOS == "windows" {
-		_, err = UnZip(filePath, "tmp")
-		if err != nil {
-			return fmt.Errorf("Unable to unzip file: %v - %v", filePath, err)
-		}
-	} else {
-		err = extractTarGz(r)
-		if err != nil {
-			return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			_, err = UnZip(filePath, "tmp")
+			if err != nil {
+				return fmt.Errorf("Unable to unzip file: %v - %v", filePath, err)
+			}
+		} else if runtime.GOARCH == "arm" {
+			err = extractTarGz(r)
+			if err != nil {
+				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+			}
+		} else {
+			err = extractTarGz(r)
+			if err != nil {
+				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+			}
 		}
 	}
 
@@ -386,87 +400,135 @@ func DoRequiredFiles() error {
 
 	// Copy files to correct location
 	var srcPath, srcRoot, srcFileCLI, srcFileD, srcFileTX, srcFileGD, srcFileUGD, srcFileGDS string
-	if runtime.GOOS == "windows" {
-		srcPath = "./tmp/divi-1.0.8/bin/"
-		srcRoot = "./tmp/"
-		srcFileCLI = CDiviCliFileWin
-		srcFileD = CDiviDFileWin
-		srcFileTX = CDiviTxFileWin
-		srcFileGD = CAppCLIFileWinGoDivi
-		srcFileGDS = CAppServerFileWinGoDivi
-	} else {
-		srcPath = "./divi-1.0.8/bin/"
-		srcRoot = "./divi-1.0.8/"
-		srcFileCLI = CDiviCliFile
-		srcFileD = CDiviDFile
-		srcFileTX = CDiviTxFile
-		srcFileGD = CAppCLIFileGoDivi
-		srcFileUGD = CAppUpdaterFileGoDivi
-		srcFileGDS = CAppServerFileGoDivi
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			srcPath = "./tmp/divi-1.0.8/bin/"
+			srcRoot = "./tmp/"
+			srcFileCLI = CDiviCliFileWin
+			srcFileD = CDiviDFileWin
+			srcFileTX = CDiviTxFileWin
+			srcFileGD = CAppCLIFileWinGoDivi
+			srcFileGDS = CAppServerFileWinGoDivi
+
+		} else if runtime.GOARCH == "arm" {
+			srcPath = "./divi-1.0.8/bin/"
+			srcRoot = "./divi-1.0.8/"
+			srcFileCLI = CDiviCliFile
+			srcFileD = CDiviDFile
+			srcFileTX = CDiviTxFile
+			srcFileGD = CAppCLIFileGoDivi
+			srcFileUGD = CAppUpdaterFileGoDivi
+			srcFileGDS = CAppServerFileGoDivi
+
+		} else {
+			srcPath = "./divi-1.0.8/bin/"
+			srcRoot = "./divi-1.0.8/"
+			srcFileCLI = CDiviCliFile
+			srcFileD = CDiviDFile
+			srcFileTX = CDiviTxFile
+			srcFileGD = CAppCLIFileGoDivi
+			srcFileUGD = CAppUpdaterFileGoDivi
+			srcFileGDS = CAppServerFileGoDivi
+		}
 	}
 
-	// divi-cli
-	err = FileCopy(srcPath+srcFileCLI, dbf+srcFileCLI, false)
+	// coin-cli
+	err = FileCopy(srcPath+srcFileCLI, abf+srcFileCLI, false)
 	if err != nil {
 		return fmt.Errorf("Unable to copyFile: %v - %v", srcPath+srcFileCLI, err)
 	}
-	err = os.Chmod(dbf+srcFileCLI, 0777)
+	err = os.Chmod(abf+srcFileCLI, 0777)
 	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", dbf+srcFileCLI, err)
+		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileCLI, err)
 	}
-	// divid
-	err = FileCopy(srcPath+srcFileD, dbf+srcFileD, false)
+	// coind
+	err = FileCopy(srcPath+srcFileD, abf+srcFileD, false)
 	if err != nil {
 		return fmt.Errorf("Unable to copyFile: %v - %v", srcPath+srcFileD, err)
 	}
-	err = os.Chmod(dbf+srcFileD, 0777)
+	err = os.Chmod(abf+srcFileD, 0777)
 	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", dbf+srcFileD, err)
+		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileD, err)
 	}
 
-	// divitx
-	err = FileCopy(srcPath+srcFileTX, dbf+srcFileTX, false)
+	// cointx
+	err = FileCopy(srcPath+srcFileTX, abf+srcFileTX, false)
 	if err != nil {
 		return fmt.Errorf("Unable to copyFile: %v - %v", srcPath+srcFileTX, err)
 	}
-	err = os.Chmod(dbf+srcFileTX, 0777)
+	err = os.Chmod(abf+srcFileTX, 0777)
 	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", dbf+srcFileTX, err)
+		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileTX, err)
 	}
 
-	// Copy the godivi binary itself
+	// Copy the gowallet binary itself
 	ex, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("error getting exe - %v", err)
 	}
 
-	err = FileCopy(ex, dbf+srcFileGD, false)
+	err = FileCopy(ex, abf+srcFileGD, false)
 	if err != nil {
-		return fmt.Errorf("Unable to copyFile: %v - %v", dbf+srcFileGD, err)
+		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGD, err)
 	}
-	err = os.Chmod(dbf+srcFileGD, 0777)
+	err = os.Chmod(abf+srcFileGD, 0777)
 	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", dbf+srcFileGD, err)
+		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGD, err)
 	}
 
-	// Copy the update-godivi file
-	err = FileCopy("./"+CAppUpdaterFileGoDivi, dbf+srcFileUGD, false)
-	if err != nil {
-		return fmt.Errorf("Unable to copyFile: %v - %v", dbf+srcFileUGD, err)
-	}
-	err = os.Chmod(dbf+srcFileUGD, 0777)
-	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", dbf+srcFileUGD, err)
+	// Copy the updater file
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			// TODO Code the Windows part
+		} else if runtime.GOARCH == "arm" {
+			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileUGD, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileUGD, err)
+			}
+			err = os.Chmod(abf+srcFileUGD, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileUGD, err)
+			}
+
+		} else {
+			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileUGD, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileUGD, err)
+			}
+			err = os.Chmod(abf+srcFileUGD, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileUGD, err)
+			}
+		}
 	}
 
 	// Copy the godivis file
-	err = FileCopy("./"+CAppServerFileGoDivi, dbf+srcFileGDS, false)
-	if err != nil {
-		return fmt.Errorf("Unable to copyFile: %v - %v", dbf+srcFileGDS, err)
-	}
-	err = os.Chmod(dbf+srcFileGDS, 0777)
-	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", dbf+srcFileGDS, err)
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			// TODO Code the Windows part
+		} else if runtime.GOARCH == "arm" {
+			err = FileCopy("./"+CAppServerFileGoDivi, abf+srcFileGDS, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGDS, err)
+			}
+			err = os.Chmod(abf+srcFileGDS, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGDS, err)
+			}
+
+		} else {
+			err = FileCopy("./"+CAppServerFileGoDivi, abf+srcFileGDS, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGDS, err)
+			}
+			err = os.Chmod(abf+srcFileGDS, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGDS, err)
+			}
+		}
 	}
 
 	err = os.RemoveAll(srcRoot)
@@ -481,6 +543,7 @@ func DoRequiredFiles() error {
 	return nil
 }
 
+// DoPrivKeyDisplay - Display the private key
 func DoPrivKeyDisplay() error {
 	dbf, err := GetAppsBinFolder()
 	if err != nil {
