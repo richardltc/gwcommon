@@ -799,6 +799,19 @@ func GetAppName() (string, error) {
 	return "", nil
 }
 
+// GetCoinDaemonFilename - Return the coin daemon file name
+func GetCoinDaemonFilename() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return cDiviDFile, nil
+	}
+	return "", nil
+}
+
 // GetCoinHomeFolder - Returns the ome folder for the coin e.g. .divi
 func GetCoinHomeFolder() (string, error) {
 	var s string
