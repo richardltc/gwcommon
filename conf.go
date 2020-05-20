@@ -2,6 +2,7 @@ package gwcommon
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -55,7 +56,7 @@ func GetConfigStruct(refreshFields bool) (ConfStruct, error) {
 	// Get the config file
 	dir, err := GetRunningDir()
 	if err != nil {
-		return ConfStruct{}, err
+		return ConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v",err)
 	}
 	file, err := ioutil.ReadFile(dir + cConfFile)
 	if err != nil {

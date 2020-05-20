@@ -87,11 +87,12 @@ const (
 	// Divii-cli wallet commands
 	cCommandDisplayWalletAddress string = "getaddressesbyaccount" // ./divi-cli getaddressesbyaccount ""
 	cCommandDumpHDinfo           string = "dumphdinfo"            // ./divi-cli dumphdinfo
-	cCommandEncryptWallet        string = "encryptwallet"         // ./divi-cli encryptwallet “a_strong_password”
-	cCommandRestoreWallet        string = "-hdseed="              // ./divid -debug-hdseed=the_seed -rescan (stop divid, rename wallet.dat, then run command)
-	cCommandUnlockWallet         string = "walletpassphrase"      // ./divi-cli walletpassphrase “password” 0
-	cCommandUnlockWalletFS       string = "walletpassphrase"      // ./divi-cli walletpassphrase “password” 0 true
-	cCommandLockWallet           string = "walletlock"            // ./divi-cli walletlock
+	// CCommandEncryptWallet - Needed by dash command
+	CCommandEncryptWallet  string = "encryptwallet"    // ./divi-cli encryptwallet “a_strong_password”
+	cCommandRestoreWallet  string = "-hdseed="         // ./divid -debug-hdseed=the_seed -rescan (stop divid, rename wallet.dat, then run command)
+	cCommandUnlockWallet   string = "walletpassphrase" // ./divi-cli walletpassphrase “password” 0
+	cCommandUnlockWalletFS string = "walletpassphrase" // ./divi-cli walletpassphrase “password” 0 true
+	cCommandLockWallet     string = "walletlock"       // ./divi-cli walletlock
 
 	cRPCUserStr     string = "rpcuser"
 	cRPCPasswordStr string = "rpcpassword"
@@ -105,11 +106,11 @@ const (
 	cUninstallConfirmationStr string = "Confirm"
 	cSeedStoredSafelyStr      string = "Confirm"
 
-	// Memory requirements
+	// CMinRequiredMemoryMB - Needed by install command
 	CMinRequiredMemoryMB int = 920
 	CMinRequiredSwapMB   int = 2048
 
-	//TODO Wallet Security Statuses - Should be types?
+	// Wallet Security Statuses - Should be types?
 	CWalletStatusLocked      string = "locked"
 	CWalletStatusUnlocked    string = "unlocked"
 	CWalletStatusLockedAndSk string = "locked-anonymization"
@@ -139,11 +140,17 @@ const (
 	cUtfLock string = "\u1F512"
 )
 
+// ProjectType - To allow external to determine what kind of wallet we are working with
 type ProjectType int
 
 const (
+	// PTDivi - Divi
 	PTDivi ProjectType = iota
+	// PTPhore - Phore
+	PTPhore
+	// PTPIVX - PIVX
 	PTPIVX
+	// PTTrezar - TrezarCoin
 	PTTrezar
 )
 
@@ -164,6 +171,7 @@ type args struct {
 	dbug       *bool
 }
 
+// ServerResponse - Determine REST Server response
 type ServerResponse int
 
 const (
