@@ -1097,19 +1097,20 @@ func IsCoinDaemonRunning() (bool, int, error) {
 	}
 }
 
-func IsGoDiviInstalled() bool {
+// IsGoWalletInstalled - Returns bool if GoWallet has been installed
+func IsGoWalletInstalled() bool {
 	// First, let's make sure that we have our divi bin folder
 	dbf, _ := GetAppsBinFolder()
 
 	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
-		// /home/user/godivi/ bin folder exists..
+		// e.g. /home/user/godivi/ bin folder exists..
 		return true
 	}
 	return false
 }
 
-// IsGoDiviCLIRunning
-func IsGoDiviCLIRunning() (bool, int, error) {
+// IsGoWalletCLIRunning - Is the GoWallet CLI Running
+func IsGoWalletCLIRunning() (bool, int, error) {
 	var pid int
 	var err error
 	if runtime.GOOS == "windows" {
