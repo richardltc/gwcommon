@@ -21,18 +21,18 @@ import (
 )
 
 const (
-	// General Constants
-	CAppVersion     string = "0.21.1" // All of the individual apps will have the same version to make it easier for the user
-	CDiviAppVersion string = "1.08"
-	cUnknown        string = "Unknown"
-	CAddNodeURL     string = "https://api.diviproject.org/v1/addnode"
-	CDownloadURLDP  string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
-	CDownloadURLGD  string = "https://bitbucket.org/rmace/godivi/downloads/"
-	CCoinNameDivi   string = "Divi"
+	// CAppVersion - The app version of the suite of apps
+	CAppVersion    string = "0.21.1" // All of the individual apps will have the same version to make it easier for the user
+	cUnknown       string = "Unknown"
+	cAddNodeURL    string = "https://api.diviproject.org/v1/addnode"
+	cDownloadURLDP string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
+	cDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
+	cCoinNameDivi  string = "Divi"
 
 	// Divi Wallet Constants
-	CDiviHomeDir    string = ".divi"
-	CDiviHomeDirWin string = "DIVI"
+	CDiviAppVersion string = "1.08"
+	cDiviHomeDir    string = ".divi"
+	cDiviHomeDirWin string = "DIVI"
 	cDiviBinDir     string = "godivi"
 	cDiviBinDirWin  string = "GoDivi"
 
@@ -50,13 +50,13 @@ const (
 	CAppNameCLIGoDivi     string = "GoDivi CLI"
 	CAppNameServerGoDivi  string = "GoDivi Server"
 
-	CDiviConfFile   string = "divi.conf"
-	CDiviCliFile    string = "divi-cli"
-	CDiviCliFileWin string = "divi-cli.exe"
-	CDiviDFile      string = "divid"
-	CDiviDFileWin   string = "divid.exe"
-	CDiviTxFile     string = "divi-tx"
-	CDiviTxFileWin  string = "divi-tx.exe"
+	cDiviConfFile   string = "divi.conf"
+	cDiviCliFile    string = "divi-cli"
+	cDiviCliFileWin string = "divi-cli.exe"
+	cDiviDFile      string = "divid"
+	cDiviDFileWin   string = "divid.exe"
+	cDiviTxFile     string = "divi-tx"
+	cDiviTxFileWin  string = "divi-tx.exe"
 
 	// GoWallet file constants
 	CAppCLIFileCompiled        string = "cli"
@@ -87,14 +87,14 @@ const (
 	// Divii-cli wallet commands
 	cCommandDisplayWalletAddress string = "getaddressesbyaccount" // ./divi-cli getaddressesbyaccount ""
 	cCommandDumpHDinfo           string = "dumphdinfo"            // ./divi-cli dumphdinfo
-	CCommandEncryptWallet        string = "encryptwallet"         // ./divi-cli encryptwallet “a_strong_password”
+	cCommandEncryptWallet        string = "encryptwallet"         // ./divi-cli encryptwallet “a_strong_password”
 	cCommandRestoreWallet        string = "-hdseed="              // ./divid -debug-hdseed=the_seed -rescan (stop divid, rename wallet.dat, then run command)
 	cCommandUnlockWallet         string = "walletpassphrase"      // ./divi-cli walletpassphrase “password” 0
 	cCommandUnlockWalletFS       string = "walletpassphrase"      // ./divi-cli walletpassphrase “password” 0 true
 	cCommandLockWallet           string = "walletlock"            // ./divi-cli walletlock
 
-	CRPCUserStr     string = "rpcuser"
-	CRPCPasswordStr string = "rpcpassword"
+	cRPCUserStr      string = "rpcuser"
+	cCRPCPasswordStr string = "rpcpassword"
 
 	// Divid Responses
 	cDiviDNotRunningError     string = "error: couldn't connect to server"
@@ -102,8 +102,8 @@ const (
 	cDividRespWalletEncrypted string = "wallet encrypted"
 
 	cGoDiviExportPath         string = "export PATH=$PATH:"
-	CUninstallConfirmationStr string = "Confirm"
-	CSeedStoredSafelyStr      string = "Confirm"
+	cUninstallConfirmationStr string = "Confirm"
+	cSeedStoredSafelyStr      string = "Confirm"
 
 	// Memory requirements
 	CMinRequiredMemoryMB int = 920
@@ -354,13 +354,13 @@ func DoRequiredFiles() error {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
 			filePath = abf + cDFileWindows
-			fileURL = CDownloadURLDP + cDFileWindows
+			fileURL = cDownloadURLDP + cDFileWindows
 		} else if runtime.GOARCH == "arm" {
 			filePath = abf + cDFileRPi
-			fileURL = CDownloadURLDP + cDFileRPi
+			fileURL = cDownloadURLDP + cDFileRPi
 		} else {
 			filePath = abf + cDFileUbuntu
-			fileURL = CDownloadURLDP + cDFileUbuntu
+			fileURL = cDownloadURLDP + cDFileUbuntu
 		}
 	}
 
@@ -405,18 +405,18 @@ func DoRequiredFiles() error {
 		if runtime.GOOS == "windows" {
 			srcPath = "./tmp/divi-1.0.8/bin/"
 			srcRoot = "./tmp/"
-			srcFileCLI = CDiviCliFileWin
-			srcFileD = CDiviDFileWin
-			srcFileTX = CDiviTxFileWin
+			srcFileCLI = cDiviCliFileWin
+			srcFileD = cDiviDFileWin
+			srcFileTX = cDiviTxFileWin
 			srcFileGD = CAppCLIFileWinGoDivi
 			srcFileGDS = CAppServerFileWinGoDivi
 
 		} else if runtime.GOARCH == "arm" {
 			srcPath = "./divi-1.0.8/bin/"
 			srcRoot = "./divi-1.0.8/"
-			srcFileCLI = CDiviCliFile
-			srcFileD = CDiviDFile
-			srcFileTX = CDiviTxFile
+			srcFileCLI = cDiviCliFile
+			srcFileD = cDiviDFile
+			srcFileTX = cDiviTxFile
 			srcFileGD = CAppCLIFileGoDivi
 			srcFileUGD = CAppUpdaterFileGoDivi
 			srcFileGDS = CAppServerFileGoDivi
@@ -424,9 +424,9 @@ func DoRequiredFiles() error {
 		} else {
 			srcPath = "./divi-1.0.8/bin/"
 			srcRoot = "./divi-1.0.8/"
-			srcFileCLI = CDiviCliFile
-			srcFileD = CDiviDFile
-			srcFileTX = CDiviTxFile
+			srcFileCLI = cDiviCliFile
+			srcFileD = cDiviDFile
+			srcFileTX = cDiviTxFile
 			srcFileGD = CAppCLIFileGoDivi
 			srcFileUGD = CAppUpdaterFileGoDivi
 			srcFileGDS = CAppServerFileGoDivi
@@ -555,9 +555,9 @@ func DoPrivKeyDisplay() error {
 	fmt.Printf(sWarning)
 	fmt.Println("")
 	fmt.Println("\nRequesting private seed...")
-	s, err := runDCCommand(dbf+CDiviCliFile, cCommandDumpHDinfo, "Waiting for wallet to respond. This could take several minutes...", 30)
+	s, err := runDCCommand(dbf+cDiviCliFile, cCommandDumpHDinfo, "Waiting for wallet to respond. This could take several minutes...", 30)
 	if err != nil {
-		return fmt.Errorf("Unable to run command: %v - %v", dbf+CDiviCliFile+cCommandDumpHDinfo, err)
+		return fmt.Errorf("Unable to run command: %v - %v", dbf+cDiviCliFile+cCommandDumpHDinfo, err)
 	}
 
 	fmt.Println("\nPrivate seed received...")
@@ -582,11 +582,11 @@ Please confirm that you understand the risks: `
 	yn := getYesNoResp(s)
 	if yn == "y" {
 		fmt.Println("\nRequesting private seed...")
-		s, err := runDCCommand(dbf+CDiviCliFile, cCommandDumpHDinfo, "Waiting for wallet to respond. This could take several minutes...", 30)
+		s, err := runDCCommand(dbf+cDiviCliFile, cCommandDumpHDinfo, "Waiting for wallet to respond. This could take several minutes...", 30)
 		// cmd := exec.Command(dbf+cDiviCliFile, cCommandDumpHDinfo)
 		// out, err := cmd.CombinedOutput()
 		if err != nil {
-			return fmt.Errorf("Unable to run command: %v - %v", dbf+CDiviCliFile+cCommandDumpHDinfo, err)
+			return fmt.Errorf("Unable to run command: %v - %v", dbf+cDiviCliFile+cCommandDumpHDinfo, err)
 		}
 
 		// Now store the info in file
@@ -625,9 +625,9 @@ func doWalletAdressDisplay() error {
 	// Display wallet public address
 
 	fmt.Println("\nRequesting wallet address...")
-	s, err := RunDCCommandWithValue(dbf+CDiviCliFile, cCommandDisplayWalletAddress, `""`, "Waiting for wallet to respond. This could take several minutes...", 30)
+	s, err := RunDCCommandWithValue(dbf+cDiviCliFile, cCommandDisplayWalletAddress, `""`, "Waiting for wallet to respond. This could take several minutes...", 30)
 	if err != nil {
-		return fmt.Errorf("Unable to run command: %v - %v", dbf+CDiviCliFile+cCommandDisplayWalletAddress, err)
+		return fmt.Errorf("Unable to run command: %v - %v", dbf+cDiviCliFile+cCommandDisplayWalletAddress, err)
 	}
 
 	fmt.Println("\nWallet address received...")
@@ -659,7 +659,7 @@ func GetAddNodes() ([]byte, error) {
 		Timeout: time.Second * 3, // Maximum of 3 secs
 	}
 
-	req, err := http.NewRequest(http.MethodGet, CAddNodeURL, nil)
+	req, err := http.NewRequest(http.MethodGet, cAddNodeURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -688,7 +688,7 @@ func GetBlockchainInfo() (BlockchainInfo, error) {
 	bci := BlockchainInfo{}
 	dbf, _ := GetAppsBinFolder()
 
-	cmdBCInfo := exec.Command(dbf+CDiviCliFile, cCommandGetBCInfo)
+	cmdBCInfo := exec.Command(dbf+cDiviCliFile, cCommandGetBCInfo)
 	out, _ := cmdBCInfo.CombinedOutput()
 	err := json.Unmarshal([]byte(out), &bci)
 	if err != nil {
@@ -808,12 +808,12 @@ func GetCoinHomeFolder() (string, error) {
 		// add the "appdata\roaming" part.
 		switch gwconf.ProjectType {
 		case PTDivi:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CDiviHomeDirWin)
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
 		}
 	} else {
 		switch gwconf.ProjectType {
 		case PTDivi:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(CDiviHomeDir)
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
 		}
 	}
 	return s, nil
@@ -826,7 +826,7 @@ func GetCoinName() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return CCoinNameDivi, nil
+		return cCoinNameDivi, nil
 	}
 	return "", nil
 }
@@ -840,7 +840,7 @@ func GetMNSyncStatus() (MNSyncStatus, error) {
 	mnss := MNSyncStatus{}
 	dbf, _ := GetAppsBinFolder()
 
-	cmdMNSS := exec.Command(dbf+CDiviCliFile, cCommandMNSyncStatus1, cCommandMNSyncStatus2)
+	cmdMNSS := exec.Command(dbf+cDiviCliFile, cCommandMNSyncStatus1, cCommandMNSyncStatus2)
 	out, _ := cmdMNSS.CombinedOutput()
 	err := json.Unmarshal([]byte(out), &mnss)
 	if err != nil {
@@ -905,7 +905,7 @@ func GetWalletAddress(attempts int) (string, error) {
 	var err error
 	var s string = "waiting for wallet."
 	dbf, _ := GetAppsBinFolder()
-	app := dbf + CDiviCliFile
+	app := dbf + cDiviCliFile
 	arg1 := cCommandDisplayWalletAddress
 	arg2 := ""
 
@@ -963,7 +963,7 @@ func GetWalletInfo(dispProgress bool) (WalletInfoStruct, error) {
 	attempts := 30
 
 	// Start the DiviD server if required...
-	err := RunDiviD(false)
+	err := RunCoinDaemon(false)
 	if err != nil {
 		return wi, fmt.Errorf("Unable to RunDiviD: %v ", err)
 	}
@@ -974,7 +974,7 @@ func GetWalletInfo(dispProgress bool) (WalletInfoStruct, error) {
 	}
 
 	for i := 0; i < attempts; i++ {
-		cmd := exec.Command(dbf+CDiviCliFile, cCommandGetWInfo)
+		cmd := exec.Command(dbf+cDiviCliFile, cCommandGetWInfo)
 		out, err := cmd.CombinedOutput()
 		if err == nil {
 			errUM := json.Unmarshal([]byte(out), &wi)
@@ -1026,9 +1026,9 @@ func GetWalletSeedRecoveryResp() string {
 
 func GetWalletSeedRecoveryConfirmationResp() bool {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Please enter the response: " + CSeedStoredSafelyStr)
+	fmt.Println("Please enter the response: " + cSeedStoredSafelyStr)
 	resp, _ := reader.ReadString('\n')
-	if resp == CSeedStoredSafelyStr+"\n" {
+	if resp == cSeedStoredSafelyStr+"\n" {
 		return true
 	}
 
@@ -1063,9 +1063,9 @@ func IsCoinDaemonRunning() (bool, int, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CDiviDFileWin)
+			pid, _, err = findProcess(cDiviDFileWin)
 		} else {
-			pid, _, err = findProcess(CDiviDFile)
+			pid, _, err = findProcess(cDiviDFile)
 		}
 	}
 
@@ -1179,7 +1179,7 @@ func RunDCCommandWithValue(cmdBaseStr, cmdStr, valueStr, waitingStr string, atte
 
 // RunCoinDaemon - Run the coins Daemon e.g. Run divid
 func RunCoinDaemon(displayOutput bool) error {
-	idr, _, _ := IsDiviDRunning()
+	idr, _, _ := IsCoinDaemonRunning()
 	if idr == true {
 		// Already running...
 		return nil
@@ -1195,7 +1195,7 @@ func RunCoinDaemon(displayOutput bool) error {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
 			//_ = exec.Command(GetAppsBinFolder() + cDiviDFileWin)
-			fp := abf + CDiviDFileWin
+			fp := abf + cDiviDFileWin
 			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
 			if err := cmd.Run(); err != nil {
 				return err
@@ -1206,7 +1206,7 @@ func RunCoinDaemon(displayOutput bool) error {
 				fmt.Println("Attempting to run the divid daemon...")
 			}
 
-			cmdRun := exec.Command(abf + CDiviDFile)
+			cmdRun := exec.Command(abf + cDiviDFile)
 			stdout, err := cmdRun.StdoutPipe()
 			if err != nil {
 				return err
@@ -1282,44 +1282,44 @@ func RunInitialDaemon() error {
 	case PTDivi:
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
 		fmt.Println("About to run divid for the first time...")
-		cmdDividRun := exec.Command(abf + CDiviDFile)
+		cmdDividRun := exec.Command(abf + cDiviDFile)
 		out, err := cmdDividRun.CombinedOutput()
 		if err != nil {
-			return fmt.Errorf("Unable to run "+abf+CDiviDFile+" - %v", err)
+			return fmt.Errorf("Unable to run "+abf+cDiviDFile+" - %v", err)
 		}
-		fmt.Println("Populating " + CDiviConfFile + " for initial setup...")
+		fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
 
 		scanner := bufio.NewScanner(strings.NewReader(string(out)))
 		var rpcuser, rpcpw string
 		for scanner.Scan() {
 			s := scanner.Text()
-			if strings.Contains(s, CRPCUserStr) {
-				rpcuser = strings.ReplaceAll(s, CRPCUserStr+"=", "")
+			if strings.Contains(s, cRPCUserStr) {
+				rpcuser = strings.ReplaceAll(s, cRPCUserStr+"=", "")
 			}
-			if strings.Contains(s, CRPCPasswordStr) {
-				rpcpw = strings.ReplaceAll(s, CRPCPasswordStr+"=", "")
+			if strings.Contains(s, cRPCPasswordStr) {
+				rpcpw = strings.ReplaceAll(s, cRPCPasswordStr+"=", "")
 			}
 		}
 
 		chd, _ := GetCoinHomeFolder()
 
-		err = WriteTextToFile(chd+CDiviConfFile, CRPCUserStr+"="+rpcuser)
+		err = WriteTextToFile(chd+cDiviConfFile, cRPCUserStr+"="+rpcuser)
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = WriteTextToFile(chd+CDiviConfFile, CRPCPasswordStr+"="+rpcpw)
+		err = WriteTextToFile(chd+cDiviConfFile, cRPCPasswordStr+"="+rpcpw)
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = WriteTextToFile(chd+CDiviConfFile, "")
+		err = WriteTextToFile(chd+cDiviConfFile, "")
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = WriteTextToFile(chd+CDiviConfFile, "daemon=1")
+		err = WriteTextToFile(chd+cDiviConfFile, "daemon=1")
 		if err != nil {
 			log.Fatal(err)
 		}
-		err = WriteTextToFile(chd+CDiviConfFile, "")
+		err = WriteTextToFile(chd+cDiviConfFile, "")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -1340,20 +1340,20 @@ func RunInitialDaemon() error {
 }
 
 func StopDiviD() error {
-	idr, _, _ := IsDiviDRunning()
+	idr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
 	if idr != true {
 		// Not running anyway ...
 		return nil
 	}
 
 	dbf, _ := GetAppsBinFolder()
-	cRun := exec.Command(dbf+CDiviCliFile, "stop")
+	cRun := exec.Command(dbf+cDiviCliFile, "stop")
 	if err := cRun.Run(); err != nil {
 		return fmt.Errorf("Unable to StopDiviD:%v", err)
 	}
 
 	for i := 0; i < 50; i++ {
-		sr, _, _ := IsDiviDRunning()
+		sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
 		if !sr {
 			return nil
 		}
@@ -1368,7 +1368,7 @@ func UnlockWallet(pword string, attempts int, forStaking bool) (bool, error) {
 	var err error
 	var s string = "waiting for wallet."
 	dbf, _ := GetAppsBinFolder()
-	app := dbf + CDiviCliFile
+	app := dbf + cDiviCliFile
 	arg1 := cCommandUnlockWalletFS
 	arg2 := pword
 	arg3 := "0"

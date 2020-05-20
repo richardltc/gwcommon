@@ -40,6 +40,7 @@ func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 	return nil
 }
 
+// GetConfigStruct - Retrieve the application config struct
 func GetConfigStruct(refreshFields bool) (ConfStruct, error) {
 
 	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
@@ -88,6 +89,7 @@ func newConfStruct(pt ProjectType) ConfStruct {
 	return cnf
 }
 
+// SetConfigStruct - Save the application config struct
 func SetConfigStruct(dir string, cs ConfStruct) error {
 	jssb, _ := json.MarshalIndent(cs, "", "  ")
 	dir = AddTrailingSlash(dir)
