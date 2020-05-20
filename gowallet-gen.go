@@ -93,8 +93,8 @@ const (
 	cCommandUnlockWalletFS       string = "walletpassphrase"      // ./divi-cli walletpassphrase “password” 0 true
 	cCommandLockWallet           string = "walletlock"            // ./divi-cli walletlock
 
-	cRPCUserStr      string = "rpcuser"
-	cCRPCPasswordStr string = "rpcpassword"
+	cRPCUserStr     string = "rpcuser"
+	cRPCPasswordStr string = "rpcpassword"
 
 	// Divid Responses
 	cDiviDNotRunningError     string = "error: couldn't connect to server"
