@@ -1209,6 +1209,76 @@ func RunGoDiviS(displayOutput bool) error {
 	return nil
 }
 
+func RunInitialDaemon() error {
+	abf, err := GetAppsBinFolder()
+	if err != nil {
+		return fmt.Errorf("Unable to GetAppsBinFolder - %v", err)
+	}
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return fmt.Errorf("Unable to GetConfigStruct - %v", err)
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		//Run divid for the first time, so that we can get the outputted info to build the conf file
+		fmt.Println("About to run divid for the first time...")
+		cmdDividRun := exec.Command(abf + CDiviDFile)
+		out, err := cmdDividRun.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("Unable to run "+abf+CDiviDFile+" - %v", err)
+		}
+		fmt.Println("Populating " + CDiviConfFile + " for initial setup...")
+
+		scanner := bufio.NewScanner(strings.NewReader(string(out)))
+		var rpcuser, rpcpw string
+		for scanner.Scan() {
+			s := scanner.Text()
+			if strings.Contains(s, CRPCUserStr) {
+				rpcuser = strings.ReplaceAll(s, CRPCUserStr+"=", "")
+			}
+			if strings.Contains(s, CRPCPasswordStr) {
+				rpcpw = strings.ReplaceAll(s, CRPCPasswordStr+"=", "")
+			}
+		}
+
+		chd, _ := GetCoinHomeFolder()
+
+		err = WriteTextToFile(chd+CDiviConfFile, CRPCUserStr+"="+rpcuser)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+CDiviConfFile, CRPCPasswordStr+"="+rpcpw)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+CDiviConfFile, "")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+CDiviConfFile, "daemon=1")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+CDiviConfFile, "")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Now get a list of the latest "addnodes" and add them to the file:
+		// I've commented out the below, as I think it might cause future issues with blockchain syncing,
+		// because, I think that the ipaddresess in the conf file are used before any others are picked up,
+		// so, it's possible that they could all go, and then cause issues.
+
+		// gdc.AddToLog(lfp, "Adding latest master nodes to "+gdc.CDiviConfFile)
+		// addnodes, _ := gdc.GetAddNodes()
+		// sAddnodes := string(addnodes[:])
+		// gdc.WriteTextToFile(dhd+gdc.CDiviConfFile, sAddnodes)
+
+		return nil
+	}
+	return nil
+}
+
 func StopDiviD() error {
 	idr, _, _ := IsDiviDRunning()
 	if idr != true {
