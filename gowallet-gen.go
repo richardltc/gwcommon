@@ -760,6 +760,19 @@ func GetAppServerFileName() (string, error) {
 	return "", nil
 }
 
+// GetAppUpdaterFileName - Returns the name of the app updater binary file e.g. update-godivi
+func GetAppUpdaterFileName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppUpdaterFileGoDivi, nil
+	}
+	return "", nil
+}
+
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
