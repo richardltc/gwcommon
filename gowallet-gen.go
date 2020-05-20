@@ -726,6 +726,20 @@ func GetAppsBinFolder() (string, error) {
 	return s, nil
 }
 
+// GetAppCLIFileName - Returns the name of the app cli binary file
+func GetAppCLIFileName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppCLIFileGoDivi, nil
+	}
+	return "", nil
+}
+
+// GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
