@@ -13,8 +13,9 @@ const (
 
 // ConfStruct - The global application config struct
 type ConfStruct struct {
-	AppName     string
-	ProjectType ProjectType
+	AppName                   string
+	ProjectType               ProjectType
+	UserConfirmedSeedRecovery bool
 }
 
 // CreateDefaultConfFile - Only to be used by GoDeploy
@@ -85,6 +86,8 @@ func newConfStruct(pt ProjectType) ConfStruct {
 	case PTPIVX:
 		//TODO Populate with PIVX and Trezar
 	}
+
+	cnf.UserConfirmedSeedRecovery = false
 
 	return cnf
 }
