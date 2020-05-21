@@ -705,7 +705,7 @@ func GetBlockchainInfo() (BlockchainInfo, error) {
 	return bci, nil
 }
 
-// GetAppsBinFolder - Returns the directory of which the coin is
+// GetAppsBinFolder - Returns the directory of where the apps binary files are stored
 func GetAppsBinFolder() (string, error) {
 	var s string
 	gwconf, err := GetConfigStruct(false)
@@ -734,7 +734,7 @@ func GetAppsBinFolder() (string, error) {
 	return s, nil
 }
 
-// GetAppCLIFileName - Returns the name of the app cli binary file
+// GetAppCLIFileName - Returns the name of the app cli binary file e.g. godivi
 func GetAppCLIFileName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
@@ -812,7 +812,7 @@ func GetAppName() (string, error) {
 	return "", nil
 }
 
-// GetCoinDaemonFilename - Return the coin daemon file name
+// GetCoinDaemonFilename - Return the coin daemon file name e.g. divid
 func GetCoinDaemonFilename() (string, error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
@@ -853,6 +853,7 @@ func GetCoinHomeFolder() (string, error) {
 	return s, nil
 }
 
+// GetCoinName - Returns the name of the coin e.g. Divi
 func GetCoinName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
