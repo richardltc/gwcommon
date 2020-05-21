@@ -1144,6 +1144,31 @@ func IsGoWalletCLIRunning() (bool, int, error) {
 	}
 }
 
+// IsAppCLIRunning - Will then work out what wallet this relates to, and return bool whether the CLI app is running
+func IsAppCLIRunning() (bool, int, error) {
+	var pid int
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return false, pid, err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppCLIFileWinGoDivi)
+		} else {
+			pid, _, err = findProcess(CAppCLIFileGoDivi)
+		}
+	}
+
+	if err == nil {
+		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
+	} else if err.Error() == "not found" {
+		return false, 0, nil
+	} else {
+		return false, 0, err
+	}
+}
+
 // IsAppServerRunning - Will then work out what wallet this relates to, and return accurate info
 func IsAppServerRunning() (bool, int, error) {
 	var pid int
