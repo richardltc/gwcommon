@@ -141,6 +141,18 @@ const (
 	cUtfLock string = "\u1F512"
 )
 
+// OSType - either ostArm, ostLinux or ostWindows
+type OSType int
+
+const (
+	// OSTArm - Arm
+	OSTArm OSType = iota
+	// OSTLinux - Linux
+	OSTLinux
+	// OSTWindows - Windows
+	OSTWindows
+)
+
 // ProjectType - To allow external to determine what kind of wallet we are working with
 type ProjectType int
 
@@ -876,6 +888,26 @@ func GetCoinName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return cCoinNameDivi, nil
+	}
+	return "", nil
+}
+
+// GetCoinDownloadLink - Returns a link to the required file
+func GetCoinDownloadLink(ostype OSType) (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		switch ostype {
+		case OSTArm:
+			return cDownloadURLDP + cDFileRPi, nil
+		case OSTLinux:
+			return cDownloadURLDP + cDFileUbuntu, nil
+		case OSTWindows:
+			return cDownloadURLDP + cDFileWindows, nil
+		}
 	}
 	return "", nil
 }
