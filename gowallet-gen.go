@@ -893,43 +893,43 @@ func GetCoinName() (string, error) {
 }
 
 // GetCoinDownloadLink - Returns a link to the required file
-func GetCoinDownloadLink(ostype OSType) (string, error) {
+func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
 		switch ostype {
 		case OSTArm:
-			return cDownloadURLDP + cDFileRPi, nil
+			return cDownloadURLDP, cDFileRPi, nil
 		case OSTLinux:
-			return cDownloadURLDP + cDFileUbuntu, nil
+			return cDownloadURLDP, cDFileUbuntu, nil
 		case OSTWindows:
-			return cDownloadURLDP + cDFileWindows, nil
+			return cDownloadURLDP, cDFileWindows, nil
 		}
 	}
-	return "", nil
+	return "", "", nil
 }
 
-// GetGoWalletDownloadLink - Returns a link to the required file
-func GetGoWalletDownloadLink(ostype OSType) (string, error) {
+// GetGoWalletDownloadLink - Returns a link of both the url and file
+func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
 		switch ostype {
 		case OSTArm:
-			return CDownloadURLGD + CDFileGodiviLatetsARM, nil
+			return CDownloadURLGD, CDFileGodiviLatetsARM, nil
 		case OSTLinux:
-			return CDownloadURLGD + CDFileGodiviLatetsLinux, nil
+			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
 		case OSTWindows:
-			return CDownloadURLGD + CDFileGodiviLatetsWindows, nil
+			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
 		}
 	}
-	return "", nil
+	return "", "", nil
 }
 
 func GetMNSyncStatus() (MNSyncStatus, error) {
