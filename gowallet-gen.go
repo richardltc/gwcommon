@@ -748,6 +748,19 @@ func GetAppCLIFileName() (string, error) {
 	return "", nil
 }
 
+// GetAppInstallerFileName - Returns the name of the app installer binary file e.g. "godivi-installer"
+func GetAppInstallerFileName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppCLIFileInstallerGoDivi, nil
+	}
+	return "", nil
+}
+
 // GetAppServerFileName - Returns the name of the app server binary file e.g. godivis
 func GetAppServerFileName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
