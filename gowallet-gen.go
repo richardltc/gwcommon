@@ -912,6 +912,26 @@ func GetCoinDownloadLink(ostype OSType) (string, error) {
 	return "", nil
 }
 
+// GetGoWalletDownloadLink - Returns a link to the required file
+func GetGoWalletDownloadLink(ostype OSType) (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		switch ostype {
+		case OSTArm:
+			return CDownloadURLGD + CDFileGodiviLatetsARM, nil
+		case OSTLinux:
+			return CDownloadURLGD + CDFileGodiviLatetsLinux, nil
+		case OSTWindows:
+			return CDownloadURLGD + CDFileGodiviLatetsWindows, nil
+		}
+	}
+	return "", nil
+}
+
 func GetMNSyncStatus() (MNSyncStatus, error) {
 	// gdConfig, err := getConfStruct("./")
 	// if err != nil {
