@@ -26,7 +26,8 @@ const (
 	cUnknown       string = "Unknown"
 	cAddNodeURL    string = "https://api.diviproject.org/v1/addnode"
 	cDownloadURLDP string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
-	cDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
+	// CDownloadURLGD - The download file lotcation for GoDivi
+	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
 	cCoinNameDivi  string = "Divi"
 
 	// Divi Wallet Constants
