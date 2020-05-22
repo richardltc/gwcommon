@@ -440,7 +440,7 @@ func DoRequiredFiles() error {
 	log.Print("Installing files...")
 
 	// Copy files to correct location
-	var srcPath, srcRoot, srcFileCLI, srcFileD, srcFileTX, srcFileGD, srcFileUGD, srcFileGDS string
+	var srcPath, srcRoot, srcFileCLI, srcFileD, srcFileTX, srcFileGWConf, srcFileGWCLI, srcFileGWUprade, srcFileGWServer string
 	switch gwconf.ProjectType {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
@@ -449,8 +449,9 @@ func DoRequiredFiles() error {
 			srcFileCLI = cDiviCliFileWin
 			srcFileD = cDiviDFileWin
 			srcFileTX = cDiviTxFileWin
-			srcFileGD = CAppCLIFileWinGoDivi
-			srcFileGDS = CAppServerFileWinGoDivi
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileWinGoDivi
+			srcFileGWServer = CAppServerFileWinGoDivi
 
 		} else if runtime.GOARCH == "arm" {
 			srcPath = "./divi-1.0.8/bin/"
@@ -458,9 +459,10 @@ func DoRequiredFiles() error {
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
 			srcFileTX = cDiviTxFile
-			srcFileGD = CAppCLIFileGoDivi
-			srcFileUGD = CAppUpdaterFileGoDivi
-			srcFileGDS = CAppServerFileGoDivi
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileGoDivi
+			srcFileGWUprade = CAppUpdaterFileGoDivi
+			srcFileGWServer = CAppServerFileGoDivi
 
 		} else {
 			srcPath = "./divi-1.0.8/bin/"
@@ -468,9 +470,10 @@ func DoRequiredFiles() error {
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
 			srcFileTX = cDiviTxFile
-			srcFileGD = CAppCLIFileGoDivi
-			srcFileUGD = CAppUpdaterFileGoDivi
-			srcFileGDS = CAppServerFileGoDivi
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileGoDivi
+			srcFileGWUprade = CAppUpdaterFileGoDivi
+			srcFileGWServer = CAppServerFileGoDivi
 		}
 	}
 
@@ -509,13 +512,19 @@ func DoRequiredFiles() error {
 		return fmt.Errorf("error getting exe - %v", err)
 	}
 
-	err = FileCopy(ex, abf+srcFileGD, false)
+	err = FileCopy(ex, abf+srcFileGWCLI, false)
 	if err != nil {
-		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGD, err)
+		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWCLI, err)
 	}
-	err = os.Chmod(abf+srcFileGD, 0777)
+	err = os.Chmod(abf+srcFileGWCLI, 0777)
 	if err != nil {
-		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGD, err)
+		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWCLI, err)
+	}
+
+	// Copy the config file
+	err = FileCopy("./"+srcFileGWConf, abf+srcFileGWConf, false)
+	if err != nil {
+		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWCLI, err)
 	}
 
 	// Copy the updater file
@@ -524,23 +533,23 @@ func DoRequiredFiles() error {
 		if runtime.GOOS == "windows" {
 			// TODO Code the Windows part
 		} else if runtime.GOARCH == "arm" {
-			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileUGD, false)
+			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileGWUprade, false)
 			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileUGD, err)
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
 			}
-			err = os.Chmod(abf+srcFileUGD, 0777)
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
 			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileUGD, err)
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
 			}
 
 		} else {
-			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileUGD, false)
+			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileGWUprade, false)
 			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileUGD, err)
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
 			}
-			err = os.Chmod(abf+srcFileUGD, 0777)
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
 			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileUGD, err)
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
 			}
 		}
 	}
@@ -551,23 +560,23 @@ func DoRequiredFiles() error {
 		if runtime.GOOS == "windows" {
 			// TODO Code the Windows part
 		} else if runtime.GOARCH == "arm" {
-			err = FileCopy("./"+CAppServerFileGoDivi, abf+srcFileGDS, false)
+			err = FileCopy("./"+CAppServerFileGoDivi, abf+srcFileGWServer, false)
 			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGDS, err)
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
 			}
-			err = os.Chmod(abf+srcFileGDS, 0777)
+			err = os.Chmod(abf+srcFileGWServer, 0777)
 			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGDS, err)
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
 			}
 
 		} else {
-			err = FileCopy("./"+CAppServerFileGoDivi, abf+srcFileGDS, false)
+			err = FileCopy("./"+CAppServerFileGoDivi, abf+srcFileGWServer, false)
 			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGDS, err)
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
 			}
-			err = os.Chmod(abf+srcFileGDS, 0777)
+			err = os.Chmod(abf+srcFileGWServer, 0777)
 			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGDS, err)
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
 			}
 		}
 	}
