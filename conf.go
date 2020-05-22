@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	cConfFile string = "config.json"
+	// CConfFile - To be used only by GoDeploy
+	CConfFile string = "config.json"
 )
 
 // ConfStruct - The global application config struct
