@@ -29,7 +29,7 @@ func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 		return err
 	}
 
-	f, err := os.Create(confDir + cConfFile)
+	f, err := os.Create(confDir + CConfFile)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func GetConfigStruct(refreshFields bool) (ConfStruct, error) {
 	if err != nil {
 		return ConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v", err)
 	}
-	file, err := ioutil.ReadFile(dir + cConfFile)
+	file, err := ioutil.ReadFile(dir + CConfFile)
 	if err != nil {
 		return ConfStruct{}, err
 	}
@@ -98,7 +98,7 @@ func newConfStruct(pt ProjectType) ConfStruct {
 func SetConfigStruct(dir string, cs ConfStruct) error {
 	jssb, _ := json.MarshalIndent(cs, "", "  ")
 	dir = AddTrailingSlash(dir)
-	sFile := dir + cConfFile
+	sFile := dir + CConfFile
 
 	f, err := os.Create(sFile)
 	if err != nil {
