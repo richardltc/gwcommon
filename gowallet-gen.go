@@ -67,7 +67,7 @@ const (
 	CAppUpdaterFileCompiled    string = "updater"
 	CAppUpdaterFileCompiledWin string = "updater.exe"
 
-	// GoDivi file constants
+	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoDivi             string = "godivi"
 	CAppCLIFileWinGoDivi          string = "godivi.exe"
 	CAppCLIFileInstallerGoDivi    string = "godivi-installer"
@@ -139,6 +139,26 @@ const (
 	cCircProg4 string = "\u25F4"
 
 	cUtfLock string = "\u1F512"
+)
+
+// APPType - either APPTCLI, APPTCLICompiled, APPTInstaller, APPTUpdater, APPTServer
+type APPType int
+
+const (
+	// APPTCLI - e.g. godivi
+	APPTCLI APPType = iota
+	// APPTCLICompiled - e.g. cli
+	APPTCLICompiled
+	// APPTInstaller e.g. godivi-installer
+	APPTInstaller
+	// APPTUpdater e.g. update-godivi
+	APPTUpdater
+	// APPTUpdaterCompiled e.g. updater
+	APPTUpdaterCompiled
+	// APPTServer e.g. godivis
+	APPTServer
+	// APPTServerCompiled e.g. web
+	APPTServerCompiled
 )
 
 // OSType - either ostArm, ostLinux or ostWindows
@@ -747,57 +767,101 @@ func GetAppsBinFolder() (string, error) {
 	return s, nil
 }
 
-// GetAppCLIFileName - Returns the name of the app cli binary file e.g. godivi
-func GetAppCLIFileName() (string, error) {
+// GetAppFileName - Returns the name of the app binary file e.g. godivi, godivis, godivi-installer
+func GetAppFileName(an APPType) (string, error) {
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return CAppCLIFileGoDivi, nil
+		switch an {
+		case APPTCLI:
+			if runtime.GOOS == "windows" {
+				return CAppCLIFileWinGoDivi, nil
+			} else {
+				return CAppCLIFileGoDivi, nil
+			}
+		case APPTCLICompiled:
+			if runtime.GOOS == "windows" {
+				return CAppCLIFileCompiledWin, nil
+			} else {
+				return CAppCLIFileCompiled, nil
+			}
+		case APPTInstaller:
+			if runtime.GOOS == "windows" {
+				return CAppCLIFileInstallerWinGoDivi, nil
+			} else {
+				return CAppCLIFileInstallerGoDivi, nil
+			}
+		case APPTServer:
+			if runtime.GOOS == "windows" {
+				return CAppServerFileWinGoDivi, nil
+			} else {
+				return CAppServerFileGoDivi, nil
+			}
+		case APPTServerCompiled:
+			if runtime.GOOS == "windows" {
+				return CAppServerFileCompiledWin, nil
+			} else {
+				return CAppServerFileCompiled, nil
+			}
+		}
 	}
 	return "", nil
 }
 
-// GetAppInstallerFileName - Returns the name of the app installer binary file e.g. "godivi-installer"
-func GetAppInstallerFileName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
-	if err != nil {
-		return "", err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		return CAppCLIFileInstallerGoDivi, nil
-	}
-	return "", nil
-}
+// // GetAppCLIFileName - Returns the name of the app cli binary file e.g. godivi
+// func GetAppCLIFileName() (string, error) {
+// 	gwconf, err := GetConfigStruct(false)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	switch gwconf.ProjectType {
+// 	case PTDivi:
+// 		return CAppCLIFileGoDivi, nil
+// 	}
+// 	return "", nil
+// }
 
-// GetAppServerFileName - Returns the name of the app server binary file e.g. godivis
-func GetAppServerFileName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
-	if err != nil {
-		return "", err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		return CAppServerFileGoDivi, nil
-	}
-	return "", nil
-}
+// // GetAppInstallerFileName - Returns the name of the app installer binary file e.g. "godivi-installer"
+// func GetAppInstallerFileName() (string, error) {
+// 	gwconf, err := GetConfigStruct(false)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	switch gwconf.ProjectType {
+// 	case PTDivi:
+// 		return CAppCLIFileInstallerGoDivi, nil
+// 	}
+// 	return "", nil
+// }
 
-// GetAppUpdaterFileName - Returns the name of the app updater binary file e.g. update-godivi
-func GetAppUpdaterFileName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
-	if err != nil {
-		return "", err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		return CAppUpdaterFileGoDivi, nil
-	}
-	return "", nil
-}
+// // GetAppServerFileName - Returns the name of the app server binary file e.g. godivis
+// func GetAppServerFileName() (string, error) {
+// 	gwconf, err := GetConfigStruct(false)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	switch gwconf.ProjectType {
+// 	case PTDivi:
+// 		return CAppServerFileGoDivi, nil
+// 	}
+// 	return "", nil
+// }
+
+// // GetAppUpdaterFileName - Returns the name of the app updater binary file e.g. update-godivi
+// func GetAppUpdaterFileName() (string, error) {
+// 	gwconf, err := GetConfigStruct(false)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	switch gwconf.ProjectType {
+// 	case PTDivi:
+// 		return CAppUpdaterFileGoDivi, nil
+// 	}
+// 	return "", nil
+// }
 
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
