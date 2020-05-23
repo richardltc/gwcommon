@@ -85,8 +85,10 @@ func newConfStruct(pt ProjectType) ConfStruct {
 	switch pt {
 	case PTDivi:
 		cnf.AppName = CAppNameGoDivi
+	case PTPhore:
+		dfd
 	case PTPIVX:
-		//TODO Populate with PIVX and Trezar
+	case PTTrezarcoin:
 	}
 
 	cnf.UserConfirmedSeedRecovery = false

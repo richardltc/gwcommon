@@ -37,13 +37,10 @@ const (
 	cDiviBinDir     string = "godivi"
 	cDiviBinDirWin  string = "GoDivi"
 
-	// Public download files
+	// GoDivi Public download files
 	CDFileGodiviLatetsARM     string = "godivi-arm-latest.zip"
 	CDFileGodiviLatetsLinux   string = "godivi-linux-latest.zip"
 	CDFileGodiviLatetsWindows string = "godivi-windows-latest.zip"
-	cDFileRPi                 string = "divi-1.0.8-RPi2.tar.gz"
-	cDFileUbuntu              string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
-	cDFileWindows             string = "divi-1.0.8-win64.zip"
 
 	// Divi project file constants
 	CAppNameGoDivi        string = "GoDivi"
@@ -58,6 +55,87 @@ const (
 	cDiviDFileWin   string = "divid.exe"
 	cDiviTxFile     string = "divi-tx"
 	cDiviTxFileWin  string = "divi-tx.exe"
+
+	// Divi public download files
+	cDFDiviRPi     string = "divi-1.0.8-RPi2.tar.gz"
+	cDFDiviLinux   string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
+	cDFDiviWindows string = "divi-1.0.8-win64.zip"
+
+	// Phore Wallet Constants
+	CPhoreAppVersion string = "1.6.3"
+	cPhoreHomeDir    string = ".phore"
+	cPhoreHomeDirWin string = "PHORE"
+	cPhoreBinDir     string = "gophore"
+	cPhoreBinDirWin  string = "GoPhore"
+
+	// Phore Public download files
+	CDFileGoPhoreLatetsARM     string = "gophore-arm-latest.zip"
+	CDFileGoPhoreLatetsLinux   string = "gophore-linux-latest.zip"
+	CDFileGoPhoreLatetsWindows string = "gophore-windows-latest.zip"
+
+	// Phore file constants
+	CAppNameGoPhore        string = "GoPhore"
+	CAppNameUpdaterGoPhore string = "GoPhore Updater"
+	CAppNameCLIGoPhore     string = "GoPhore CLI"
+	CAppNameServerGoPhore  string = "GoPhore Server"
+
+	cPhoreConfFile   string = "phore.conf"
+	cPhoreCliFile    string = "phore-cli"
+	cPhoreCliFileWin string = "phore-cli.exe"
+	cPhoreDFile      string = "phored"
+	cPhoreDFileWin   string = "phored.exe"
+	cPhoreTxFile     string = "phore-tx"
+	cPhoreTxFileWin  string = "phore-tx.exe"
+
+	// Phore public download files
+	cDFPhoreFileRPi     string = "divi-1.0.8-RPi2.tar.gz"
+	cDFPhoreFileLinux   string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
+	cDFPhoreFileWindows string = "divi-1.0.8-win64.zip"
+
+	// PIVX file constants
+	CAppNameGoPIVX        string = "GoPIVX"
+	CAppNameUpdaterGoPIVX string = "GoPIVX Updater"
+	CAppNameCLIGoPIVX     string = "GoPIVX CLI"
+	CAppNameServerGoPIVX  string = "GoPIVX Server"
+
+	cPIVXConfFile   string = "divi.conf"
+	cPIVXCliFile    string = "divi-cli"
+	cPIVXCliFileWin string = "divi-cli.exe"
+	cPIVXDFile      string = "divid"
+	cPIVXDFileWin   string = "divid.exe"
+	cPIVXTxFile     string = "divi-tx"
+	cPIVXTxFileWin  string = "divi-tx.exe"
+
+	// Divi Wallet Constants
+	CTrezarcoinAppVersion string = "2.01"
+	cTrezarcoinHomeDir    string = ".trezarcoin"
+	cTrezarcoinHomeDirWin string = "TREZARCOIN"
+	cTrezarcoinBinDir     string = "gotrezarcoin"
+	cTrezarcoinBinDirWin  string = "GoTrezarcoin"
+
+	// GoTrezarcoin Public download files
+	CDFileGoTrezarcoinLatetsARM     string = "gotrezarcoin-arm-latest.zip"
+	CDFileGoTrezarcoinLatetsLinux   string = "gotrezarcoin-linux-latest.zip"
+	CDFileGoTrezarcoinLatetsWindows string = "gotrezarcoin-windows-latest.zip"
+
+	// Trezarcoin file constants
+	CAppNameGoTrezarcoin        string = "GoTrezarcoin"
+	CAppNameUpdaterGoTrezarcoin string = "GoTrezarcoin Updater"
+	CAppNameCLIGoTrezarcoin     string = "GoTrezarcoin CLI"
+	CAppNameServerGoTrezarcoin  string = "GoTrezarcoin Server"
+
+	cTrezarcoinConfFile   string = "trezarcoin.conf"
+	cTrezarcoinCliFile    string = "trezarcoin-cli"
+	cTrezarcoinCliFileWin string = "trezarcoin-cli.exe"
+	cTrezarcoinDFile      string = "trezarcoind"
+	cTrezarcoinDFileWin   string = "trezarcoind.exe"
+	cTrezarcoinTxFile     string = "trezarcoin-tx"
+	cTrezarcoinTxFileWin  string = "trezarcoin-tx.exe"
+
+	// Trezarcoin public download files
+	cDFTrezarcoinRPi     string = "trezarcoin-2.0.1-rPI.zip"
+	cDFTrezarcoinLinux   string = "trezarcoin-2.0.1-linux64.tar.gz"
+	cDFTrezarcoinWindows string = "trezarcoin-2.0.1-win64-setup.exe"
 
 	// GoWallet file constants
 	CAppCLIFileCompiled        string = "cli"
@@ -331,6 +409,7 @@ var lastBCSyncStatus string = ""
 var lastMNSyncStatus string = ""
 
 func AddGoDiviPath() error {
+	//TODO Rename this to AddProjctPath (or something) and calculate for other coins
 	if runtime.GOOS != "windows" {
 		u, err := user.Current()
 		if err != nil {
@@ -394,14 +473,25 @@ func DoRequiredFiles() error {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
-			filePath = abf + cDFileWindows
-			fileURL = cDownloadURLDP + cDFileWindows
+			filePath = abf + cDFDiviWindows
+			fileURL = cDownloadURLDP + cDFDiviWindows
 		} else if runtime.GOARCH == "arm" {
-			filePath = abf + cDFileRPi
-			fileURL = cDownloadURLDP + cDFileRPi
+			filePath = abf + cDFDiviRPi
+			fileURL = cDownloadURLDP + cDFDiviRPi
 		} else {
-			filePath = abf + cDFileUbuntu
-			fileURL = cDownloadURLDP + cDFileUbuntu
+			filePath = abf + cDFDiviLinux
+			fileURL = cDownloadURLDP + cDFDiviLinux
+		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			filePath = abf + cDFTrezarcoinWindows
+			fileURL = cDownloadURLDP + cDFTrezarcoinWindows
+		} else if runtime.GOARCH == "arm" {
+			filePath = abf + cDFTrezarcoinRPi
+			fileURL = cDownloadURLDP + cDFTrezarcoinRPi
+		} else {
+			filePath = abf + cDFTrezarcoinLinux
+			fileURL = cDownloadURLDP + cDFTrezarcoinLinux
 		}
 	}
 
@@ -975,11 +1065,11 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 	case PTDivi:
 		switch ostype {
 		case OSTArm:
-			return cDownloadURLDP, cDFileRPi, nil
+			return cDownloadURLDP, cDFDiviRPi, nil
 		case OSTLinux:
-			return cDownloadURLDP, cDFileUbuntu, nil
+			return cDownloadURLDP, cDFDiviLinux, nil
 		case OSTWindows:
-			return cDownloadURLDP, cDFileWindows, nil
+			return cDownloadURLDP, cDFDiviWindows, nil
 		}
 	}
 	return "", "", nil
