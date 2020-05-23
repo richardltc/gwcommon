@@ -80,8 +80,8 @@ const (
 	CWalletSeedFileGoDivi         string = "unsecure-divi-seed.txt"
 
 	// Divi-cli command constants
-	cCommandGetBCInfo     string = "GetBlockchainInfo"
-	cCommandGetWInfo      string = "GetWalletInfo"
+	cCommandGetBCInfo     string = "getblockchaininfo"
+	cCommandGetWInfo      string = "getwalletinfo"
 	cCommandMNSyncStatus1 string = "mnsync"
 	cCommandMNSyncStatus2 string = "status"
 
@@ -1155,6 +1155,11 @@ func GetWalletInfo(dispProgress bool) (WalletInfoStruct, error) {
 			if errUM == nil {
 				return wi, err
 			}
+		} else {
+			if dispProgress {
+				fmt.Printf("error: %v", string(out))
+			}
+
 		}
 
 		//s = s + "."
