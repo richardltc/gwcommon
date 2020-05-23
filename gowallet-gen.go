@@ -183,8 +183,8 @@ const (
 	PTPhore
 	// PTPIVX - PIVX
 	PTPIVX
-	// PTTrezar - TrezarCoin
-	PTTrezar
+	// PTTrezarcoin - TrezarCoin
+	PTTrezarcoin
 )
 
 type progressBarType int
