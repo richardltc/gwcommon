@@ -1469,6 +1469,7 @@ func RunAppServer(displayOutput bool) error {
 	return nil
 }
 
+// RunInitialDaemon - Runs the divid Daemon for the first time to populate the divi.conf file
 func RunInitialDaemon() error {
 	abf, err := GetAppsBinFolder()
 	if err != nil {
@@ -1483,10 +1484,11 @@ func RunInitialDaemon() error {
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
 		fmt.Println("About to run divid for the first time...")
 		cmdDividRun := exec.Command(abf + cDiviDFile)
-		out, err := cmdDividRun.CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("Unable to run "+abf+cDiviDFile+" - %v", err)
-		}
+		out, _ := cmdDividRun.CombinedOutput()
+		// out, err := cmdDividRun.CombinedOutput()
+		// if err != nil {
+		// 	return fmt.Errorf("Unable to run "+abf+cDiviDFile+" - %v", err)
+		// }
 		fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
 
 		scanner := bufio.NewScanner(strings.NewReader(string(out)))
