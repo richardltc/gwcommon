@@ -23,7 +23,10 @@ type ConfStruct struct {
 
 // CreateDefaultConfFile - Only to be used by GoDeploy
 func CreateDefaultConfFile(confDir string, pt ProjectType) error {
-	var conf = newConfStruct(pt)
+	conf, err := newConfStruct(pt)
+	if err != nil {
+		return err
+	}
 
 	jssb, err := json.MarshalIndent(conf, "", "  ")
 	if err != nil {
