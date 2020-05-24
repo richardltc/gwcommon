@@ -1,7 +1,7 @@
 package gwcommon
 
 const (
-	// Divi Wallet Constants
+	// CDiviAppVersion - The app version of Divi
 	CDiviAppVersion string = "1.08"
 	cDiviHomeDir    string = ".divi"
 	cDiviHomeDirWin string = "DIVI"
