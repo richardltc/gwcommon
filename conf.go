@@ -85,12 +85,16 @@ func newConfStruct(pt ProjectType) ConfStruct {
 	switch pt {
 	case PTDivi:
 		cnf.AppName = CAppNameGoDivi
+		cnf.ProjectType = PTDivi
 	case PTPhore:
 		cnf.AppName = CAppNameGoPhore
+		cnf.ProjectType = PTPhore
 	case PTPIVX:
 		cnf.AppName = CAppNameGoPIVX
+		cnf.ProjectType = PTPIVX
 	case PTTrezarcoin:
 		cnf.AppName = CAppNameGoTrezarcoin
+		cnf.ProjectType = PTTrezarcoin
 	}
 
 	cnf.UserConfirmedSeedRecovery = false
