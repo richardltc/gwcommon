@@ -2,6 +2,7 @@ package gwcommon
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -79,8 +80,9 @@ func GetConfigStruct(refreshFields bool) (ConfStruct, error) {
 	return cs, nil
 }
 
-func newConfStruct(pt ProjectType) ConfStruct {
+func newConfStruct(pt ProjectType) (ConfStruct, error) {
 	cnf := ConfStruct{}
+	var err error
 
 	switch pt {
 	case PTDivi:
@@ -95,11 +97,17 @@ func newConfStruct(pt ProjectType) ConfStruct {
 	case PTTrezarcoin:
 		cnf.AppName = CAppNameGoTrezarcoin
 		cnf.ProjectType = PTTrezarcoin
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	cnf.UserConfirmedSeedRecovery = false
 
-	return cnf
+	if err != nil {
+		return cnf, err
+	}
+
+	return cnf, nil
 }
 
 // SetConfigStruct - Save the application config struct
