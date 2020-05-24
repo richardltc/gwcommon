@@ -30,37 +30,6 @@ const (
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
 	cCoinNameDivi  string = "Divi"
 
-	// Divi Wallet Constants
-	CDiviAppVersion string = "1.08"
-	cDiviHomeDir    string = ".divi"
-	cDiviHomeDirWin string = "DIVI"
-	cDiviBinDir     string = "godivi"
-	cDiviBinDirWin  string = "GoDivi"
-
-	// GoDivi Public download files
-	CDFileGodiviLatetsARM     string = "godivi-arm-latest.zip"
-	CDFileGodiviLatetsLinux   string = "godivi-linux-latest.zip"
-	CDFileGodiviLatetsWindows string = "godivi-windows-latest.zip"
-
-	// Divi project file constants
-	CAppNameGoDivi        string = "GoDivi"
-	CAppNameUpdaterGoDivi string = "GoDivi Updater"
-	CAppNameCLIGoDivi     string = "GoDivi CLI"
-	CAppNameServerGoDivi  string = "GoDivi Server"
-
-	cDiviConfFile   string = "divi.conf"
-	cDiviCliFile    string = "divi-cli"
-	cDiviCliFileWin string = "divi-cli.exe"
-	cDiviDFile      string = "divid"
-	cDiviDFileWin   string = "divid.exe"
-	cDiviTxFile     string = "divi-tx"
-	cDiviTxFileWin  string = "divi-tx.exe"
-
-	// Divi public download files
-	cDFDiviRPi     string = "divi-1.0.8-RPi2.tar.gz"
-	cDFDiviLinux   string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
-	cDFDiviWindows string = "divi-1.0.8-win64.zip"
-
 	// Phore Wallet Constants
 	CPhoreAppVersion string = "1.6.3"
 	cPhoreHomeDir    string = ".phore"
@@ -145,17 +114,7 @@ const (
 	CAppUpdaterFileCompiled    string = "updater"
 	CAppUpdaterFileCompiledWin string = "updater.exe"
 
-	// CAppCLIFileGoDivi - Only to be used by GoDeploy
-	CAppCLIFileGoDivi             string = "godivi"
-	CAppCLIFileWinGoDivi          string = "godivi.exe"
-	CAppCLIFileInstallerGoDivi    string = "godivi-installer"
-	CAppCLIFileInstallerWinGoDivi string = "godivi-installer.exe"
-	CAppServerFileGoDivi          string = "godivis"
-	CAppServerFileWinGoDivi       string = "godivis.exe"
-	CAppUpdaterFileGoDivi         string = "update-godivi"
-	CAppUpdaterFileWinGoDivi      string = "update-godivi.exe"
-	CAppCLILogfileGoDivi          string = "godivi.log"
-	CWalletSeedFileGoDivi         string = "unsecure-divi-seed.txt"
+	CWalletSeedFileGoDivi string = "unsecure-divi-seed.txt"
 
 	// Divi-cli command constants
 	cCommandGetBCInfo     string = "getblockchaininfo"
