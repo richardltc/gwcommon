@@ -1,6 +1,9 @@
 package gwcommon
 
 const (
+	cCoinNameDivi  string = "Divi"
+	cDownloadURLDP string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
+
 	// CDiviAppVersion - The app version of Divi
 	CDiviAppVersion string = "1.08"
 	cDiviHomeDir    string = ".divi"

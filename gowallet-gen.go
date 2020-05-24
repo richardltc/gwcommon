@@ -22,13 +22,11 @@ import (
 
 const (
 	// CAppVersion - The app version of the suite of apps
-	CAppVersion    string = "0.21.1" // All of the individual apps will have the same version to make it easier for the user
-	cUnknown       string = "Unknown"
-	cAddNodeURL    string = "https://api.diviproject.org/v1/addnode"
-	cDownloadURLDP string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
+	CAppVersion string = "0.21.1" // All of the individual apps will have the same version to make it easier for the user
+	cUnknown    string = "Unknown"
+	cAddNodeURL string = "https://api.diviproject.org/v1/addnode"
 	// CDownloadURLGD - The download file lotcation for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
-	cCoinNameDivi  string = "Divi"
 
 	// GoWallet file constants
 	CAppCLIFileCompiled        string = "cli"
@@ -376,6 +374,11 @@ func DoRequiredFiles() error {
 			filePath = abf + cDFTrezarcoinLinux
 			fileURL = cDownloadURLDP + cDFTrezarcoinLinux
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
+	}
+	if err != nil {
+		return fmt.Errorf("Unable to determine project type - %v", err)
 	}
 
 	log.Print("Downloading required files...")
@@ -391,7 +394,7 @@ func DoRequiredFiles() error {
 	// Now, uncompress the files...
 	log.Print("Uncompressing files...")
 	switch gwconf.ProjectType {
-	case PTDivi:
+	case PTDivi, PTTrezarcoin:
 		if runtime.GOOS == "windows" {
 			_, err = UnZip(filePath, "tmp")
 			if err != nil {
@@ -448,6 +451,26 @@ func DoRequiredFiles() error {
 			srcFileGWUprade = CAppUpdaterFileGoDivi
 			srcFileGWServer = CAppServerFileGoDivi
 		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			err = errors.New("Windows in not currently supported for Trezarcoin")
+
+		} else if runtime.GOARCH == "arm" {
+			err = errors.New("Windows in not currently supported for Trezarcoin")
+		} else {
+			srcPath = "./trezarcoin-2.0.1-linux64/"
+			srcRoot = "./trezarcoin-2.0.1-linux64/"
+			srcFileCLI = cTrezarcoinCliFile
+			srcFileD = cTrezarcoinDFile
+			srcFileTX = cTrezarcoinTxFile
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileGoTrezarcoin
+			srcFileGWUprade = CAppUpdaterFileGoTrezarcoin
+			srcFileGWServer = CAppServerFileGoTrezarcoin
+		}
+	}
+	if err != nil {
+		return fmt.Errorf("Error: - %v", err)
 	}
 
 	// coin-cli
@@ -789,61 +812,42 @@ func GetAppFileName(an APPType) (string, error) {
 				return CAppServerFileCompiled, nil
 			}
 		}
+	case PTTrezarcoin:
+		switch an {
+		case APPTCLI:
+			if runtime.GOOS == "windows" {
+				return CAppCLIFileWinGoTrezarcoin, nil
+			} else {
+				return CAppCLIFileGoTrezarcoin, nil
+			}
+		case APPTCLICompiled:
+			if runtime.GOOS == "windows" {
+				return CAppCLIFileCompiledWin, nil
+			} else {
+				return CAppCLIFileCompiled, nil
+			}
+		case APPTInstaller:
+			if runtime.GOOS == "windows" {
+				return CAppCLIFileInstallerWinGoTrezarcoin, nil
+			} else {
+				return CAppCLIFileInstallerGoTrezarcoin, nil
+			}
+		case APPTServer:
+			if runtime.GOOS == "windows" {
+				return CAppServerFileWinGoTrezarcoin, nil
+			} else {
+				return CAppServerFileGoTrezarcoin, nil
+			}
+		case APPTServerCompiled:
+			if runtime.GOOS == "windows" {
+				return CAppServerFileCompiledWin, nil
+			} else {
+				return CAppServerFileCompiled, nil
+			}
+		}
 	}
 	return "", nil
 }
-
-// // GetAppCLIFileName - Returns the name of the app cli binary file e.g. godivi
-// func GetAppCLIFileName() (string, error) {
-// 	gwconf, err := GetConfigStruct(false)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	switch gwconf.ProjectType {
-// 	case PTDivi:
-// 		return CAppCLIFileGoDivi, nil
-// 	}
-// 	return "", nil
-// }
-
-// // GetAppInstallerFileName - Returns the name of the app installer binary file e.g. "godivi-installer"
-// func GetAppInstallerFileName() (string, error) {
-// 	gwconf, err := GetConfigStruct(false)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	switch gwconf.ProjectType {
-// 	case PTDivi:
-// 		return CAppCLIFileInstallerGoDivi, nil
-// 	}
-// 	return "", nil
-// }
-
-// // GetAppServerFileName - Returns the name of the app server binary file e.g. godivis
-// func GetAppServerFileName() (string, error) {
-// 	gwconf, err := GetConfigStruct(false)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	switch gwconf.ProjectType {
-// 	case PTDivi:
-// 		return CAppServerFileGoDivi, nil
-// 	}
-// 	return "", nil
-// }
-
-// // GetAppUpdaterFileName - Returns the name of the app updater binary file e.g. update-godivi
-// func GetAppUpdaterFileName() (string, error) {
-// 	gwconf, err := GetConfigStruct(false)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	switch gwconf.ProjectType {
-// 	case PTDivi:
-// 		return CAppUpdaterFileGoDivi, nil
-// 	}
-// 	return "", nil
-// }
 
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
@@ -854,6 +858,8 @@ func GetAppCLIName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameCLIGoDivi, nil
+	case PTTrezarcoin:
+		return CAppNameCLIGoTrezarcoin, nil
 	}
 	return "", nil
 }
@@ -867,6 +873,8 @@ func GetAppServerName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameServerGoDivi, nil
+	case PTTrezarcoin:
+		return CAppNameServerGoTrezarcoin, nil
 	}
 	return "", nil
 }
@@ -880,6 +888,8 @@ func GetAppName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameGoDivi, nil
+	case PTTrezarcoin:
+		return CAppNameGoTrezarcoin, nil
 	}
 	return "", nil
 }
@@ -893,6 +903,8 @@ func GetCoinDaemonFilename() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return cDiviDFile, nil
+	case PTTrezarcoin:
+		return cTrezarcoinDFile, nil
 	}
 	return "", nil
 }
@@ -915,11 +927,15 @@ func GetCoinHomeFolder() (string, error) {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
+		case PTTrezarcoin:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinHomeDirWin)
 		}
 	} else {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
+		case PTTrezarcoin:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinHomeDir)
 		}
 	}
 	return s, nil
@@ -934,6 +950,8 @@ func GetCoinName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return cCoinNameDivi, nil
+	case PTTrezarcoin:
+		return cCoinNameTrezarcoin, nil
 	}
 	return "", nil
 }
@@ -954,6 +972,15 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 		case OSTWindows:
 			return cDownloadURLDP, cDFDiviWindows, nil
 		}
+	case PTTrezarcoin:
+		switch ostype {
+		case OSTArm:
+			return cDownloadURLTC, cDFTrezarcoinRPi, nil
+		case OSTLinux:
+			return cDownloadURLTC, cDFTrezarcoinLinux, nil
+		case OSTWindows:
+			return cDownloadURLTC, cDFTrezarcoinWindows, nil
+		}
 	}
 	return "", "", nil
 }
@@ -973,6 +1000,15 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
+		}
+	case PTTrezarcoin:
+		switch ostype {
+		case OSTArm:
+			return CDownloadURLGD, CDFileGoTrezarcoinLatetsARM, nil
+		case OSTLinux:
+			return CDownloadURLGD, CDFileGoTrezarcoinLatetsLinux, nil
+		case OSTWindows:
+			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
 		}
 	}
 	return "", "", nil
@@ -1275,6 +1311,12 @@ func IsAppCLIRunning() (bool, int, error) {
 		} else {
 			pid, _, err = findProcess(CAppCLIFileGoDivi)
 		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppCLIFileWinGoTrezarcoin)
+		} else {
+			pid, _, err = findProcess(CAppCLIFileGoTrezarcoin)
+		}
 	}
 
 	if err == nil {
@@ -1299,6 +1341,12 @@ func IsAppServerRunning() (bool, int, error) {
 			pid, _, err = findProcess(CAppServerFileWinGoDivi)
 		} else {
 			pid, _, err = findProcess(CAppServerFileGoDivi)
+		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppServerFileWinGoTrezarcoin)
+		} else {
+			pid, _, err = findProcess(CAppServerFileGoTrezarcoin)
 		}
 	}
 
@@ -1406,11 +1454,47 @@ func RunCoinDaemon(displayOutput bool) error {
 				}
 			}
 		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			//_ = exec.Command(GetAppsBinFolder() + cDiviDFileWin)
+			fp := abf + cTrezarcoinDFileWin
+			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+			if err := cmd.Run(); err != nil {
+				return err
+			}
+
+		} else {
+			if displayOutput {
+				fmt.Println("Attempting to run the trezarcoind daemon...")
+			}
+
+			cmdRun := exec.Command(abf + cTrezarcoinDFile)
+			stdout, err := cmdRun.StdoutPipe()
+			if err != nil {
+				return err
+			}
+			cmdRun.Start()
+
+			buf := bufio.NewReader(stdout) // Notice that this is not in a loop
+			num := 1
+			for {
+				line, _, _ := buf.ReadLine()
+				if num > 3 {
+					os.Exit(0)
+				}
+				num++
+				return nil
+				if string(line) == "" {
+					return nil
+				} else {
+					return errors.New("Unable to start Trezarcoin daemon")
+		}
+
 	}
 
 	return nil
 }
-
+	
 // RunAppServer - Runs the App Server
 func RunAppServer(displayOutput bool) error {
 	idr, _, _ := IsAppServerRunning()
@@ -1438,6 +1522,23 @@ func RunAppServer(displayOutput bool) error {
 			}
 
 			cmdRun := exec.Command(abf + CAppServerFileGoDivi)
+			if err := cmdRun.Start(); err != nil {
+				return fmt.Errorf("Failed to start cmd: %v", err)
+			}
+		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			fp := abf + CAppServerFileWinGoTrezarcoin
+			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+			if err := cmd.Run(); err != nil {
+				return err
+			}
+		} else {
+			if displayOutput {
+				fmt.Println("Attempting to run " + CAppNameServerGoTrezarcoin + "...")
+			}
+
+			cmdRun := exec.Command(abf + CAppServerFileGoTrezarcoin)
 			if err := cmdRun.Start(); err != nil {
 				return fmt.Errorf("Failed to start cmd: %v", err)
 			}
@@ -1504,6 +1605,53 @@ func RunInitialDaemon() error {
 			log.Fatal(err)
 		}
 
+		return nil
+	case PTTrezarcoin:
+		//Run divid for the first time, so that we can get the outputted info to build the conf file
+		fmt.Println("About to run divid for the first time...")
+		cmdDividRun := exec.Command(abf + cDiviDFile)
+		out, _ := cmdDividRun.CombinedOutput()
+		// out, err := cmdDividRun.CombinedOutput()
+		// if err != nil {
+		// 	return fmt.Errorf("Unable to run "+abf+cDiviDFile+" - %v", err)
+		// }
+		fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
+
+		scanner := bufio.NewScanner(strings.NewReader(string(out)))
+		var rpcuser, rpcpw string
+		for scanner.Scan() {
+			s := scanner.Text()
+			if strings.Contains(s, cRPCUserStr) {
+				rpcuser = strings.ReplaceAll(s, cRPCUserStr+"=", "")
+			}
+			if strings.Contains(s, cRPCPasswordStr) {
+				rpcpw = strings.ReplaceAll(s, cRPCPasswordStr+"=", "")
+			}
+		}
+
+		chd, _ := GetCoinHomeFolder()
+
+		err = WriteTextToFile(chd+cDiviConfFile, cRPCUserStr+"="+rpcuser)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+cDiviConfFile, cRPCPasswordStr+"="+rpcpw)
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+cDiviConfFile, "")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+cDiviConfFile, "daemon=1")
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = WriteTextToFile(chd+cDiviConfFile, "")
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		// Now get a list of the latest "addnodes" and add them to the file:
 		// I've commented out the below, as I think it might cause future issues with blockchain syncing,
 		// because, I think that the ipaddresess in the conf file are used before any others are picked up,
@@ -1515,6 +1663,7 @@ func RunInitialDaemon() error {
 		// gdc.WriteTextToFile(dhd+gdc.CDiviConfFile, sAddnodes)
 
 		return nil
+
 	}
 	return nil
 }

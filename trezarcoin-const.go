@@ -1,6 +1,9 @@
 package gwcommon
 
 const (
+	cCoinNameTrezarcoin string = "Trezarcoin"
+	cDownloadURLTC      string = "https://github.com/TrezarCoin/TrezarCoin/releases/download/2.0.1.0/"
+
 	// CTrezarcoinAppVersion - The app version of Trezarcoin
 	CTrezarcoinAppVersion string = "2.01"
 	cTrezarcoinHomeDir    string = ".trezarcoin"
@@ -33,7 +36,7 @@ const (
 	cDFTrezarcoinWindows string = "trezarcoin-2.0.1-win64-setup.exe"
 
 	// GoDivi - Only to be used by GoDeploy
-	CAppCLIFileTrezarcoin               string = "gotrezarcoin"
+	CAppCLIFileGoTrezarcoin             string = "gotrezarcoin"
 	CAppCLIFileWinGoTrezarcoin          string = "gotrezarcoin.exe"
 	CAppCLIFileInstallerGoTrezarcoin    string = "gotrezarcoin-installer"
 	CAppCLIFileInstallerWinGoTrezarcoin string = "gotrezarcoin-installer.exe"
