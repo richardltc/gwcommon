@@ -1455,46 +1455,11 @@ func RunCoinDaemon(displayOutput bool) error {
 			}
 		}
 	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
-			//_ = exec.Command(GetAppsBinFolder() + cDiviDFileWin)
-			fp := abf + cTrezarcoinDFileWin
-			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-			if err := cmd.Run(); err != nil {
-				return err
-			}
-
-		} else {
-			if displayOutput {
-				fmt.Println("Attempting to run the trezarcoind daemon...")
-			}
-
-			cmdRun := exec.Command(abf + cTrezarcoinDFile)
-			stdout, err := cmdRun.StdoutPipe()
-			if err != nil {
-				return err
-			}
-			cmdRun.Start()
-
-			buf := bufio.NewReader(stdout) // Notice that this is not in a loop
-			num := 1
-			for {
-				line, _, _ := buf.ReadLine()
-				if num > 3 {
-					os.Exit(0)
-				}
-				num++
-				return nil
-				if string(line) == "" {
-					return nil
-				} else {
-					return errors.New("Unable to start Trezarcoin daemon")
-		}
 
 	}
-
 	return nil
 }
-	
+
 // RunAppServer - Runs the App Server
 func RunAppServer(displayOutput bool) error {
 	idr, _, _ := IsAppServerRunning()
@@ -1554,6 +1519,11 @@ func RunInitialDaemon() error {
 	if err != nil {
 		return fmt.Errorf("Unable to GetAppsBinFolder - %v", err)
 	}
+	coind, err := GetCoinDaemonFilename()
+	if err != nil {
+		return fmt.Errorf("Unable to GetCoinDaemonFilename - %v", err)
+	}
+
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
 		return fmt.Errorf("Unable to GetConfigStruct - %v", err)
@@ -1561,54 +1531,7 @@ func RunInitialDaemon() error {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
-		fmt.Println("About to run divid for the first time...")
-		cmdDividRun := exec.Command(abf + cDiviDFile)
-		out, _ := cmdDividRun.CombinedOutput()
-		// out, err := cmdDividRun.CombinedOutput()
-		// if err != nil {
-		// 	return fmt.Errorf("Unable to run "+abf+cDiviDFile+" - %v", err)
-		// }
-		fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
-
-		scanner := bufio.NewScanner(strings.NewReader(string(out)))
-		var rpcuser, rpcpw string
-		for scanner.Scan() {
-			s := scanner.Text()
-			if strings.Contains(s, cRPCUserStr) {
-				rpcuser = strings.ReplaceAll(s, cRPCUserStr+"=", "")
-			}
-			if strings.Contains(s, cRPCPasswordStr) {
-				rpcpw = strings.ReplaceAll(s, cRPCPasswordStr+"=", "")
-			}
-		}
-
-		chd, _ := GetCoinHomeFolder()
-
-		err = WriteTextToFile(chd+cDiviConfFile, cRPCUserStr+"="+rpcuser)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, cRPCPasswordStr+"="+rpcpw)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, "")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, "daemon=1")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, "")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		return nil
-	case PTTrezarcoin:
-		//Run divid for the first time, so that we can get the outputted info to build the conf file
-		fmt.Println("About to run divid for the first time...")
+		fmt.Println("About to run " + coind + " for the first time...")
 		cmdDividRun := exec.Command(abf + cDiviDFile)
 		out, _ := cmdDividRun.CombinedOutput()
 		// out, err := cmdDividRun.CombinedOutput()
@@ -1663,6 +1586,59 @@ func RunInitialDaemon() error {
 		// gdc.WriteTextToFile(dhd+gdc.CDiviConfFile, sAddnodes)
 
 		return nil
+	case PTTrezarcoin:
+		//Run divid for the first time, so that we can get the outputted info to build the conf file
+		fmt.Println("About to run " + coind + " for the first time...")
+		cmdTrezarCDRun := exec.Command(abf + cDiviDFile)
+		_, _ := cmdTrezarCDRun.CombinedOutput()
+		// fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
+
+		// scanner := bufio.NewScanner(strings.NewReader(string(out)))
+		// var rpcuser, rpcpw string
+		// for scanner.Scan() {
+		// 	s := scanner.Text()
+		// 	if strings.Contains(s, cRPCUserStr) {
+		// 		rpcuser = strings.ReplaceAll(s, cRPCUserStr+"=", "")
+		// 	}
+		// 	if strings.Contains(s, cRPCPasswordStr) {
+		// 		rpcpw = strings.ReplaceAll(s, cRPCPasswordStr+"=", "")
+		// 	}
+		// }
+
+		// chd, _ := GetCoinHomeFolder()
+
+		// err = WriteTextToFile(chd+cDiviConfFile, cRPCUserStr+"="+rpcuser)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// err = WriteTextToFile(chd+cDiviConfFile, cRPCPasswordStr+"="+rpcpw)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// err = WriteTextToFile(chd+cDiviConfFile, "")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// err = WriteTextToFile(chd+cDiviConfFile, "daemon=1")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// err = WriteTextToFile(chd+cDiviConfFile, "")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		// Now get a list of the latest "addnodes" and add them to the file:
+		// I've commented out the below, as I think it might cause future issues with blockchain syncing,
+		// because, I think that the ipaddresess in the conf file are used before any others are picked up,
+		// so, it's possible that they could all go, and then cause issues.
+
+		// gdc.AddToLog(lfp, "Adding latest master nodes to "+gdc.CDiviConfFile)
+		// addnodes, _ := gdc.GetAddNodes()
+		// sAddnodes := string(addnodes[:])
+		// gdc.WriteTextToFile(dhd+gdc.CDiviConfFile, sAddnodes)
+
+		return nil
 
 	}
 	return nil
@@ -1677,6 +1653,11 @@ func StopCoinDaemon() error {
 	}
 
 	dbf, _ := GetAppsBinFolder()
+	coind, err := GetCoinDaemonFilename()
+	if err != nil {
+		return fmt.Errorf("Unable to GetCoinDaemonFilename - %v", err)
+	}
+
 	gwconf, err := GetConfigStruct(false)
 	if err != nil {
 		return err
@@ -1697,6 +1678,25 @@ func StopCoinDaemon() error {
 					return nil
 				}
 				fmt.Printf("\rWaiting for divid server to stop %d/"+strconv.Itoa(50), i+1)
+				time.Sleep(3 * time.Second)
+
+			}
+		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			// TODO Complete for Windows
+		} else {
+			cRun := exec.Command(dbf+cTrezarcoinCliFile, "stop")
+			if err := cRun.Run(); err != nil {
+				return fmt.Errorf("Unable to StopCoinDaemon:%v", err)
+			}
+
+			for i := 0; i < 50; i++ {
+				sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
+				if !sr {
+					return nil
+				}
+				fmt.Printf("\rWaiting for "+coind+" server to stop %d/"+strconv.Itoa(50), i+1)
 				time.Sleep(3 * time.Second)
 
 			}
