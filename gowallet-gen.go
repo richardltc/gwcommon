@@ -1590,7 +1590,7 @@ func RunInitialDaemon() error {
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
 		fmt.Println("About to run " + coind + " for the first time...")
 		cmdTrezarCDRun := exec.Command(abf + cDiviDFile)
-		_, _ := cmdTrezarCDRun.CombinedOutput()
+		_, _ = cmdTrezarCDRun.CombinedOutput()
 		// fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
 
 		// scanner := bufio.NewScanner(strings.NewReader(string(out)))
