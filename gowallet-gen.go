@@ -864,6 +864,21 @@ func GetAppCLIName() (string, error) {
 	return "", nil
 }
 
+// GetAppLogfileName - Returns the application logfile name e.g. godivi.log
+func GetAppLogfileName() (string, error) {
+	gwconf, err := GetConfigStruct(false)
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		return CAppCLILogfileGoDivi, nil
+	case PTTrezarcoin:
+		return CAppCLILogfileGoTrezarcoin, nil
+	}
+	return "", nil
+}
+
 // GetAppServerName - Returns the application Server name e.g. GoDivi Server
 func GetAppServerName() (string, error) {
 	gwconf, err := GetConfigStruct(false)
