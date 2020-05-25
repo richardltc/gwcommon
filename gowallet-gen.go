@@ -458,8 +458,8 @@ func DoRequiredFiles() error {
 		} else if runtime.GOARCH == "arm" {
 			err = errors.New("Windows in not currently supported for Trezarcoin")
 		} else {
-			srcPath = "./trezarcoin-2.0.1-linux64/"
-			srcRoot = "./trezarcoin-2.0.1-linux64/"
+			srcPath = "./"
+			srcRoot = "./"
 			srcFileCLI = cTrezarcoinCliFile
 			srcFileD = cTrezarcoinDFile
 			srcFileTX = cTrezarcoinTxFile
