@@ -761,12 +761,16 @@ func GetAppsBinFolder() (string, error) {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+		case PTTrezarcoin:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
 		}
 
 	} else {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+		case PTTrezarcoin:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
 		}
 	}
 	return s, nil
