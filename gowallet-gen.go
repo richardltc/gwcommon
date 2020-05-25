@@ -366,13 +366,13 @@ func DoRequiredFiles() error {
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
 			filePath = abf + cDFTrezarcoinWindows
-			fileURL = cDownloadURLDP + cDFTrezarcoinWindows
+			fileURL = cDownloadURLTC + cDFTrezarcoinWindows
 		} else if runtime.GOARCH == "arm" {
 			filePath = abf + cDFTrezarcoinRPi
-			fileURL = cDownloadURLDP + cDFTrezarcoinRPi
+			fileURL = cDownloadURLTC + cDFTrezarcoinRPi
 		} else {
 			filePath = abf + cDFTrezarcoinLinux
-			fileURL = cDownloadURLDP + cDFTrezarcoinLinux
+			fileURL = cDownloadURLTC + cDFTrezarcoinLinux
 		}
 	default:
 		err = errors.New("Unable to determine ProjectType")
