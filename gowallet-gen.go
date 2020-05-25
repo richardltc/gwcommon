@@ -412,6 +412,11 @@ func DoRequiredFiles() error {
 			}
 		}
 	}
+	log.Print("Removing downloaded file...")
+	err = FileDelete(filePath)
+	if err != nil {
+		return fmt.Errorf("error deleting file: %v - %v", filePath, err)
+	}
 
 	log.Print("Installing files...")
 
@@ -548,9 +553,34 @@ func DoRequiredFiles() error {
 				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
 			}
 		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			// TODO Code the Windows part
+		} else if runtime.GOARCH == "arm" {
+			err = FileCopy("./"+CAppUpdaterFileGoTrezarcoin, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+
+		} else {
+			err = FileCopy("./"+CAppUpdaterFileGoTrezarcoin, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
-	// Copy the godivis file
+	// Copy the App Server file
 	switch gwconf.ProjectType {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
@@ -575,17 +605,42 @@ func DoRequiredFiles() error {
 				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
 			}
 		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			// TODO Code the Windows part
+		} else if runtime.GOARCH == "arm" {
+			err = FileCopy("./"+CAppServerFileGoTrezarcoin, abf+srcFileGWServer, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
+			}
+			err = os.Chmod(abf+srcFileGWServer, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
+			}
+
+		} else {
+			err = FileCopy("./"+CAppServerFileGoTrezarcoin, abf+srcFileGWServer, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
+			}
+			err = os.Chmod(abf+srcFileGWServer, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
+			}
+		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
+
 	}
 
-	err = os.RemoveAll(srcRoot)
-	if err != nil {
-		return fmt.Errorf("error performing os.RemoveAll - %v", err)
+	switch gwconf.ProjectType {
+	case PTDivi:
+		err = os.RemoveAll(srcRoot)
+		if err != nil {
+			return fmt.Errorf("error performing os.RemoveAll - %v", err)
+		}
+	case PTTrezarcoin:
 	}
-	err = FileDelete(filePath)
-	if err != nil {
-		return fmt.Errorf("error deleting file: %v - %v", filePath, err)
-	}
-
 	return nil
 }
 
