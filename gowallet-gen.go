@@ -1274,6 +1274,12 @@ func IsCoinDaemonRunning() (bool, int, error) {
 		} else {
 			pid, _, err = findProcess(cDiviDFile)
 		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(cTrezarcoinDFileWin)
+		} else {
+			pid, _, err = findProcess(cTrezarcoinDFile)
+		}
 	}
 
 	if err == nil {
