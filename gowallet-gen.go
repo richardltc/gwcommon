@@ -815,7 +815,16 @@ func GetAppFileName(an APPType) (string, error) {
 			} else {
 				return CAppServerFileCompiled, nil
 			}
+		case APPTUpdater:
+			if runtime.GOOS == "windows" {
+				return CAppUpdaterFileWinGoDivi, nil
+			} else {
+				return CAppUpdaterFileGoDivi, nil
+			}
+		default:
+			err = errors.New("Unable to determine ProjectType")
 		}
+
 	case PTTrezarcoin:
 		switch an {
 		case APPTCLI:
@@ -848,7 +857,18 @@ func GetAppFileName(an APPType) (string, error) {
 			} else {
 				return CAppServerFileCompiled, nil
 			}
+		case APPTUpdater:
+			if runtime.GOOS == "windows" {
+				return CAppUpdaterFileWinGoTrezarcoin, nil
+			} else {
+				return CAppUpdaterFileGoTrezarcoin, nil
+			}
+		default:
+			err = errors.New("Unable to determine APPType")
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
+
 	}
 	return "", nil
 }
@@ -864,6 +884,8 @@ func GetAppCLIName() (string, error) {
 		return CAppNameCLIGoDivi, nil
 	case PTTrezarcoin:
 		return CAppNameCLIGoTrezarcoin, nil
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	return "", nil
 }
@@ -879,6 +901,9 @@ func GetAppLogfileName() (string, error) {
 		return CAppCLILogfileGoDivi, nil
 	case PTTrezarcoin:
 		return CAppCLILogfileGoTrezarcoin, nil
+	default:
+		err = errors.New("Unable to determine ProjectType")
+
 	}
 	return "", nil
 }
@@ -894,6 +919,9 @@ func GetAppServerName() (string, error) {
 		return CAppNameServerGoDivi, nil
 	case PTTrezarcoin:
 		return CAppNameServerGoTrezarcoin, nil
+	default:
+		err = errors.New("Unable to determine ProjectType")
+
 	}
 	return "", nil
 }
@@ -909,6 +937,9 @@ func GetAppName() (string, error) {
 		return CAppNameGoDivi, nil
 	case PTTrezarcoin:
 		return CAppNameGoTrezarcoin, nil
+	default:
+		err = errors.New("Unable to determine ProjectType")
+
 	}
 	return "", nil
 }
@@ -924,6 +955,9 @@ func GetCoinDaemonFilename() (string, error) {
 		return cDiviDFile, nil
 	case PTTrezarcoin:
 		return cTrezarcoinDFile, nil
+	default:
+		err = errors.New("Unable to determine ProjectType")
+
 	}
 	return "", nil
 }
@@ -948,6 +982,9 @@ func GetCoinHomeFolder() (string, error) {
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinHomeDirWin)
+		default:
+			err = errors.New("Unable to determine ProjectType")
+
 		}
 	} else {
 		switch gwconf.ProjectType {
@@ -955,6 +992,9 @@ func GetCoinHomeFolder() (string, error) {
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinHomeDir)
+		default:
+			err = errors.New("Unable to determine ProjectType")
+
 		}
 	}
 	return s, nil
@@ -971,6 +1011,8 @@ func GetCoinName() (string, error) {
 		return cCoinNameDivi, nil
 	case PTTrezarcoin:
 		return cCoinNameTrezarcoin, nil
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	return "", nil
 }
@@ -1000,6 +1042,8 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 		case OSTWindows:
 			return cDownloadURLTC, cDFTrezarcoinWindows, nil
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	return "", "", nil
 }
@@ -1029,6 +1073,8 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	return "", "", nil
 }
@@ -1280,6 +1326,8 @@ func IsCoinDaemonRunning() (bool, int, error) {
 		} else {
 			pid, _, err = findProcess(cTrezarcoinDFile)
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	if err == nil {
@@ -1342,6 +1390,8 @@ func IsAppCLIRunning() (bool, int, error) {
 		} else {
 			pid, _, err = findProcess(CAppCLIFileGoTrezarcoin)
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	if err == nil {
@@ -1373,6 +1423,8 @@ func IsAppServerRunning() (bool, int, error) {
 		} else {
 			pid, _, err = findProcess(CAppServerFileGoTrezarcoin)
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	if err == nil {
@@ -1533,6 +1585,8 @@ func RunAppServer(displayOutput bool) error {
 				return fmt.Errorf("Failed to start cmd: %v", err)
 			}
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	return nil
@@ -1726,6 +1780,8 @@ func StopCoinDaemon() error {
 
 			}
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	return nil
