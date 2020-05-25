@@ -476,7 +476,7 @@ func DoRequiredFiles() error {
 	// coin-cli
 	err = FileCopy(srcPath+srcFileCLI, abf+srcFileCLI, false)
 	if err != nil {
-		return fmt.Errorf("Unable to copyFile: %v - %v", srcPath+srcFileCLI, err)
+		return fmt.Errorf("Unable to copyFile from: %v to %v - %v", srcPath+srcFileCLI, abf+srcFileCLI, err)
 	}
 	err = os.Chmod(abf+srcFileCLI, 0777)
 	if err != nil {
