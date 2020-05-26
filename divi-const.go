@@ -22,13 +22,14 @@ const (
 	CAppNameCLIGoDivi     string = "GoDivi CLI"
 	CAppNameServerGoDivi  string = "GoDivi Server"
 
-	cDiviConfFile   string = "divi.conf"
-	cDiviCliFile    string = "divi-cli"
-	cDiviCliFileWin string = "divi-cli.exe"
-	cDiviDFile      string = "divid"
-	cDiviDFileWin   string = "divid.exe"
-	cDiviTxFile     string = "divi-tx"
-	cDiviTxFileWin  string = "divi-tx.exe"
+	cDiviConfFile     string = "divi.conf"
+	cDiviCliFile      string = "divi-cli"
+	cDiviCliFileWin   string = "divi-cli.exe"
+	cDiviDFile        string = "divid"
+	cDiviDFileWin     string = "divid.exe"
+	cDiviTxFile       string = "divi-tx"
+	cDiviTxFileWin    string = "divi-tx.exe"
+	cDiviExtractedDir string = "divi-1.0.8/"
 
 	// Divi public download files
 	cDFDiviRPi     string = "divi-1.0.8-RPi2.tar.gz"

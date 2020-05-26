@@ -378,13 +378,14 @@ func DoRequiredFiles() error {
 		err = errors.New("Unable to determine ProjectType")
 	}
 	if err != nil {
-		return fmt.Errorf("Unable to determine project type - %v", err)
+		return fmt.Errorf("Error - %v", err)
 	}
 
 	log.Print("Downloading required files...")
 	if err := DownloadFile(filePath, fileURL); err != nil {
 		return fmt.Errorf("Unable to download file: %v - %v", filePath+fileURL, err)
 	}
+	defer FileDelete(filePath)
 
 	r, err := os.Open(filePath)
 	if err != nil {
@@ -394,7 +395,27 @@ func DoRequiredFiles() error {
 	// Now, uncompress the files...
 	log.Print("Uncompressing files...")
 	switch gwconf.ProjectType {
-	case PTDivi, PTTrezarcoin:
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			_, err = UnZip(filePath, "tmp")
+			if err != nil {
+				return fmt.Errorf("Unable to unzip file: %v - %v", filePath, err)
+			}
+			defer os.RemoveAll("tmp")
+		} else if runtime.GOARCH == "arm" {
+			err = extractTarGz(r)
+			if err != nil {
+				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+			}
+			err = os.RemoveAll("./" + cDiviExtractedDir)
+		} else {
+			err = extractTarGz(r)
+			if err != nil {
+				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+			}
+			err = os.RemoveAll("./" + cDiviExtractedDir)
+		}
+	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
 			_, err = UnZip(filePath, "tmp")
 			if err != nil {
@@ -412,21 +433,15 @@ func DoRequiredFiles() error {
 			}
 		}
 	}
-	log.Print("Removing downloaded file...")
-	err = FileDelete(filePath)
-	if err != nil {
-		return fmt.Errorf("error deleting file: %v - %v", filePath, err)
-	}
 
 	log.Print("Installing files...")
 
 	// Copy files to correct location
-	var srcPath, srcRoot, srcFileCLI, srcFileD, srcFileTX, srcFileGWConf, srcFileGWCLI, srcFileGWUprade, srcFileGWServer string
+	var srcPath, srcFileCLI, srcFileD, srcFileTX, srcFileGWConf, srcFileGWCLI, srcFileGWUprade, srcFileGWServer string
 	switch gwconf.ProjectType {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
-			srcPath = "./tmp/divi-1.0.8/bin/"
-			srcRoot = "./tmp/"
+			srcPath = "./tmp/" + cDiviExtractedDir + "bin/"
 			srcFileCLI = cDiviCliFileWin
 			srcFileD = cDiviDFileWin
 			srcFileTX = cDiviTxFileWin
@@ -435,8 +450,7 @@ func DoRequiredFiles() error {
 			srcFileGWServer = CAppServerFileWinGoDivi
 
 		} else if runtime.GOARCH == "arm" {
-			srcPath = "./divi-1.0.8/bin/"
-			srcRoot = "./divi-1.0.8/"
+			srcPath = "./" + cDiviExtractedDir + "bin/"
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
 			srcFileTX = cDiviTxFile
@@ -446,8 +460,7 @@ func DoRequiredFiles() error {
 			srcFileGWServer = CAppServerFileGoDivi
 
 		} else {
-			srcPath = "./divi-1.0.8/bin/"
-			srcRoot = "./divi-1.0.8/"
+			srcPath = "./" + cDiviExtractedDir + "bin/"
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
 			srcFileTX = cDiviTxFile
@@ -461,10 +474,9 @@ func DoRequiredFiles() error {
 			err = errors.New("Windows in not currently supported for Trezarcoin")
 
 		} else if runtime.GOARCH == "arm" {
-			err = errors.New("Windows in not currently supported for Trezarcoin")
+			err = errors.New("Arm in not currently supported for Trezarcoin")
 		} else {
 			srcPath = "./"
-			srcRoot = "./"
 			srcFileCLI = cTrezarcoinCliFile
 			srcFileD = cTrezarcoinDFile
 			srcFileTX = cTrezarcoinTxFile
@@ -633,14 +645,6 @@ func DoRequiredFiles() error {
 
 	}
 
-	switch gwconf.ProjectType {
-	case PTDivi:
-		err = os.RemoveAll(srcRoot)
-		if err != nil {
-			return fmt.Errorf("error performing os.RemoveAll - %v", err)
-		}
-	case PTTrezarcoin:
-	}
 	return nil
 }
 
@@ -668,6 +672,7 @@ func DoPrivKeyDisplay() error {
 	return nil
 }
 
+// DoPrivKeyFile - Handles the private key
 func DoPrivKeyFile() error {
 	dbf, err := GetAppsBinFolder()
 	if err != nil {
