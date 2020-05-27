@@ -407,13 +407,13 @@ func DoRequiredFiles() error {
 			if err != nil {
 				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
 			}
-			err = os.RemoveAll("./" + cDiviExtractedDir)
+			defer os.RemoveAll("./" + cDiviExtractedDir)
 		} else {
 			err = extractTarGz(r)
 			if err != nil {
 				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
 			}
-			err = os.RemoveAll("./" + cDiviExtractedDir)
+			defer os.RemoveAll("./" + cDiviExtractedDir)
 		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
@@ -421,6 +421,7 @@ func DoRequiredFiles() error {
 			if err != nil {
 				return fmt.Errorf("Unable to unzip file: %v - %v", filePath, err)
 			}
+			defer os.RemoveAll("tmp")
 		} else if runtime.GOARCH == "arm" {
 			err = extractTarGz(r)
 			if err != nil {
@@ -471,10 +472,10 @@ func DoRequiredFiles() error {
 		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
-			err = errors.New("Windows in not currently supported for Trezarcoin")
+			err = errors.New("Windows is not currently supported for Trezarcoin")
 
 		} else if runtime.GOARCH == "arm" {
-			err = errors.New("Arm in not currently supported for Trezarcoin")
+			err = errors.New("Arm is not currently supported for Trezarcoin")
 		} else {
 			srcPath = "./"
 			srcFileCLI = cTrezarcoinCliFile
