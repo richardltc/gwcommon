@@ -1727,8 +1727,8 @@ func RunInitialDaemon() error {
 		return nil
 	case PTTrezarcoin:
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
-		fmt.Println("About to run " + coind + " for the first time...")
-		cmdTrezarCDRun := exec.Command(abf + cDiviDFile)
+		fmt.Println("Attempting to run " + coind + " for the first time...")
+		cmdTrezarCDRun := exec.Command(abf + coind)
 		if err := cmdTrezarCDRun.Run(); err != nil {
 			return err
 		}
