@@ -28,15 +28,20 @@ const (
 	// CDownloadURLGD - The download file lotcation for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
 
-	// GoWallet file constants
-	CAppCLIFileCompiled        string = "cli"
-	CAppCLIFileCompiledWin     string = "cli.exe"
-	CAppServerFileCompiled     string = "web"
-	CAppServerFileCompiledWin  string = "web.exe"
-	CAppUpdaterFileCompiled    string = "updater"
+	// CAppCLIFileCompiled - Should only be used by GoDeploy
+	CAppCLIFileCompiled string = "cli"
+	// CAppCLIFileCompiledWin - Should only be used by GoDeploy
+	CAppCLIFileCompiledWin string = "cli.exe"
+	// CAppServerFileCompiled - Should only be used by GoDeploy
+	CAppServerFileCompiled string = "web"
+	// CAppServerFileCompiledWin - Should only be used by GoDeploy
+	CAppServerFileCompiledWin string = "web.exe"
+	// CAppUpdaterFileCompiled - Should only be used by GoDeploy
+	CAppUpdaterFileCompiled string = "updater"
+	// CAppUpdaterFileCompiledWin - Should only be used by GoDeploy
 	CAppUpdaterFileCompiledWin string = "updater.exe"
 
-	CWalletSeedFileGoDivi string = "unsecure-divi-seed.txt"
+	cWalletSeedFileGoDivi string = "unsecure-divi-seed.txt"
 
 	// Divi-cli command constants
 	cCommandGetBCInfo     string = "getblockchaininfo"
@@ -433,6 +438,8 @@ func DoRequiredFiles() error {
 				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
 			}
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 
 	log.Print("Installing files...")
@@ -486,6 +493,8 @@ func DoRequiredFiles() error {
 			srcFileGWUprade = CAppUpdaterFileGoTrezarcoin
 			srcFileGWServer = CAppServerFileGoTrezarcoin
 		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	if err != nil {
 		return fmt.Errorf("Error: - %v", err)
@@ -824,6 +833,8 @@ func GetAppsBinFolder() (string, error) {
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
+		default:
+			err = errors.New("Unable to determine ProjectType")
 		}
 
 	} else {
@@ -832,6 +843,8 @@ func GetAppsBinFolder() (string, error) {
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
+		default:
+			err = errors.New("Unable to determine ProjectType")
 		}
 	}
 	return s, nil
@@ -1093,6 +1106,8 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 			return cDownloadURLDP, cDFDiviLinux, nil
 		case OSTWindows:
 			return cDownloadURLDP, cDFDiviWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
 		}
 	case PTTrezarcoin:
 		switch ostype {
@@ -1102,6 +1117,8 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 			return cDownloadURLTC, cDFTrezarcoinLinux, nil
 		case OSTWindows:
 			return cDownloadURLTC, cDFTrezarcoinWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
 		}
 	default:
 		err = errors.New("Unable to determine ProjectType")
@@ -1124,6 +1141,8 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
 		}
 	case PTTrezarcoin:
 		switch ostype {
@@ -1133,6 +1152,8 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 			return CDownloadURLGD, CDFileGoTrezarcoinLatetsLinux, nil
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
 		}
 	default:
 		err = errors.New("Unable to determine ProjectType")
@@ -1593,7 +1614,9 @@ func RunCoinDaemon(displayOutput bool) error {
 			}
 		}
 	case PTTrezarcoin:
-
+		// TODO Need to code this bit pronto!
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	return nil
 }
@@ -1736,6 +1759,8 @@ func RunInitialDaemon() error {
 
 		return nil
 
+	default:
+		err = errors.New("Unable to determine ProjectType")
 	}
 	return nil
 }
