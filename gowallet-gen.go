@@ -706,11 +706,11 @@ Please confirm that you understand the risks: `
 		}
 
 		// Now store the info in file
-		err = WriteTextToFile(dbf+CWalletSeedFileGoDivi, s)
+		err = WriteTextToFile(dbf+cWalletSeedFileGoDivi, s)
 		if err != nil {
 			return fmt.Errorf("error writing to file %s", err)
 		}
-		fmt.Println("Now please store the privte seed file somewhere safe. The file has been saved to: " + dbf + CWalletSeedFileGoDivi)
+		fmt.Println("Now please store the privte seed file somewhere safe. The file has been saved to: " + dbf + cWalletSeedFileGoDivi)
 	}
 	return nil
 }
