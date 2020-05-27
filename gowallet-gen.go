@@ -1729,53 +1729,9 @@ func RunInitialDaemon() error {
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
 		fmt.Println("About to run " + coind + " for the first time...")
 		cmdTrezarCDRun := exec.Command(abf + cDiviDFile)
-		_, _ = cmdTrezarCDRun.CombinedOutput()
-		// fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
-
-		// scanner := bufio.NewScanner(strings.NewReader(string(out)))
-		// var rpcuser, rpcpw string
-		// for scanner.Scan() {
-		// 	s := scanner.Text()
-		// 	if strings.Contains(s, cRPCUserStr) {
-		// 		rpcuser = strings.ReplaceAll(s, cRPCUserStr+"=", "")
-		// 	}
-		// 	if strings.Contains(s, cRPCPasswordStr) {
-		// 		rpcpw = strings.ReplaceAll(s, cRPCPasswordStr+"=", "")
-		// 	}
-		// }
-
-		// chd, _ := GetCoinHomeFolder()
-
-		// err = WriteTextToFile(chd+cDiviConfFile, cRPCUserStr+"="+rpcuser)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// err = WriteTextToFile(chd+cDiviConfFile, cRPCPasswordStr+"="+rpcpw)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// err = WriteTextToFile(chd+cDiviConfFile, "")
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// err = WriteTextToFile(chd+cDiviConfFile, "daemon=1")
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// err = WriteTextToFile(chd+cDiviConfFile, "")
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-
-		// Now get a list of the latest "addnodes" and add them to the file:
-		// I've commented out the below, as I think it might cause future issues with blockchain syncing,
-		// because, I think that the ipaddresess in the conf file are used before any others are picked up,
-		// so, it's possible that they could all go, and then cause issues.
-
-		// gdc.AddToLog(lfp, "Adding latest master nodes to "+gdc.CDiviConfFile)
-		// addnodes, _ := gdc.GetAddNodes()
-		// sAddnodes := string(addnodes[:])
-		// gdc.WriteTextToFile(dhd+gdc.CDiviConfFile, sAddnodes)
+		if err := cmdTrezarCDRun.Run(); err != nil {
+			return err
+		}
 
 		return nil
 
