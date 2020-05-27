@@ -1729,8 +1729,8 @@ func RunInitialDaemon() error {
 		//Run divid for the first time, so that we can get the outputted info to build the conf file
 		fmt.Println("Attempting to run " + coind + " for the first time...")
 		cmdTrezarCDRun := exec.Command(abf + coind)
-		if err := cmdTrezarCDRun.Run(); err != nil {
-			return err
+		if err := cmdTrezarCDRun.Start(); err != nil {
+			return fmt.Errorf("Failed to start %v: %v", coind, err)
 		}
 
 		return nil
