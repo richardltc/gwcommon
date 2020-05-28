@@ -29,7 +29,7 @@ Loop:
 		case <-t.C:
 			sProg := fmt.Sprintf("%.1f", 100*resp.Progress())
 			//fmt.Println(sProg + "% complete...")
-			fmt.Printf("\r" + sProg + `% complete...`)
+			fmt.Printf("\r" + sProg + "%% complete...")
 
 		case <-resp.Done:
 			// download is complete
