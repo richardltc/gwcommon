@@ -422,6 +422,26 @@ func DoRequiredFiles() error {
 			if err != nil {
 				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
 			}
+			defer os.RemoveAll("./" + cDiviExtractedDir)
+		} else {
+			err = extractTarGz(r)
+			if err != nil {
+				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+			}
+			defer os.RemoveAll("./" + cDiviExtractedDir)
+		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			_, err = UnZip(filePath, "tmp")
+			if err != nil {
+				return fmt.Errorf("Unable to unzip file: %v - %v", filePath, err)
+			}
+			defer os.RemoveAll("tmp")
+		} else if runtime.GOARCH == "arm" {
+			err = extractTarGz(r)
+			if err != nil {
+				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
+			}
 			defer os.RemoveAll("./" + cPIVXExtractedDirArm)
 		} else {
 			err = extractTarGz(r)
@@ -458,7 +478,8 @@ func DoRequiredFiles() error {
 	var srcPath, srcFileCLI, srcFileD, srcFileTX, srcFileGWConf, srcFileGWCLI, srcFileGWUprade, srcFileGWServer string
 	switch gwconf.ProjectType {
 	case PTDivi:
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "windows":
 			srcPath = "./tmp/" + cDiviExtractedDir + "bin/"
 			srcFileCLI = cDiviCliFileWin
 			srcFileD = cDiviDFileWin
@@ -466,8 +487,7 @@ func DoRequiredFiles() error {
 			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileWinGoDivi
 			srcFileGWServer = CAppServerFileWinGoDivi
-
-		} else if runtime.GOARCH == "arm" {
+		case "arm":
 			srcPath = "./" + cDiviExtractedDir + "bin/"
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
@@ -476,8 +496,7 @@ func DoRequiredFiles() error {
 			srcFileGWCLI = CAppCLIFileGoDivi
 			srcFileGWUprade = CAppUpdaterFileGoDivi
 			srcFileGWServer = CAppServerFileGoDivi
-
-		} else {
+		case "linux":
 			srcPath = "./" + cDiviExtractedDir + "bin/"
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
@@ -486,14 +505,47 @@ func DoRequiredFiles() error {
 			srcFileGWCLI = CAppCLIFileGoDivi
 			srcFileGWUprade = CAppUpdaterFileGoDivi
 			srcFileGWServer = CAppServerFileGoDivi
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
+		}
+	case PTPIVX:
+		switch runtime.GOOS {
+		case "windows":
+			srcPath = "./tmp/" + cPIVXExtractedDirWindows + "bin/"
+			srcFileCLI = cPIVXCliFileWin
+			srcFileD = cPIVXDFileWin
+			srcFileTX = cPIVXTxFileWin
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileWinGoPIVX
+			srcFileGWServer = CAppServerFileWinGoPIVX
+		case "arm":
+			srcPath = "./" + cPIVXExtractedDirArm + "bin/"
+			srcFileCLI = cPIVXCliFile
+			srcFileD = cPIVXDFile
+			srcFileTX = cPIVXTxFile
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileGoPIVX
+			srcFileGWUprade = CAppUpdaterFileGoPIVX
+			srcFileGWServer = CAppServerFileGoPIVX
+		case "linux":
+			srcPath = "./" + cPIVXExtractedDirLinux + "bin/"
+			srcFileCLI = cPIVXCliFile
+			srcFileD = cPIVXDFile
+			srcFileTX = cPIVXTxFile
+			srcFileGWConf = CConfFile
+			srcFileGWCLI = CAppCLIFileGoPIVX
+			srcFileGWUprade = CAppUpdaterFileGoPIVX
+			srcFileGWServer = CAppServerFileGoPIVX
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
 		}
 	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "windows":
 			err = errors.New("Windows is not currently supported for Trezarcoin")
-
-		} else if runtime.GOARCH == "arm" {
+		case "arm":
 			err = errors.New("Arm is not currently supported for Trezarcoin")
-		} else {
+		case "linux":
 			srcPath = "./"
 			srcFileCLI = cTrezarcoinCliFile
 			srcFileD = cTrezarcoinDFile
@@ -502,6 +554,8 @@ func DoRequiredFiles() error {
 			srcFileGWCLI = CAppCLIFileGoTrezarcoin
 			srcFileGWUprade = CAppUpdaterFileGoTrezarcoin
 			srcFileGWServer = CAppServerFileGoTrezarcoin
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
 		}
 	default:
 		err = errors.New("Unable to determine ProjectType")
@@ -563,20 +617,35 @@ func DoRequiredFiles() error {
 	// Copy the updater file
 	switch gwconf.ProjectType {
 	case PTDivi:
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "arm":
+			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+		case "linux":
+			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+		case "windows":
 			// TODO Code the Windows part
-		} else if runtime.GOARCH == "arm" {
-			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileGWUprade, false)
-			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
-			}
-			err = os.Chmod(abf+srcFileGWUprade, 0777)
-			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
-			}
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
 
-		} else {
-			err = FileCopy("./"+CAppUpdaterFileGoDivi, abf+srcFileGWUprade, false)
+		}
+	case PTPIVX:
+		switch runtime.GOOS {
+		case "arm":
+			err = FileCopy("./"+CAppUpdaterFileGoPIVX, abf+srcFileGWUprade, false)
 			if err != nil {
 				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
 			}
@@ -584,30 +653,47 @@ func DoRequiredFiles() error {
 			if err != nil {
 				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
 			}
+		case "linux":
+			err = FileCopy("./"+CAppUpdaterFileGoPIVX, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+		case "windows":
+			// TODO Code the Windows part
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
+
 		}
 	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "arm":
+			err = FileCopy("./"+CAppUpdaterFileGoTrezarcoin, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+		case "linux":
+			err = FileCopy("./"+CAppUpdaterFileGoTrezarcoin, abf+srcFileGWUprade, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
+			}
+			err = os.Chmod(abf+srcFileGWUprade, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
+			}
+		case "windows":
 			// TODO Code the Windows part
-		} else if runtime.GOARCH == "arm" {
-			err = FileCopy("./"+CAppUpdaterFileGoTrezarcoin, abf+srcFileGWUprade, false)
-			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
-			}
-			err = os.Chmod(abf+srcFileGWUprade, 0777)
-			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
-			}
-
-		} else {
-			err = FileCopy("./"+CAppUpdaterFileGoTrezarcoin, abf+srcFileGWUprade, false)
-			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWUprade, err)
-			}
-			err = os.Chmod(abf+srcFileGWUprade, 0777)
-			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWUprade, err)
-			}
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
 		}
+
 	default:
 		err = errors.New("Unable to determine ProjectType")
 	}
@@ -638,28 +724,31 @@ func DoRequiredFiles() error {
 			}
 		}
 	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
+		switch runtime.GOOS {
+		case "arm":
+			err = FileCopy("./"+CAppServerFileGoTrezarcoin, abf+srcFileGWServer, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
+			}
+			err = os.Chmod(abf+srcFileGWServer, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
+			}
+		case "linux":
+			err = FileCopy("./"+CAppServerFileGoTrezarcoin, abf+srcFileGWServer, false)
+			if err != nil {
+				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
+			}
+			err = os.Chmod(abf+srcFileGWServer, 0777)
+			if err != nil {
+				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
+			}
+		case "windows":
 			// TODO Code the Windows part
-		} else if runtime.GOARCH == "arm" {
-			err = FileCopy("./"+CAppServerFileGoTrezarcoin, abf+srcFileGWServer, false)
-			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
-			}
-			err = os.Chmod(abf+srcFileGWServer, 0777)
-			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
-			}
-
-		} else {
-			err = FileCopy("./"+CAppServerFileGoTrezarcoin, abf+srcFileGWServer, false)
-			if err != nil {
-				return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWServer, err)
-			}
-			err = os.Chmod(abf+srcFileGWServer, 0777)
-			if err != nil {
-				return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWServer, err)
-			}
+		default:
+			err = errors.New("Unable to determine runtime.GOOS")
 		}
+
 	default:
 		err = errors.New("Unable to determine ProjectType")
 
@@ -841,6 +930,8 @@ func GetAppsBinFolder() (string, error) {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+		case PTPIVX:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
 		default:
@@ -851,6 +942,8 @@ func GetAppsBinFolder() (string, error) {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+		case PTPIVX:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
 		default:
@@ -870,34 +963,60 @@ func GetAppFileName(an APPType) (string, error) {
 	case PTDivi:
 		switch an {
 		case APPTCLI:
-			if runtime.GOOS == "windows" {
-				return CAppCLIFileWinGoDivi, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppCLIFileGoDivi, nil
+			case "linux":
+				return CAppCLIFileGoDivi, nil
+			case "windows":
+				return CAppCLIFileWinGoDivi, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
+
 		case APPTCLICompiled:
-			if runtime.GOOS == "windows" {
-				return CAppCLIFileCompiledWin, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppCLIFileCompiled, nil
+			case "linux":
+				return CAppCLIFileCompiled, nil
+			case "windows":
+				return CAppCLIFileCompiledWin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTInstaller:
-			if runtime.GOOS == "windows" {
-				return CAppCLIFileInstallerWinGoDivi, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppCLIFileInstallerGoDivi, nil
+			case "linux":
+				return CAppCLIFileInstallerGoDivi, nil
+			case "windows":
+				return CAppCLIFileInstallerWinGoDivi, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTServer:
-			if runtime.GOOS == "windows" {
-				return CAppServerFileWinGoDivi, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppServerFileGoDivi, nil
+			case "linux":
+				return CAppServerFileGoDivi, nil
+			case "windows":
+				return CAppServerFileWinGoDivi, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTServerCompiled:
-			if runtime.GOOS == "windows" {
-				return CAppServerFileCompiledWin, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppServerFileCompiled, nil
+			case "linux":
+				return CAppServerFileCompiled, nil
+			case "windows":
+				return CAppServerFileCompiledWin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
@@ -908,47 +1027,138 @@ func GetAppFileName(an APPType) (string, error) {
 		default:
 			err = errors.New("Unable to determine ProjectType")
 		}
-
-	case PTTrezarcoin:
+	case PTPIVX:
 		switch an {
 		case APPTCLI:
-			if runtime.GOOS == "windows" {
-				return CAppCLIFileWinGoTrezarcoin, nil
-			} else {
-				return CAppCLIFileGoTrezarcoin, nil
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileGoPIVX, nil
+			case "linux":
+				return CAppCLIFileGoPIVX, nil
+			case "windows":
+				return CAppCLIFileWinGoPIVX, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
+
 		case APPTCLICompiled:
-			if runtime.GOOS == "windows" {
-				return CAppCLIFileCompiledWin, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppCLIFileCompiled, nil
+			case "linux":
+				return CAppCLIFileCompiled, nil
+			case "windows":
+				return CAppCLIFileCompiledWin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTInstaller:
-			if runtime.GOOS == "windows" {
-				return CAppCLIFileInstallerWinGoTrezarcoin, nil
-			} else {
-				return CAppCLIFileInstallerGoTrezarcoin, nil
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileInstallerGoPIVX, nil
+			case "linux":
+				return CAppCLIFileInstallerGoPIVX, nil
+			case "windows":
+				return CAppCLIFileInstallerWinGoPIVX, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTServer:
-			if runtime.GOOS == "windows" {
-				return CAppServerFileWinGoTrezarcoin, nil
-			} else {
-				return CAppServerFileGoTrezarcoin, nil
+			switch runtime.GOOS {
+			case "arm":
+				return CAppServerFileGoPIVX, nil
+			case "linux":
+				return CAppServerFileGoPIVX, nil
+			case "windows":
+				return CAppServerFileWinGoPIVX, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTServerCompiled:
-			if runtime.GOOS == "windows" {
-				return CAppServerFileCompiledWin, nil
-			} else {
+			switch runtime.GOOS {
+			case "arm":
 				return CAppServerFileCompiled, nil
+			case "linux":
+				return CAppServerFileCompiled, nil
+			case "windows":
+				return CAppServerFileCompiledWin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
 			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
-				return CAppUpdaterFileWinGoTrezarcoin, nil
+				return CAppUpdaterFileWinGoPIVX, nil
 			} else {
-				return CAppUpdaterFileGoTrezarcoin, nil
+				return CAppUpdaterFileGoPIVX, nil
 			}
 		default:
-			err = errors.New("Unable to determine APPType")
+			err = errors.New("Unable to determine ProjectType")
+		}
+	case PTTrezarcoin:
+		switch an {
+		case APPTCLI:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileGoTrezarcoin, nil
+			case "linux":
+				return CAppCLIFileGoTrezarcoin, nil
+			case "windows":
+				return CAppCLIFileWinGoTrezarcoin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
+			}
+		case APPTCLICompiled:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileCompiled, nil
+			case "linux":
+				return CAppCLIFileCompiled, nil
+			case "windows":
+				return CAppCLIFileCompiledWin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
+			}
+		case APPTInstaller:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileInstallerGoTrezarcoin, nil
+			case "linux":
+				return CAppCLIFileInstallerGoTrezarcoin, nil
+			case "windows":
+				return CAppCLIFileInstallerWinGoTrezarcoin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
+			}
+		case APPTServer:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppServerFileGoTrezarcoin, nil
+			case "linux":
+				return CAppServerFileGoTrezarcoin, nil
+			case "windows":
+				return CAppServerFileWinGoTrezarcoin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
+			}
+		case APPTServerCompiled:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppServerFileCompiled, nil
+			case "linux":
+				return CAppServerFileCompiled, nil
+			case "windows":
+				return CAppServerFileCompiledWin, nil
+			default:
+				err = errors.New("Unable to determine runtime.GOOS")
+			}
+		case APPTUpdater:
+			if runtime.GOOS == "windows" {
+				return CAppUpdaterFileWinGoPIVX, nil
+			} else {
+				return CAppUpdaterFileGoPIVX, nil
+			}
+		default:
+			err = errors.New("Unable to determine ProjectType")
 		}
 	default:
 		err = errors.New("Unable to determine ProjectType")
@@ -966,6 +1176,8 @@ func GetAppCLIName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameCLIGoDivi, nil
+	case PTPIVX:
+		return CAppNameCLIGoPIVX, nil
 	case PTTrezarcoin:
 		return CAppNameCLIGoTrezarcoin, nil
 	default:
@@ -983,6 +1195,8 @@ func GetAppLogfileName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppCLILogfileGoDivi, nil
+	case PTPIVX:
+		return CAppCLILogfileGoPIVX, nil
 	case PTTrezarcoin:
 		return CAppCLILogfileGoTrezarcoin, nil
 	default:
@@ -1001,6 +1215,8 @@ func GetAppServerName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameServerGoDivi, nil
+	case PTPIVX:
+		return CAppNameServerGoPIVX, nil
 	case PTTrezarcoin:
 		return CAppNameServerGoTrezarcoin, nil
 	default:
@@ -1019,6 +1235,8 @@ func GetAppName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameGoDivi, nil
+	case PTPIVX:
+		return CAppNameGoPIVX, nil
 	case PTTrezarcoin:
 		return CAppNameGoTrezarcoin, nil
 	default:
@@ -1036,6 +1254,8 @@ func GetCoinDaemonFilename() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
+		return cDiviDFile, nil
+	case PTPIVX:
 		return cDiviDFile, nil
 	case PTTrezarcoin:
 		return cTrezarcoinDFile, nil
@@ -1064,6 +1284,8 @@ func GetCoinHomeFolder() (string, error) {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
+		case PTPIVX:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXHomeDirWin)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinHomeDirWin)
 		default:
@@ -1074,6 +1296,8 @@ func GetCoinHomeFolder() (string, error) {
 		switch gwconf.ProjectType {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
+		case PTPIVX:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXHomeDir)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinHomeDir)
 		default:
@@ -1093,6 +1317,8 @@ func GetCoinName() (string, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		return cCoinNameDivi, nil
+	case PTPIVX:
+		return cCoinNamePIVX, nil
 	case PTTrezarcoin:
 		return cCoinNameTrezarcoin, nil
 	default:
@@ -1116,6 +1342,17 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 			return cDownloadURLDP, cDFDiviLinux, nil
 		case OSTWindows:
 			return cDownloadURLDP, cDFDiviWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
+		}
+	case PTPIVX:
+		switch ostype {
+		case OSTArm:
+			return cDownloadURLPIVX, cDFPIVXFileRPi, nil
+		case OSTLinux:
+			return cDownloadURLPIVX, cDFPIVXFileLinux, nil
+		case OSTWindows:
+			return cDownloadURLPIVX, cDFPIVXFileWindows, nil
 		default:
 			err = errors.New("Unable to determine OSType")
 		}
@@ -1151,6 +1388,17 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
+		}
+	case PTPIVX:
+		switch ostype {
+		case OSTArm:
+			return CDownloadURLGD, CDFileGoPIVXLatetsARM, nil
+		case OSTLinux:
+			return CDownloadURLGD, CDFileGoPIVXLatetsLinux, nil
+		case OSTWindows:
+			return CDownloadURLGD, CDFileGoPIVXLatetsWindows, nil
 		default:
 			err = errors.New("Unable to determine OSType")
 		}
@@ -1412,6 +1660,12 @@ func IsCoinDaemonRunning() (bool, int, error) {
 		} else {
 			pid, _, err = findProcess(cDiviDFile)
 		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(cPIVXDFileWin)
+		} else {
+			pid, _, err = findProcess(cPIVXDFile)
+		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
 			pid, _, err = findProcess(cTrezarcoinDFileWin)
@@ -1441,26 +1695,31 @@ func IsGoWalletInstalled() bool {
 	return false
 }
 
-// IsGoWalletCLIRunning - Is the GoWallet CLI Running
-func IsGoWalletCLIRunning() (bool, int, error) {
-	var pid int
-	var err error
-	if runtime.GOOS == "windows" {
-		pid, _, err = findProcess(CAppCLIFileWinGoDivi)
-	} else {
-		pid, _, err = findProcess(CAppCLIFileGoDivi)
-	}
+// // IsGoWalletCLIRunning - Is the GoWallet CLI Running
+// func IsGoWalletCLIRunning() (bool, int, error) {
+// 	var pid int
+// 	var err error
+// 	gwconf, err := GetConfigStruct(false)
+// 	if err != nil {
+// 		return false, pid, err
+// 	}
 
-	//pid, _, err := FindProcess(cDiviDFile)
-	if err.Error() == "not found" {
-		return false, 0, nil
-	}
-	if err == nil {
-		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
-	} else {
-		return false, 0, err
-	}
-}
+// 	if runtime.GOOS == "windows" {
+// 		pid, _, err = findProcess(CAppCLIFileWinGoDivi)
+// 	} else {
+// 		pid, _, err = findProcess(CAppCLIFileGoDivi)
+// 	}
+
+// 	//pid, _, err := FindProcess(cDiviDFile)
+// 	if err.Error() == "not found" {
+// 		return false, 0, nil
+// 	}
+// 	if err == nil {
+// 		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
+// 	} else {
+// 		return false, 0, err
+// 	}
+// }
 
 // IsAppCLIRunning - Will then work out what wallet this relates to, and return bool whether the CLI app is running
 func IsAppCLIRunning() (bool, int, error) {
@@ -1475,6 +1734,12 @@ func IsAppCLIRunning() (bool, int, error) {
 			pid, _, err = findProcess(CAppCLIFileWinGoDivi)
 		} else {
 			pid, _, err = findProcess(CAppCLIFileGoDivi)
+		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppCLIFileWinGoPIVX)
+		} else {
+			pid, _, err = findProcess(CAppCLIFileGoPIVX)
 		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
@@ -1508,6 +1773,12 @@ func IsAppServerRunning() (bool, int, error) {
 			pid, _, err = findProcess(CAppServerFileWinGoDivi)
 		} else {
 			pid, _, err = findProcess(CAppServerFileGoDivi)
+		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppServerFileWinGoPIVX)
+		} else {
+			pid, _, err = findProcess(CAppServerFileGoPIVX)
 		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
@@ -1662,6 +1933,23 @@ func RunAppServer(displayOutput bool) error {
 				return fmt.Errorf("Failed to start cmd: %v", err)
 			}
 		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			fp := abf + CAppServerFileWinGoPIVX
+			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+			if err := cmd.Run(); err != nil {
+				return err
+			}
+		} else {
+			if displayOutput {
+				fmt.Println("Attempting to run " + CAppNameServerGoPIVX + "...")
+			}
+
+			cmdRun := exec.Command(abf + CAppServerFileGoPIVX)
+			if err := cmdRun.Start(); err != nil {
+				return fmt.Errorf("Failed to start cmd: %v", err)
+			}
+		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
 			fp := abf + CAppServerFileWinGoTrezarcoin
@@ -1809,6 +2097,25 @@ func StopCoinDaemon() error {
 					return nil
 				}
 				fmt.Printf("\rWaiting for divid server to stop %d/"+strconv.Itoa(50), i+1)
+				time.Sleep(3 * time.Second)
+
+			}
+		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			// TODO Complete for Windows
+		} else {
+			cRun := exec.Command(dbf+cPIVXCliFile, "stop")
+			if err := cRun.Run(); err != nil {
+				return fmt.Errorf("Unable to StopPIVXD:%v", err)
+			}
+
+			for i := 0; i < 50; i++ {
+				sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
+				if !sr {
+					return nil
+				}
+				fmt.Printf("\rWaiting for pivxd server to stop %d/"+strconv.Itoa(50), i+1)
 				time.Sleep(3 * time.Second)
 
 			}
