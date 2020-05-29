@@ -22,9 +22,8 @@ import (
 
 const (
 	// CAppVersion - The app version of the suite of apps
-	CAppVersion string = "0.21.2" // All of the individual apps will have the same version to make it easier for the user
+	CAppVersion string = "0.21.3" // All of the individual apps will have the same version to make it easier for the user
 	cUnknown    string = "Unknown"
-	cAddNodeURL string = "https://api.diviproject.org/v1/addnode"
 	// CDownloadURLGD - The download file lotcation for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
 
@@ -294,8 +293,8 @@ type WalletInfoStruct struct {
 var lastBCSyncStatus string = ""
 var lastMNSyncStatus string = ""
 
-func AddGoDiviPath() error {
-	//TODO Rename this to AddProjctPath (or something) and calculate for other coins
+// AddProjectPath - Add the coin project path to the profile
+func AddProjectPath() error {
 	if runtime.GOOS != "windows" {
 		u, err := user.Current()
 		if err != nil {
@@ -368,6 +367,17 @@ func DoRequiredFiles() error {
 			filePath = abf + cDFDiviLinux
 			fileURL = cDownloadURLDP + cDFDiviLinux
 		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			filePath = abf + cDFPIVXFileWindows
+			fileURL = cDownloadURLPIVX + cDFPIVXFileWindows
+		} else if runtime.GOARCH == "arm" {
+			filePath = abf + cDFPIVXFileRPi
+			fileURL = cDownloadURLPIVX + cDFPIVXFileRPi
+		} else {
+			filePath = abf + cDFPIVXFileLinux
+			fileURL = cDownloadURLPIVX + cDFPIVXFileLinux
+		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
 			filePath = abf + cDFTrezarcoinWindows
@@ -412,13 +422,13 @@ func DoRequiredFiles() error {
 			if err != nil {
 				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
 			}
-			defer os.RemoveAll("./" + cDiviExtractedDir)
+			defer os.RemoveAll("./" + cPIVXExtractedDirArm)
 		} else {
 			err = extractTarGz(r)
 			if err != nil {
 				return fmt.Errorf("Unable to extractTarGz file: %v - %v", r, err)
 			}
-			defer os.RemoveAll("./" + cDiviExtractedDir)
+			defer os.RemoveAll("./" + cPIVXExtractedDirLinux)
 		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
@@ -775,7 +785,7 @@ func GetAddNodes() ([]byte, error) {
 		Timeout: time.Second * 3, // Maximum of 3 secs
 	}
 
-	req, err := http.NewRequest(http.MethodGet, cAddNodeURL, nil)
+	req, err := http.NewRequest(http.MethodGet, cDiviAddNodeURL, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -22,13 +22,15 @@ const (
 	CAppNameCLIGoPIVX     string = "GoPIVX CLI"
 	CAppNameServerGoPIVX  string = "GoPIVX Server"
 
-	cPIVXConfFile   string = "pivx.conf"
-	cPIVXCliFile    string = "pivx-cli"
-	cPIVXCliFileWin string = "pivx-cli.exe"
-	cPIVXDFile      string = "pivxd"
-	cPIVXDFileWin   string = "pivxd.exe"
-	cPIVXTxFile     string = "pivx-tx"
-	cPIVXTxFileWin  string = "pivx-tx.exe"
+	cPIVXConfFile          string = "pivx.conf"
+	cPIVXCliFile           string = "pivx-cli"
+	cPIVXCliFileWin        string = "pivx-cli.exe"
+	cPIVXDFile             string = "pivxd"
+	cPIVXDFileWin          string = "pivxd.exe"
+	cPIVXTxFile            string = "pivx-tx"
+	cPIVXTxFileWin         string = "pivx-tx.exe"
+	cPIVXExtractedDirArm   string = "pivx-4.1.0-aarch64-linux-gnu/"
+	cPIVXExtractedDirLinux string = "pivx-4.1.0-x86_64-linux-gnu/"
 
 	// Phore public download files
 	cDFPIVXFileRPi     string = "pivx-4.1.0-aarch64-linux-gnu.tar.gz"
