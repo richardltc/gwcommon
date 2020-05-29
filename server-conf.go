@@ -10,18 +10,18 @@ import (
 )
 
 const (
-	// CConfFile - To be used only by GoDeploy
+	// CServerConfFile - To be used only by GoDeploy
 	CServerConfFile string = "server-config.json"
 )
 
-// ConfStruct - The global application config struct
+// ServerConfStruct - The global application config struct
 type ServerConfStruct struct {
 	AppName                   string
 	ProjectType               ProjectType
 	UserConfirmedSeedRecovery bool
 }
 
-// CreateDefaultConfFile - Only to be used by GoDeploy
+// CreateDefaultServerConfFile - Only to be used by GoDeploy
 func CreateDefaultServerConfFile(confDir string, pt ProjectType) error {
 	conf, err := newServerConfStruct(pt)
 	if err != nil {
@@ -47,7 +47,7 @@ func CreateDefaultServerConfFile(confDir string, pt ProjectType) error {
 	return nil
 }
 
-// GetConfigStruct - Retrieve the application config struct
+// GetServerConfigStruct - Retrieve the application config struct
 func GetServerConfigStruct(refreshFields bool) (ServerConfStruct, error) {
 
 	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
@@ -113,7 +113,7 @@ func newServerConfStruct(pt ProjectType) (ServerConfStruct, error) {
 	return cnf, nil
 }
 
-// SetConfigStruct - Save the application config struct
+// SetServerConfigStruct - Save the application config struct
 func SetServerConfigStruct(dir string, cs ServerConfStruct) error {
 	jssb, _ := json.MarshalIndent(cs, "", "  ")
 	dir = AddTrailingSlash(dir)
