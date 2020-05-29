@@ -10,20 +10,20 @@ import (
 )
 
 const (
-	// CConfFile - To be used only by GoDeploy
-	CConfFile string = "config.json"
+	// CCLIConfFile - To be used only by GoDeploy
+	CCLIConfFile string = "cli-config.json"
 )
 
-// ConfStruct - The global application config struct
-type ConfStruct struct {
+// CLIConfStruct - The global application config struct
+type CLIConfStruct struct {
 	AppName                   string
 	ProjectType               ProjectType
 	UserConfirmedSeedRecovery bool
 }
 
-// CreateDefaultConfFile - Only to be used by GoDeploy
-func CreateDefaultConfFile(confDir string, pt ProjectType) error {
-	conf, err := newConfStruct(pt)
+// CreateDefaultCLIConfFile - Only to be used by GoDeploy
+func CreateDefaultCLIConfFile(confDir string, pt ProjectType) error {
+	conf, err := newCLIConfStruct(pt)
 	if err != nil {
 		return err
 	}
@@ -33,12 +33,12 @@ func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 		return err
 	}
 
-	f, err := os.Create(confDir + CConfFile)
+	f, err := os.Create(confDir + CServerConfFile)
 	if err != nil {
 		return err
 	}
 
-	log.Println("Creating default config file " + f.Name())
+	log.Println("Creating default CLI config file " + f.Name())
 	_, err = f.WriteString(string(jssb))
 	err = f.Close()
 	if err != nil {
@@ -47,8 +47,8 @@ func CreateDefaultConfFile(confDir string, pt ProjectType) error {
 	return nil
 }
 
-// GetConfigStruct - Retrieve the application config struct
-func GetConfigStruct(refreshFields bool) (ConfStruct, error) {
+// GetCLIConfigStruct - Retrieve the application config struct
+func GetCLIConfigStruct(refreshFields bool) (CLIConfStruct, error) {
 
 	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
 
@@ -61,30 +61,30 @@ func GetConfigStruct(refreshFields bool) (ConfStruct, error) {
 	// Get the config file
 	dir, err := GetRunningDir()
 	if err != nil {
-		return ConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v", err)
+		return CLIConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v", err)
 	}
-	file, err := ioutil.ReadFile(dir + CConfFile)
+	file, err := ioutil.ReadFile(dir + CServerConfFile)
 	if err != nil {
-		return ConfStruct{}, err
+		return CLIConfStruct{}, err
 	}
 
-	cs := ConfStruct{}
+	cs := CLIConfStruct{}
 
 	err = json.Unmarshal([]byte(file), &cs)
 	if err != nil {
-		return ConfStruct{}, err
+		return CLIConfStruct{}, err
 	}
 
 	// Now, let's write the file back because it may have some new fields
 	if refreshFields {
-		SetConfigStruct(dir, cs)
+		SetCLIConfigStruct(dir, cs)
 	}
 
 	return cs, nil
 }
 
-func newConfStruct(pt ProjectType) (ConfStruct, error) {
-	cnf := ConfStruct{}
+func newCLIConfStruct(pt ProjectType) (ServerConfStruct, error) {
+	cnf := ServerConfStruct{}
 	var err error
 
 	switch pt {
@@ -113,11 +113,11 @@ func newConfStruct(pt ProjectType) (ConfStruct, error) {
 	return cnf, nil
 }
 
-// SetConfigStruct - Save the application config struct
-func SetConfigStruct(dir string, cs ConfStruct) error {
+// SetCLIConfigStruct - Save the application config struct
+func SetCLIConfigStruct(dir string, cs CLIConfStruct) error {
 	jssb, _ := json.MarshalIndent(cs, "", "  ")
 	dir = AddTrailingSlash(dir)
-	sFile := dir + CConfFile
+	sFile := dir + CServerConfFile
 
 	f, err := os.Create(sFile)
 	if err != nil {
