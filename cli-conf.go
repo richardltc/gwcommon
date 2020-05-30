@@ -121,7 +121,7 @@ func newCLIConfStruct(pt ProjectType) (CLIConfStruct, error) {
 func SetCLIConfigStruct(dir string, cs CLIConfStruct) error {
 	jssb, _ := json.MarshalIndent(cs, "", "  ")
 	dir = AddTrailingSlash(dir)
-	sFile := dir + CServerConfFile
+	sFile := dir + CCLIConfFile
 
 	f, err := os.Create(sFile)
 	if err != nil {
