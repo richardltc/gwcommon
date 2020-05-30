@@ -35,7 +35,7 @@ func CreateDefaultCLIConfFile(confDir string, pt ProjectType) error {
 		return err
 	}
 
-	f, err := os.Create(confDir + CServerConfFile)
+	f, err := os.Create(confDir + CCLIConfFile)
 	if err != nil {
 		return err
 	}
