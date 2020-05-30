@@ -351,9 +351,9 @@ func DoRequiredFiles() error {
 		return fmt.Errorf("Unable to perform GetAppsBinFolder: %v ", err)
 	}
 
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
-		return fmt.Errorf("Unable to get ConfigStruct: %v ", err)
+		return fmt.Errorf("Unable to get CLIConfigStruct: %v ", err)
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
@@ -475,7 +475,10 @@ func DoRequiredFiles() error {
 	log.Print("Installing files...")
 
 	// Copy files to correct location
-	var srcPath, srcFileCLI, srcFileD, srcFileTX, srcFileGWConf, srcFileGWCLI, srcFileGWUprade, srcFileGWServer string
+	var srcPath, srcFileCLI, srcFileD, srcFileTX, srcFileGWConfCLI, srcFileGWConfSrv, srcFileGWCLI, srcFileGWUprade, srcFileGWServer string
+	srcFileGWConfCLI = CCLIConfFile
+	srcFileGWConfSrv = CServerConfFile
+
 	switch gwconf.ProjectType {
 	case PTDivi:
 		switch runtime.GOOS {
@@ -484,7 +487,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cDiviCliFileWin
 			srcFileD = cDiviDFileWin
 			srcFileTX = cDiviTxFileWin
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileWinGoDivi
 			srcFileGWServer = CAppServerFileWinGoDivi
 		case "arm":
@@ -492,7 +494,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
 			srcFileTX = cDiviTxFile
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileGoDivi
 			srcFileGWUprade = CAppUpdaterFileGoDivi
 			srcFileGWServer = CAppServerFileGoDivi
@@ -501,7 +502,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cDiviCliFile
 			srcFileD = cDiviDFile
 			srcFileTX = cDiviTxFile
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileGoDivi
 			srcFileGWUprade = CAppUpdaterFileGoDivi
 			srcFileGWServer = CAppServerFileGoDivi
@@ -515,7 +515,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cPIVXCliFileWin
 			srcFileD = cPIVXDFileWin
 			srcFileTX = cPIVXTxFileWin
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileWinGoPIVX
 			srcFileGWServer = CAppServerFileWinGoPIVX
 		case "arm":
@@ -523,7 +522,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cPIVXCliFile
 			srcFileD = cPIVXDFile
 			srcFileTX = cPIVXTxFile
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileGoPIVX
 			srcFileGWUprade = CAppUpdaterFileGoPIVX
 			srcFileGWServer = CAppServerFileGoPIVX
@@ -532,7 +530,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cPIVXCliFile
 			srcFileD = cPIVXDFile
 			srcFileTX = cPIVXTxFile
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileGoPIVX
 			srcFileGWUprade = CAppUpdaterFileGoPIVX
 			srcFileGWServer = CAppServerFileGoPIVX
@@ -550,7 +547,6 @@ func DoRequiredFiles() error {
 			srcFileCLI = cTrezarcoinCliFile
 			srcFileD = cTrezarcoinDFile
 			srcFileTX = cTrezarcoinTxFile
-			srcFileGWConf = CConfFile
 			srcFileGWCLI = CAppCLIFileGoTrezarcoin
 			srcFileGWUprade = CAppUpdaterFileGoTrezarcoin
 			srcFileGWServer = CAppServerFileGoTrezarcoin
@@ -608,10 +604,16 @@ func DoRequiredFiles() error {
 		return fmt.Errorf("Unable to chmod file: %v - %v", abf+srcFileGWCLI, err)
 	}
 
-	// Copy the config file
-	err = FileCopy("./"+srcFileGWConf, abf+srcFileGWConf, false)
+	// Copy the CLI config file
+	err = FileCopy("./"+srcFileGWConfCLI, abf+srcFileGWConfCLI, false)
 	if err != nil {
-		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWCLI, err)
+		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWConfCLI, err)
+	}
+
+	// Copy the Ser er config file
+	err = FileCopy("./"+srcFileGWConfSrv, abf+srcFileGWConfSrv, false)
+	if err != nil {
+		return fmt.Errorf("Unable to copyFile: %v - %v", abf+srcFileGWConfSrv, err)
 	}
 
 	// Copy the updater file
@@ -915,7 +917,7 @@ func GetBlockchainInfo() (BlockchainInfo, error) {
 // GetAppsBinFolder - Returns the directory of where the apps binary files are stored
 func GetAppsBinFolder() (string, error) {
 	var s string
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -955,7 +957,7 @@ func GetAppsBinFolder() (string, error) {
 
 // GetAppFileName - Returns the name of the app binary file e.g. godivi, godivis, godivi-installer
 func GetAppFileName(an APPType) (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1169,7 +1171,7 @@ func GetAppFileName(an APPType) (string, error) {
 
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1188,7 +1190,7 @@ func GetAppCLIName() (string, error) {
 
 // GetAppLogfileName - Returns the application logfile name e.g. godivi.log
 func GetAppLogfileName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1208,7 +1210,7 @@ func GetAppLogfileName() (string, error) {
 
 // GetAppServerName - Returns the application Server name e.g. GoDivi Server
 func GetAppServerName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1228,7 +1230,7 @@ func GetAppServerName() (string, error) {
 
 // GetAppName - Returns the application name e.g. GoDivi
 func GetAppName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1248,7 +1250,7 @@ func GetAppName() (string, error) {
 
 // GetCoinDaemonFilename - Return the coin daemon file name e.g. divid
 func GetCoinDaemonFilename() (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1269,7 +1271,7 @@ func GetCoinDaemonFilename() (string, error) {
 // GetCoinHomeFolder - Returns the ome folder for the coin e.g. .divi
 func GetCoinHomeFolder() (string, error) {
 	var s string
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1310,7 +1312,7 @@ func GetCoinHomeFolder() (string, error) {
 
 // GetCoinName - Returns the name of the coin e.g. Divi
 func GetCoinName() (string, error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", err
 	}
@@ -1329,7 +1331,7 @@ func GetCoinName() (string, error) {
 
 // GetCoinDownloadLink - Returns a link to the required file
 func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", "", err
 	}
@@ -1375,7 +1377,7 @@ func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
 
 // GetGoWalletDownloadLink - Returns a link of both the url and file
 func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", "", err
 	}
@@ -1649,7 +1651,7 @@ func getYesNoResp(msg string) string {
 // IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
 func IsCoinDaemonRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return false, pid, err
 	}
@@ -1724,7 +1726,7 @@ func IsGoWalletInstalled() bool {
 // IsAppCLIRunning - Will then work out what wallet this relates to, and return bool whether the CLI app is running
 func IsAppCLIRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return false, pid, err
 	}
@@ -1763,7 +1765,7 @@ func IsAppCLIRunning() (bool, int, error) {
 // IsAppServerRunning - Will then work out what wallet this relates to, and return accurate info
 func IsAppServerRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return false, pid, err
 	}
@@ -1851,7 +1853,7 @@ func RunCoinDaemon(displayOutput bool) error {
 		return nil
 	}
 
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return err
 	}
@@ -1909,7 +1911,7 @@ func RunAppServer(displayOutput bool) error {
 		// Already running...
 		return nil
 	}
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return err
 	}
@@ -1985,7 +1987,7 @@ func RunInitialDaemon() error {
 		return fmt.Errorf("Unable to GetCoinDaemonFilename - %v", err)
 	}
 
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return fmt.Errorf("Unable to GetConfigStruct - %v", err)
 	}
@@ -2077,7 +2079,7 @@ func StopCoinDaemon() error {
 		return fmt.Errorf("Unable to GetCoinDaemonFilename - %v", err)
 	}
 
-	gwconf, err := GetConfigStruct(false)
+	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return err
 	}
@@ -2146,6 +2148,7 @@ func StopCoinDaemon() error {
 	return nil
 }
 
+// UnlockWallet - Used by the server to unlock the wallet
 func UnlockWallet(pword string, attempts int, forStaking bool) (bool, error) {
 	var err error
 	var s string = "waiting for wallet."
