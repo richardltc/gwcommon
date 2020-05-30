@@ -106,6 +106,9 @@ func newServerConfStruct(pt ProjectType) (ServerConfStruct, error) {
 		err = errors.New("Unable to determine ProjectType")
 	}
 
+	cnf.Port = "4000"
+	cnf.ServerIP = "127.0.0.1"
+
 	cnf.UserConfirmedSeedRecovery = false
 
 	if err != nil {
