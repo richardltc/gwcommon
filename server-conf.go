@@ -17,7 +17,6 @@ const (
 // ServerConfStruct - The server application config struct
 type ServerConfStruct struct {
 	ProjectType               ProjectType
-	ServerIP                  string
 	Port                      string
 	UserConfirmedSeedRecovery bool
 }
@@ -102,7 +101,6 @@ func newServerConfStruct(pt ProjectType) (ServerConfStruct, error) {
 	}
 
 	cnf.Port = "4000"
-	cnf.ServerIP = "127.0.0.1"
 
 	cnf.UserConfirmedSeedRecovery = false
 
