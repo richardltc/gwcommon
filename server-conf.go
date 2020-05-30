@@ -16,7 +16,6 @@ const (
 
 // ServerConfStruct - The server application config struct
 type ServerConfStruct struct {
-	AppName                   string
 	ProjectType               ProjectType
 	ServerIP                  string
 	Port                      string
@@ -91,16 +90,12 @@ func newServerConfStruct(pt ProjectType) (ServerConfStruct, error) {
 
 	switch pt {
 	case PTDivi:
-		cnf.AppName = CAppNameGoDivi
 		cnf.ProjectType = PTDivi
 	case PTPhore:
-		cnf.AppName = CAppNameGoPhore
 		cnf.ProjectType = PTPhore
 	case PTPIVX:
-		cnf.AppName = CAppNameGoPIVX
 		cnf.ProjectType = PTPIVX
 	case PTTrezarcoin:
-		cnf.AppName = CAppNameGoTrezarcoin
 		cnf.ProjectType = PTTrezarcoin
 	default:
 		err = errors.New("Unable to determine ProjectType")
