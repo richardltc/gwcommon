@@ -14,10 +14,12 @@ const (
 	CServerConfFile string = "server-config.json"
 )
 
-// ServerConfStruct - The global application config struct
+// ServerConfStruct - The server application config struct
 type ServerConfStruct struct {
 	AppName                   string
 	ProjectType               ProjectType
+	ServerIP                  string
+	Port                      string
 	UserConfirmedSeedRecovery bool
 }
 

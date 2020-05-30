@@ -14,10 +14,12 @@ const (
 	CCLIConfFile string = "cli-config.json"
 )
 
-// CLIConfStruct - The global application config struct
+// CLIConfStruct - The CLI application config struct
 type CLIConfStruct struct {
 	AppName                   string
 	ProjectType               ProjectType
+	ServerIP                  string
+	Port                      string
 	UserConfirmedSeedRecovery bool
 }
 
@@ -63,7 +65,7 @@ func GetCLIConfigStruct(refreshFields bool) (CLIConfStruct, error) {
 	if err != nil {
 		return CLIConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v", err)
 	}
-	file, err := ioutil.ReadFile(dir + CServerConfFile)
+	file, err := ioutil.ReadFile(dir + CCLIConfFile)
 	if err != nil {
 		return CLIConfStruct{}, err
 	}
@@ -83,8 +85,8 @@ func GetCLIConfigStruct(refreshFields bool) (CLIConfStruct, error) {
 	return cs, nil
 }
 
-func newCLIConfStruct(pt ProjectType) (ServerConfStruct, error) {
-	cnf := ServerConfStruct{}
+func newCLIConfStruct(pt ProjectType) (CLIConfStruct, error) {
+	cnf := CLIConfStruct{}
 	var err error
 
 	switch pt {
@@ -105,6 +107,8 @@ func newCLIConfStruct(pt ProjectType) (ServerConfStruct, error) {
 	}
 
 	cnf.UserConfirmedSeedRecovery = false
+	cnf.Port = "4000"
+	cnf.ServerIP = "127.0.0.1"
 
 	if err != nil {
 		return cnf, err
