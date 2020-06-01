@@ -2,7 +2,6 @@ package gwcommon
 
 const (
 	cCoinNamePIVX    string = "PIVX"
-	cDownloadURLPIVX string = "https://github.com/PIVX-Project/PIVX/releases/download/v4.1.0/"
 
 	// PIVX Wallet Constants
 	CPIVXAppVersion string = "4.1.0"
@@ -32,11 +31,6 @@ const (
 	cPIVXExtractedDirArm     string = "pivx-4.1.0-aarch64-linux-gnu/"
 	cPIVXExtractedDirLinux   string = "pivx-4.1.0-x86_64-linux-gnu/"
 	cPIVXExtractedDirWindows string = "pivx-4.1.0-win64\\"
-
-	// Phore public download files
-	cDFPIVXFileRPi     string = "pivx-4.1.0-aarch64-linux-gnu.tar.gz"
-	cDFPIVXFileLinux   string = "pivx-4.1.0-x86_64-linux-gnu.tar.gz"
-	cDFPIVXFileWindows string = "pivx-4.1.0-win64.zip"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoPIVX             string = "gopivx"

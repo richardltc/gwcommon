@@ -262,7 +262,7 @@ func getFunnyWaitingStr(index int) string {
 
 }
 
-func extractTarGz(gzipStream io.Reader) error {
+func ExtractTarGz(gzipStream io.Reader) error {
 	uncompressedStream, err := gzip.NewReader(gzipStream)
 	if err != nil {
 		log.Fatal("ExtractTarGz: NewReader failed")

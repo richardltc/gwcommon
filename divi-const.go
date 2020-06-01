@@ -2,7 +2,6 @@ package gwcommon
 
 const (
 	cCoinNameDivi   string = "Divi"
-	cDownloadURLDP  string = "https://github.com/DiviProject/Divi/releases/download/v1.0.8/"
 	cDiviAddNodeURL string = "https://api.diviproject.org/v1/addnode"
 
 	// CDiviAppVersion - The app version of Divi
@@ -31,11 +30,6 @@ const (
 	CDiviTxFile       string = "divi-tx"
 	CDiviTxFileWin    string = "divi-tx.exe"
 	CDiviExtractedDir string = "divi-1.0.8/"
-
-	// Divi public download files
-	cDFDiviRPi     string = "divi-1.0.8-RPi2.tar.gz"
-	cDFDiviLinux   string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
-	cDFDiviWindows string = "divi-1.0.8-win64.zip"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoDivi             string = "godivi"
