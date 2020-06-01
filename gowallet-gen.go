@@ -181,16 +181,6 @@ const (
 	CServRequestShutdownServer string = "ShutdownServer"
 )
 
-type BlockchainInfo struct {
-	Chain                string  `json:"chain"`
-	Blocks               int     `json:"blocks"`
-	Headers              int     `json:"headers"`
-	Bestblockhash        string  `json:"bestblockhash"`
-	Difficulty           float64 `json:"difficulty"`
-	Verificationprogress float64 `json:"verificationprogress"`
-	Chainwork            string  `json:"chainwork"`
-}
-
 type listTransactions []struct {
 	Account         string        `json:"account"`
 	Address         string        `json:"address"`
@@ -894,24 +884,6 @@ func GetAddNodes() ([]byte, error) {
 	}
 
 	return body, nil
-}
-
-func GetBlockchainInfo() (BlockchainInfo, error) {
-	// gdConfig, err := getConfStruct("./")
-	// if err != nil {
-	// 	log.Print(err)
-	// }
-
-	bci := BlockchainInfo{}
-	dbf, _ := GetAppsBinFolder()
-
-	cmdBCInfo := exec.Command(dbf+cDiviCliFile, cCommandGetBCInfo)
-	out, _ := cmdBCInfo.CombinedOutput()
-	err := json.Unmarshal([]byte(out), &bci)
-	if err != nil {
-		return bci, err
-	}
-	return bci, nil
 }
 
 // GetAppsBinFolder - Returns the directory of where the apps binary files are stored
