@@ -21,13 +21,13 @@ const (
 	CAppNameCLIGoTrezarcoin     string = "GoTrezarcoin CLI"
 	CAppNameServerGoTrezarcoin  string = "GoTrezarcoin Server"
 
-	cTrezarcoinConfFile   string = "trezarcoin.conf"
-	cTrezarcoinCliFile    string = "trezarcoin-cli"
-	cTrezarcoinCliFileWin string = "trezarcoin-cli.exe"
-	cTrezarcoinDFile      string = "trezarcoind"
-	cTrezarcoinDFileWin   string = "trezarcoind.exe"
-	cTrezarcoinTxFile     string = "trezarcoin-tx"
-	cTrezarcoinTxFileWin  string = "trezarcoin-tx.exe"
+	CTrezarcoinConfFile   string = "trezarcoin.conf"
+	CTrezarcoinCliFile    string = "trezarcoin-cli"
+	CTrezarcoinCliFileWin string = "trezarcoin-cli.exe"
+	CTrezarcoinDFile      string = "trezarcoind"
+	CTrezarcoinDFileWin   string = "trezarcoind.exe"
+	CTrezarcoinTxFile     string = "trezarcoin-tx"
+	CTrezarcoinTxFileWin  string = "trezarcoin-tx.exe"
 
 	// GoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoTrezarcoin             string = "gotrezarcoin"

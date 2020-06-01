@@ -1,7 +1,7 @@
 package gwcommon
 
 const (
-	cCoinNamePIVX    string = "PIVX"
+	cCoinNamePIVX string = "PIVX"
 
 	// PIVX Wallet Constants
 	CPIVXAppVersion string = "4.1.0"
@@ -21,16 +21,13 @@ const (
 	CAppNameCLIGoPIVX     string = "GoPIVX CLI"
 	CAppNameServerGoPIVX  string = "GoPIVX Server"
 
-	cPIVXConfFile            string = "pivx.conf"
-	cPIVXCliFile             string = "pivx-cli"
-	cPIVXCliFileWin          string = "pivx-cli.exe"
-	cPIVXDFile               string = "pivxd"
-	cPIVXDFileWin            string = "pivxd.exe"
-	cPIVXTxFile              string = "pivx-tx"
-	cPIVXTxFileWin           string = "pivx-tx.exe"
-	cPIVXExtractedDirArm     string = "pivx-4.1.0-aarch64-linux-gnu/"
-	cPIVXExtractedDirLinux   string = "pivx-4.1.0-x86_64-linux-gnu/"
-	cPIVXExtractedDirWindows string = "pivx-4.1.0-win64\\"
+	CPIVXConfFile   string = "pivx.conf"
+	CPIVXCliFile    string = "pivx-cli"
+	CPIVXCliFileWin string = "pivx-cli.exe"
+	CPIVXDFile      string = "pivxd"
+	CPIVXDFileWin   string = "pivxd.exe"
+	CPIVXTxFile     string = "pivx-tx"
+	CPIVXTxFileWin  string = "pivx-tx.exe"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoPIVX             string = "gopivx"

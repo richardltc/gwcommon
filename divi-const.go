@@ -29,7 +29,6 @@ const (
 	CDiviDFileWin     string = "divid.exe"
 	CDiviTxFile       string = "divi-tx"
 	CDiviTxFileWin    string = "divi-tx.exe"
-	CDiviExtractedDir string = "divi-1.0.8/"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoDivi             string = "godivi"
