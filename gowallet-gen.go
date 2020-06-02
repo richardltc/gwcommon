@@ -42,22 +42,6 @@ const (
 
 	cWalletSeedFileGoDivi string = "unsecure-divi-seed.txt"
 
-	// Divi-cli command constants
-	cCommandGetBCInfo     string = "getblockchaininfo"
-	cCommandGetWInfo      string = "getwalletinfo"
-	cCommandMNSyncStatus1 string = "mnsync"
-	cCommandMNSyncStatus2 string = "status"
-
-	// Divii-cli wallet commands
-	cCommandDisplayWalletAddress string = "getaddressesbyaccount" // ./divi-cli getaddressesbyaccount ""
-	cCommandDumpHDinfo           string = "dumphdinfo"            // ./divi-cli dumphdinfo
-	// CCommandEncryptWallet - Needed by dash command
-	CCommandEncryptWallet  string = "encryptwallet"    // ./divi-cli encryptwallet “a_strong_password”
-	cCommandRestoreWallet  string = "-hdseed="         // ./divid -debug-hdseed=the_seed -rescan (stop divid, rename wallet.dat, then run command)
-	cCommandUnlockWallet   string = "walletpassphrase" // ./divi-cli walletpassphrase “password” 0
-	cCommandUnlockWalletFS string = "walletpassphrase" // ./divi-cli walletpassphrase “password” 0 true
-	cCommandLockWallet     string = "walletlock"       // ./divi-cli walletlock
-
 	cRPCUserStr     string = "rpcuser"
 	cRPCPasswordStr string = "rpcpassword"
 
@@ -198,20 +182,6 @@ type listTransactions []struct {
 	Timereceived    int           `json:"timereceived"`
 }
 
-type MNSyncStatus struct {
-	IsBlockchainSynced         bool `json:"IsBlockchainSynced"`
-	LastMasternodeList         int  `json:"lastMasternodeList"`
-	LastMasternodeWinner       int  `json:"lastMasternodeWinner"`
-	LastFailure                int  `json:"lastFailure"`
-	NCountFailures             int  `json:"nCountFailures"`
-	SumMasternodeList          int  `json:"sumMasternodeList"`
-	SumMasternodeWinner        int  `json:"sumMasternodeWinner"`
-	CountMasternodeList        int  `json:"countMasternodeList"`
-	CountMasternodeWinner      int  `json:"countMasternodeWinner"`
-	RequestedMasternodeAssets  int  `json:"RequestedMasternodeAssets"`
-	RequestedMasternodeAttempt int  `json:"RequestedMasternodeAttempt"`
-}
-
 type stakingStatusStruct struct {
 	Validtime       bool `json:"validtime"`
 	Haveconnections bool `json:"haveconnections"`
@@ -333,62 +303,6 @@ func ConvertBCVerification(verificationPG float64) string {
 	return sProg
 }
 
-// DoPrivKeyDisplay - Display the private key
-func DoPrivKeyDisplay() error {
-	dbf, err := GetAppsBinFolder()
-	if err != nil {
-		return fmt.Errorf("Unable to GetAppsBinFolder: %v", err)
-	}
-	// Display instructions for displaying seed recovery
-
-	sWarning := getWalletSeedDisplayWarning()
-	fmt.Printf(sWarning)
-	fmt.Println("")
-	fmt.Println("\nRequesting private seed...")
-	s, err := runDCCommand(dbf+cDiviCliFile, cCommandDumpHDinfo, "Waiting for wallet to respond. This could take several minutes...", 30)
-	if err != nil {
-		return fmt.Errorf("Unable to run command: %v - %v", dbf+cDiviCliFile+cCommandDumpHDinfo, err)
-	}
-
-	fmt.Println("\nPrivate seed received...")
-	fmt.Println("")
-	println(s)
-
-	return nil
-}
-
-// DoPrivKeyFile - Handles the private key
-func DoPrivKeyFile() error {
-	dbf, err := GetAppsBinFolder()
-	if err != nil {
-		return fmt.Errorf("Unable to GetAppsBinFolder: %v", err)
-	}
-
-	// User specified that they wanted to save their private key in a file.
-	s := getWalletSeedDisplayWarning() + `
-
-Storing your private key in a file is risky.
-
-Please confirm that you understand the risks: `
-	yn := getYesNoResp(s)
-	if yn == "y" {
-		fmt.Println("\nRequesting private seed...")
-		s, err := runDCCommand(dbf+cDiviCliFile, cCommandDumpHDinfo, "Waiting for wallet to respond. This could take several minutes...", 30)
-		// cmd := exec.Command(dbf+cDiviCliFile, cCommandDumpHDinfo)
-		// out, err := cmd.CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("Unable to run command: %v - %v", dbf+cDiviCliFile+cCommandDumpHDinfo, err)
-		}
-
-		// Now store the info in file
-		err = WriteTextToFile(dbf+cWalletSeedFileGoDivi, s)
-		if err != nil {
-			return fmt.Errorf("error writing to file %s", err)
-		}
-		fmt.Println("Now please store the privte seed file somewhere safe. The file has been saved to: " + dbf + cWalletSeedFileGoDivi)
-	}
-	return nil
-}
 
 func doUpdate(url string) error {
 	resp, err := http.Get(url)
@@ -403,72 +317,6 @@ func doUpdate(url string) error {
 	return err
 }
 
-func doWalletAdressDisplay() error {
-	err := RunCoinDaemon(false)
-	if err != nil {
-		return fmt.Errorf("Unable to RunCoinDaemon: %v ", err)
-	}
-
-	dbf, err := GetAppsBinFolder()
-	if err != nil {
-		return fmt.Errorf("Unable to GetAppsBinFolder: %v", err)
-	}
-	// Display wallet public address
-
-	fmt.Println("\nRequesting wallet address...")
-	s, err := RunDCCommandWithValue(dbf+cDiviCliFile, cCommandDisplayWalletAddress, `""`, "Waiting for wallet to respond. This could take several minutes...", 30)
-	if err != nil {
-		return fmt.Errorf("Unable to run command: %v - %v", dbf+cDiviCliFile+cCommandDisplayWalletAddress, err)
-	}
-
-	fmt.Println("\nWallet address received...")
-	fmt.Println("")
-	println(s)
-
-	return nil
-}
-
-func findProcess(key string) (int, string, error) {
-	pname := ""
-	pid := 0
-	err := errors.New("not found")
-	ps, _ := ps.Processes()
-
-	for i := range ps {
-		if ps[i].Executable() == key {
-			pid = ps[i].Pid()
-			pname = ps[i].Executable()
-			err = nil
-			break
-		}
-	}
-	return pid, pname, err
-}
-
-func GetAddNodes() ([]byte, error) {
-	addNodesClient := http.Client{
-		Timeout: time.Second * 3, // Maximum of 3 secs
-	}
-
-	req, err := http.NewRequest(http.MethodGet, cDiviAddNodeURL, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("User-Agent", "godivi")
-
-	res, getErr := addNodesClient.Do(req)
-	if getErr != nil {
-		return nil, err
-	}
-
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
 
 // GetAppsBinFolder - Returns the directory of where the apps binary files are stored
 func GetAppsBinFolder() (string, error) {
@@ -885,116 +733,6 @@ func GetCoinName() (string, error) {
 	return "", nil
 }
 
-// GetCoinDownloadLink - Returns a link to the required file
-func GetCoinDownloadLink(ostype OSType) (url, file string, err error) {
-	gwconf, err := GetCLIConfigStruct(false)
-	if err != nil {
-		return "", "", err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		switch ostype {
-		case OSTArm:
-			return cDownloadURLDP, cDFDiviRPi, nil
-		case OSTLinux:
-			return cDownloadURLDP, cDFDiviLinux, nil
-		case OSTWindows:
-			return cDownloadURLDP, cDFDiviWindows, nil
-		default:
-			err = errors.New("Unable to determine OSType")
-		}
-	case PTPIVX:
-		switch ostype {
-		case OSTArm:
-			return cDownloadURLPIVX, cDFPIVXFileRPi, nil
-		case OSTLinux:
-			return cDownloadURLPIVX, cDFPIVXFileLinux, nil
-		case OSTWindows:
-			return cDownloadURLPIVX, cDFPIVXFileWindows, nil
-		default:
-			err = errors.New("Unable to determine OSType")
-		}
-	case PTTrezarcoin:
-		switch ostype {
-		case OSTArm:
-			return cDownloadURLTC, cDFTrezarcoinRPi, nil
-		case OSTLinux:
-			return cDownloadURLTC, cDFTrezarcoinLinux, nil
-		case OSTWindows:
-			return cDownloadURLTC, cDFTrezarcoinWindows, nil
-		default:
-			err = errors.New("Unable to determine OSType")
-		}
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-	return "", "", nil
-}
-
-// GetGoWalletDownloadLink - Returns a link of both the url and file
-func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
-	gwconf, err := GetCLIConfigStruct(false)
-	if err != nil {
-		return "", "", err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		switch ostype {
-		case OSTArm:
-			return CDownloadURLGD, CDFileGodiviLatetsARM, nil
-		case OSTLinux:
-			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
-		case OSTWindows:
-			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
-		default:
-			err = errors.New("Unable to determine OSType")
-		}
-	case PTPIVX:
-		switch ostype {
-		case OSTArm:
-			return CDownloadURLGD, CDFileGoPIVXLatetsARM, nil
-		case OSTLinux:
-			return CDownloadURLGD, CDFileGoPIVXLatetsLinux, nil
-		case OSTWindows:
-			return CDownloadURLGD, CDFileGoPIVXLatetsWindows, nil
-		default:
-			err = errors.New("Unable to determine OSType")
-		}
-	case PTTrezarcoin:
-		switch ostype {
-		case OSTArm:
-			return CDownloadURLGD, CDFileGoTrezarcoinLatetsARM, nil
-		case OSTLinux:
-			return CDownloadURLGD, CDFileGoTrezarcoinLatetsLinux, nil
-		case OSTWindows:
-			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
-		default:
-			err = errors.New("Unable to determine OSType")
-		}
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-	return "", "", nil
-}
-
-func GetMNSyncStatus() (MNSyncStatus, error) {
-	// gdConfig, err := getConfStruct("./")
-	// if err != nil {
-	// 	log.Print(err)
-	// }
-
-	mnss := MNSyncStatus{}
-	dbf, _ := GetAppsBinFolder()
-
-	cmdMNSS := exec.Command(dbf+cDiviCliFile, cCommandMNSyncStatus1, cCommandMNSyncStatus2)
-	out, _ := cmdMNSS.CombinedOutput()
-	err := json.Unmarshal([]byte(out), &mnss)
-	if err != nil {
-		return mnss, err
-	}
-	return mnss, nil
-}
-
 func GetNextProgMNIndicator(LIndicator string) string {
 	if LIndicator == cProgress1 {
 		lastMNSyncStatus = cProgress2
@@ -1144,18 +882,6 @@ func GetWalletInfo(dispProgress bool) (WalletInfoStruct, error) {
 	return wi, nil
 }
 
-func getWalletRestoreResp() string {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print(`Warning - This will overrite your existing wallet.dat file and re-sync the blockchain!
-
-It will take a while for your restored wallet to sync and display any funds.
-
-Restore wallet now?: (y/n)`)
-	resp, _ := reader.ReadString('\n')
-	resp = strings.ReplaceAll(resp, "\n", "")
-	return resp
-}
-
 func getWalletSeedDisplayWarning() string {
 	return `
 A recovery seed can be used to recover your wallet, should anything happen to this computer.
@@ -1202,43 +928,6 @@ func getYesNoResp(msg string) string {
 	resp, _ := reader.ReadString('\n')
 	resp = strings.ReplaceAll(resp, "\n", "")
 	return resp
-}
-
-// IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
-func IsCoinDaemonRunning() (bool, int, error) {
-	var pid int
-	gwconf, err := GetCLIConfigStruct(false)
-	if err != nil {
-		return false, pid, err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(cDiviDFileWin)
-		} else {
-			pid, _, err = findProcess(cDiviDFile)
-		}
-	case PTPIVX:
-		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(cPIVXDFileWin)
-		} else {
-			pid, _, err = findProcess(cPIVXDFile)
-		}
-	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(cTrezarcoinDFileWin)
-		} else {
-			pid, _, err = findProcess(cTrezarcoinDFile)
-		}
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-
-	if err == nil {
-		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
-	} else {
-		return false, 0, err
-	}
 }
 
 // IsGoWalletInstalled - Returns bool if GoWallet has been installed
@@ -1621,88 +1310,6 @@ func RunInitialDaemon() error {
 	return nil
 }
 
-// StopCoinDaemon - Stops the coin daemon (e.g. divid) from running
-func StopCoinDaemon() error {
-	idr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
-	if idr != true {
-		// Not running anyway ...
-		return nil
-	}
-
-	dbf, _ := GetAppsBinFolder()
-	coind, err := GetCoinDaemonFilename()
-	if err != nil {
-		return fmt.Errorf("Unable to GetCoinDaemonFilename - %v", err)
-	}
-
-	gwconf, err := GetCLIConfigStruct(false)
-	if err != nil {
-		return err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		if runtime.GOOS == "windows" {
-			// TODO Complete for Windows
-		} else {
-			cRun := exec.Command(dbf+cDiviCliFile, "stop")
-			if err := cRun.Run(); err != nil {
-				return fmt.Errorf("Unable to StopDiviD:%v", err)
-			}
-
-			for i := 0; i < 50; i++ {
-				sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
-				if !sr {
-					return nil
-				}
-				fmt.Printf("\rWaiting for divid server to stop %d/"+strconv.Itoa(50), i+1)
-				time.Sleep(3 * time.Second)
-
-			}
-		}
-	case PTPIVX:
-		if runtime.GOOS == "windows" {
-			// TODO Complete for Windows
-		} else {
-			cRun := exec.Command(dbf+cPIVXCliFile, "stop")
-			if err := cRun.Run(); err != nil {
-				return fmt.Errorf("Unable to StopPIVXD:%v", err)
-			}
-
-			for i := 0; i < 50; i++ {
-				sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
-				if !sr {
-					return nil
-				}
-				fmt.Printf("\rWaiting for pivxd server to stop %d/"+strconv.Itoa(50), i+1)
-				time.Sleep(3 * time.Second)
-
-			}
-		}
-	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
-			// TODO Complete for Windows
-		} else {
-			cRun := exec.Command(dbf+cTrezarcoinCliFile, "stop")
-			if err := cRun.Run(); err != nil {
-				return fmt.Errorf("Unable to StopCoinDaemon:%v", err)
-			}
-
-			for i := 0; i < 50; i++ {
-				sr, _, _ := IsCoinDaemonRunning() //DiviDRunning()
-				if !sr {
-					return nil
-				}
-				fmt.Printf("\rWaiting for "+coind+" server to stop %d/"+strconv.Itoa(50), i+1)
-				time.Sleep(3 * time.Second)
-
-			}
-		}
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-
-	return nil
-}
 
 // UnlockWallet - Used by the server to unlock the wallet
 func UnlockWallet(pword string, attempts int, forStaking bool) (bool, error) {

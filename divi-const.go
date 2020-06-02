@@ -2,7 +2,6 @@ package gwcommon
 
 const (
 	cCoinNameDivi   string = "Divi"
-	cDiviAddNodeURL string = "https://api.diviproject.org/v1/addnode"
 
 	// CDiviAppVersion - The app version of Divi
 	CDiviAppVersion string = "1.08"
