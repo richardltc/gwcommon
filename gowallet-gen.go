@@ -2,7 +2,6 @@ package gwcommon
 
 import (
 	"bufio"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -11,7 +10,6 @@ import (
 	"os/exec"
 	"os/user"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 
@@ -39,9 +37,6 @@ const (
 	CAppUpdaterFileCompiledWin string = "updater.exe"
 
 	cWalletSeedFileGoDivi string = "unsecure-divi-seed.txt"
-
-	cRPCUserStr     string = "rpcuser"
-	cRPCPasswordStr string = "rpcpassword"
 
 	// Divid Responses
 	cDiviDNotRunningError     string = "error: couldn't connect to server"
@@ -227,26 +222,6 @@ type tickerStruct struct {
 			} `json:"USD"`
 		} `json:"quote"`
 	} `json:"DIVI"`
-}
-
-// WalletInfoStruct - The WalletInfoStruct
-type WalletInfoStruct struct {
-	Walletversion      int     `json:"walletversion"`
-	Balance            float64 `json:"balance"`
-	UnconfirmedBalance float64 `json:"unconfirmed_balance"`
-	ImmatureBalance    float64 `json:"immature_balance"`
-	Txcount            int     `json:"txcount"`
-	Keypoololdest      int     `json:"keypoololdest"`
-	Keypoolsize        int     `json:"keypoolsize"`
-	UnlockedUntil      int     `json:"unlocked_until"`
-	EncryptionStatus   string  `json:"encryption_status"`
-	Hdchainid          string  `json:"hdchainid"`
-	Hdaccountcount     int     `json:"hdaccountcount"`
-	Hdaccounts         []struct {
-		Hdaccountindex     int `json:"hdaccountindex"`
-		Hdexternalkeyindex int `json:"hdexternalkeyindex"`
-		Hdinternalkeyindex int `json:"hdinternalkeyindex"`
-	} `json:"hdaccounts"`
 }
 
 var lastBCSyncStatus string = ""
@@ -657,11 +632,11 @@ func GetCoinDaemonFilename() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return cDiviDFile, nil
+		return CDiviDFile, nil
 	case PTPIVX:
-		return cDiviDFile, nil
+		return CDiviDFile, nil
 	case PTTrezarcoin:
-		return cTrezarcoinDFile, nil
+		return CTrezarcoinDFile, nil
 	default:
 		err = errors.New("Unable to determine ProjectType")
 
@@ -680,7 +655,6 @@ func GetCoinHomeFolder() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	//hd := getUserHomeDir()
 	hd := u.HomeDir
 	if runtime.GOOS == "windows" {
 		// add the "appdata\roaming" part.
@@ -782,44 +756,6 @@ Encrypt it now?: (y/n)`)
 	return resp
 }
 
-func GetWalletAddress(attempts int) (string, error) {
-	var err error
-	var s string = "waiting for wallet."
-	dbf, _ := GetAppsBinFolder()
-	app := dbf + cDiviCliFile
-	arg1 := cCommandDisplayWalletAddress
-	arg2 := ""
-
-	for i := 0; i < attempts; i++ {
-
-		cmd := exec.Command(app, arg1, arg2)
-		out, err := cmd.CombinedOutput()
-
-		if err == nil {
-			return string(out), err
-		}
-
-		fmt.Printf("\r"+s+" %d/"+strconv.Itoa(attempts), i+1)
-
-		time.Sleep(3 * time.Second)
-
-		// t := string(out)
-		// if strings.Contains(string(out), "Loading block index....") {
-		// 	//s = s + "."
-		// 	//fmt.Println(s)
-		// 	fmt.Printf("\r"+s+" %d/"+strconv.Itoa(attempts), i+1)
-		// 	fmt.Println(t)
-
-		// 	time.Sleep(3 * time.Second)
-
-		// }
-
-	}
-
-	return "", err
-
-}
-
 func GetWalletEncryptionPassword() string {
 	reader := bufio.NewReader(os.Stdin)
 	for i := 0; i <= 2; i++ {
@@ -836,54 +772,6 @@ func GetWalletEncryptionPassword() string {
 		}
 	}
 	return ""
-}
-
-func GetWalletInfo(dispProgress bool) (WalletInfoStruct, error) {
-	wi := WalletInfoStruct{}
-	s := "waiting for divid server.."
-	attempts := 30
-
-	// Start the DiviD server if required...
-	err := RunCoinDaemon(false)
-	if err != nil {
-		return wi, fmt.Errorf("Unable to RunDiviD: %v ", err)
-	}
-
-	dbf, err := GetAppsBinFolder()
-	if err != nil {
-		return wi, fmt.Errorf("Unable to GetAppsBinFolder: %v ", err)
-	}
-
-	for i := 0; i < attempts; i++ {
-		cmd := exec.Command(dbf+cDiviCliFile, cCommandGetWInfo)
-		out, err := cmd.CombinedOutput()
-		if err == nil {
-			errUM := json.Unmarshal([]byte(out), &wi)
-			if errUM == nil {
-				return wi, err
-			}
-		} else {
-			if dispProgress {
-				fmt.Printf("error: %v", string(out))
-			}
-
-		}
-
-		//s = s + "."
-		//fmt.Println(s)
-		if dispProgress {
-			fmt.Printf("\r"+s+" %d/"+strconv.Itoa(attempts), i+1)
-		}
-		time.Sleep(3 * time.Second)
-	}
-	return wi, nil
-}
-
-func getWalletSeedDisplayWarning() string {
-	return `
-A recovery seed can be used to recover your wallet, should anything happen to this computer.
-					
-It's a good idea to have more than one and keep each in a safe place, other than your computer.`
 }
 
 // GetWalletUnlockPassword - Retrieves the wallet unlock password that the user has entered
