@@ -16,9 +16,10 @@ const (
 
 // ServerConfStruct - The server application config struct
 type ServerConfStruct struct {
-	ProjectType               ProjectType
-	Port                      string
-	UserConfirmedSeedRecovery bool
+	ProjectType               ProjectType // The project type
+	Port                      string      // The port that the server should run on
+	Token                     string      // Stored after generation and is checked to be equal with the clients
+	UserConfirmedSeedRecovery bool        // Whether or not the user has said they've stored their recovery seed has been stored
 }
 
 // CreateDefaultServerConfFile - Only to be used by GoDeploy

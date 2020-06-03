@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +16,6 @@ import (
 	"time"
 
 	"github.com/inconshreveable/go-update"
-	"github.com/mitchellh/go-ps"
 )
 
 const (
@@ -303,7 +301,6 @@ func ConvertBCVerification(verificationPG float64) string {
 	return sProg
 }
 
-
 func doUpdate(url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -316,7 +313,6 @@ func doUpdate(url string) error {
 	}
 	return err
 }
-
 
 // GetAppsBinFolder - Returns the directory of where the apps binary files are stored
 func GetAppsBinFolder() (string, error) {
@@ -889,29 +885,6 @@ A recovery seed can be used to recover your wallet, should anything happen to th
 It's a good idea to have more than one and keep each in a safe place, other than your computer.`
 }
 
-func GetWalletSeedRecoveryResp() string {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("\n\n*** WARNING ***" + "\n\n" +
-		"You haven't provided confirmation that you've backed up your recovery seed!\n\n" +
-		"This is *extremely* important as it's the only way of recovering your wallet in the future\n\n" +
-		"To (d)isplay your reovery seed now press: d, to (c)onfirm that you've backed it up press: c, or to (m)ove on, press: m\n\n" +
-		"Please enter: [d/c/m]")
-	resp, _ := reader.ReadString('\n')
-	resp = strings.ReplaceAll(resp, "\n", "")
-	return resp
-}
-
-func GetWalletSeedRecoveryConfirmationResp() bool {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Please enter the response: " + cSeedStoredSafelyStr)
-	resp, _ := reader.ReadString('\n')
-	if resp == cSeedStoredSafelyStr+"\n" {
-		return true
-	}
-
-	return false
-}
-
 // GetWalletUnlockPassword - Retrieves the wallet unlock password that the user has entered
 func GetWalletUnlockPassword() string {
 	reader := bufio.NewReader(os.Stdin)
@@ -941,32 +914,6 @@ func IsGoWalletInstalled() bool {
 	}
 	return false
 }
-
-// // IsGoWalletCLIRunning - Is the GoWallet CLI Running
-// func IsGoWalletCLIRunning() (bool, int, error) {
-// 	var pid int
-// 	var err error
-// 	gwconf, err := GetConfigStruct(false)
-// 	if err != nil {
-// 		return false, pid, err
-// 	}
-
-// 	if runtime.GOOS == "windows" {
-// 		pid, _, err = findProcess(CAppCLIFileWinGoDivi)
-// 	} else {
-// 		pid, _, err = findProcess(CAppCLIFileGoDivi)
-// 	}
-
-// 	//pid, _, err := FindProcess(cDiviDFile)
-// 	if err.Error() == "not found" {
-// 		return false, 0, nil
-// 	}
-// 	if err == nil {
-// 		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
-// 	} else {
-// 		return false, 0, err
-// 	}
-// }
 
 // IsAppCLIRunning - Will then work out what wallet this relates to, and return bool whether the CLI app is running
 func IsAppCLIRunning() (bool, int, error) {
@@ -1046,109 +993,6 @@ func IsAppServerRunning() (bool, int, error) {
 	}
 }
 
-func runDCCommand(cmdBaseStr, cmdStr, waitingStr string, attempts int) (string, error) {
-	var err error
-	//var s string = waitingStr
-	for i := 0; i < attempts; i++ {
-		cmd := exec.Command(cmdBaseStr, cmdStr)
-		out, err := cmd.CombinedOutput()
-
-		// cmd := exec.Command(cmdBaseStr, cmdStr)
-		// cmd.Stdout = os.Stdout
-		// cmd.Stderr = os.Stderr
-		// err = cmd.Run()
-
-		if err == nil {
-			return string(out), err
-		}
-		//s = s + "."
-		//fmt.Println(s)
-		fmt.Printf("\r"+waitingStr+" %d/"+strconv.Itoa(attempts), i)
-
-		time.Sleep(3 * time.Second)
-	}
-
-	return "", err
-}
-
-func RunDCCommandWithValue(cmdBaseStr, cmdStr, valueStr, waitingStr string, attempts int) (string, error) {
-	var err error
-	//var s string = waitingStr
-	for i := 0; i < attempts; i++ {
-		cmd := exec.Command(cmdBaseStr, cmdStr, valueStr)
-		out, err := cmd.CombinedOutput()
-
-		if err == nil {
-			return string(out), err
-		}
-		//s = s + "."
-		//fmt.Println(s)
-		fmt.Printf("\r"+waitingStr+" %d/"+strconv.Itoa(attempts), i)
-		time.Sleep(3 * time.Second)
-	}
-
-	return "", err
-}
-
-// RunCoinDaemon - Run the coins Daemon e.g. Run divid
-func RunCoinDaemon(displayOutput bool) error {
-	idr, _, _ := IsCoinDaemonRunning()
-	if idr == true {
-		// Already running...
-		return nil
-	}
-
-	gwconf, err := GetCLIConfigStruct(false)
-	if err != nil {
-		return err
-	}
-	abf, _ := GetAppsBinFolder()
-
-	switch gwconf.ProjectType {
-	case PTDivi:
-		if runtime.GOOS == "windows" {
-			//_ = exec.Command(GetAppsBinFolder() + cDiviDFileWin)
-			fp := abf + cDiviDFileWin
-			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-			if err := cmd.Run(); err != nil {
-				return err
-			}
-
-		} else {
-			if displayOutput {
-				fmt.Println("Attempting to run the divid daemon...")
-			}
-
-			cmdRun := exec.Command(abf + cDiviDFile)
-			stdout, err := cmdRun.StdoutPipe()
-			if err != nil {
-				return err
-			}
-			cmdRun.Start()
-
-			buf := bufio.NewReader(stdout) // Notice that this is not in a loop
-			num := 1
-			for {
-				line, _, _ := buf.ReadLine()
-				if num > 3 {
-					os.Exit(0)
-				}
-				num++
-				if string(line) == "DIVI server starting" {
-					return nil
-				} else {
-					return errors.New("Unable to start Divi server")
-				}
-			}
-		}
-	case PTTrezarcoin:
-		// TODO Need to code this bit pronto!
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-	return nil
-}
-
 // RunAppServer - Runs the App Server
 func RunAppServer(displayOutput bool) error {
 	idr, _, _ := IsAppServerRunning()
@@ -1219,140 +1063,4 @@ func RunAppServer(displayOutput bool) error {
 	}
 
 	return nil
-}
-
-// RunInitialDaemon - Runs the divid Daemon for the first time to populate the divi.conf file
-func RunInitialDaemon() error {
-	abf, err := GetAppsBinFolder()
-	if err != nil {
-		return fmt.Errorf("Unable to GetAppsBinFolder - %v", err)
-	}
-	coind, err := GetCoinDaemonFilename()
-	if err != nil {
-		return fmt.Errorf("Unable to GetCoinDaemonFilename - %v", err)
-	}
-
-	gwconf, err := GetCLIConfigStruct(false)
-	if err != nil {
-		return fmt.Errorf("Unable to GetConfigStruct - %v", err)
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		//Run divid for the first time, so that we can get the outputted info to build the conf file
-		fmt.Println("About to run " + coind + " for the first time...")
-		cmdDividRun := exec.Command(abf + cDiviDFile)
-		out, _ := cmdDividRun.CombinedOutput()
-		// out, err := cmdDividRun.CombinedOutput()
-		// if err != nil {
-		// 	return fmt.Errorf("Unable to run "+abf+cDiviDFile+" - %v", err)
-		// }
-		fmt.Println("Populating " + cDiviConfFile + " for initial setup...")
-
-		scanner := bufio.NewScanner(strings.NewReader(string(out)))
-		var rpcuser, rpcpw string
-		for scanner.Scan() {
-			s := scanner.Text()
-			if strings.Contains(s, cRPCUserStr) {
-				rpcuser = strings.ReplaceAll(s, cRPCUserStr+"=", "")
-			}
-			if strings.Contains(s, cRPCPasswordStr) {
-				rpcpw = strings.ReplaceAll(s, cRPCPasswordStr+"=", "")
-			}
-		}
-
-		chd, _ := GetCoinHomeFolder()
-
-		err = WriteTextToFile(chd+cDiviConfFile, cRPCUserStr+"="+rpcuser)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, cRPCPasswordStr+"="+rpcpw)
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, "")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, "daemon=1")
-		if err != nil {
-			log.Fatal(err)
-		}
-		err = WriteTextToFile(chd+cDiviConfFile, "")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Now get a list of the latest "addnodes" and add them to the file:
-		// I've commented out the below, as I think it might cause future issues with blockchain syncing,
-		// because, I think that the ipaddresess in the conf file are used before any others are picked up,
-		// so, it's possible that they could all go, and then cause issues.
-
-		// gdc.AddToLog(lfp, "Adding latest master nodes to "+gdc.CDiviConfFile)
-		// addnodes, _ := gdc.GetAddNodes()
-		// sAddnodes := string(addnodes[:])
-		// gdc.WriteTextToFile(dhd+gdc.CDiviConfFile, sAddnodes)
-
-		return nil
-	case PTTrezarcoin:
-		//Run divid for the first time, so that we can get the outputted info to build the conf file
-		fmt.Println("Attempting to run " + coind + " for the first time...")
-		cmdTrezarCDRun := exec.Command(abf + coind)
-		if err := cmdTrezarCDRun.Start(); err != nil {
-			return fmt.Errorf("Failed to start %v: %v", coind, err)
-		}
-
-		return nil
-
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-	return nil
-}
-
-
-// UnlockWallet - Used by the server to unlock the wallet
-func UnlockWallet(pword string, attempts int, forStaking bool) (bool, error) {
-	var err error
-	var s string = "waiting for wallet."
-	dbf, _ := GetAppsBinFolder()
-	app := dbf + cDiviCliFile
-	arg1 := cCommandUnlockWalletFS
-	arg2 := pword
-	arg3 := "0"
-	arg4 := "true"
-	for i := 0; i < attempts; i++ {
-
-		var cmd *exec.Cmd
-		if forStaking {
-			cmd = exec.Command(app, arg1, arg2, arg3, arg4)
-		} else {
-			cmd = exec.Command(app, arg1, arg2, arg3)
-		}
-		//fmt.Println("cmd = " + dbf + cDiviCliFile + cCommandUnlockWalletFS + `"` + pword + `"` + "0")
-		out, err := cmd.CombinedOutput()
-
-		fmt.Println("string = " + string(out))
-		//fmt.Println("error = " + err.Error())
-
-		if err == nil {
-			return true, err
-		}
-
-		if strings.Contains(string(out), "The wallet passphrase entered was incorrect.") {
-			return false, err
-		}
-
-		if strings.Contains(string(out), "Loading block index....") {
-			//s = s + "."
-			//fmt.Println(s)
-			fmt.Printf("\r"+s+" %d/"+strconv.Itoa(attempts), i+1)
-
-			time.Sleep(3 * time.Second)
-
-		}
-
-	}
-
-	return false, err
 }
