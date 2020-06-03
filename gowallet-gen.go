@@ -160,6 +160,7 @@ const (
 
 // Server Request COnstants
 const (
+	CServRequestGenerateToken  string = "GenerateToken"
 	CServRequestShutdownServer string = "ShutdownServer"
 )
 
