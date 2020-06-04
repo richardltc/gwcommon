@@ -320,7 +320,7 @@ func GetAppsBinFolder() (string, error) {
 // GetActualAppsBinFolder - Only to be used by web server - Returns the directory of where the apps binary files are stored
 func GetActualAppsBinFolder() (string, error) {
 	var s string
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -360,7 +360,7 @@ func GetActualAppsBinFolder() (string, error) {
 
 // GetAppFileName - Returns the name of the app binary file e.g. godivi, godivis, godivi-installer
 func GetAppFileName(an APPType) (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -574,7 +574,7 @@ func GetAppFileName(an APPType) (string, error) {
 
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
 func GetAppCLIName() (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -593,7 +593,7 @@ func GetAppCLIName() (string, error) {
 
 // GetAppLogfileName - Returns the application logfile name e.g. godivi.log
 func GetAppLogfileName() (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -613,7 +613,7 @@ func GetAppLogfileName() (string, error) {
 
 // GetAppServerName - Returns the application Server name e.g. GoDivi Server
 func GetAppServerName() (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -633,7 +633,7 @@ func GetAppServerName() (string, error) {
 
 // GetAppName - Returns the application name e.g. GoDivi
 func GetAppName() (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -653,7 +653,7 @@ func GetAppName() (string, error) {
 
 // GetCoinDaemonFilename - Return the coin daemon file name e.g. divid
 func GetCoinDaemonFilename() (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -674,7 +674,7 @@ func GetCoinDaemonFilename() (string, error) {
 // GetCoinHomeFolder - Returns the ome folder for the coin e.g. .divi
 func GetCoinHomeFolder() (string, error) {
 	var s string
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -714,7 +714,7 @@ func GetCoinHomeFolder() (string, error) {
 
 // GetCoinName - Returns the name of the coin e.g. Divi
 func GetCoinName() (string, error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
@@ -733,7 +733,7 @@ func GetCoinName() (string, error) {
 
 // GetGoWalletDownloadLink - Used by updater and installer Returns a link of both the url and file
 func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", "", err
 	}
@@ -880,7 +880,7 @@ func IsGoWalletInstalled() bool {
 // IsAppCLIRunning - Will then work out what wallet this relates to, and return bool whether the CLI app is running
 func IsAppCLIRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return false, pid, err
 	}
@@ -919,7 +919,7 @@ func IsAppCLIRunning() (bool, int, error) {
 // IsAppServerRunning - Will then work out what wallet this relates to, and return accurate info
 func IsAppServerRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return false, pid, err
 	}
@@ -958,7 +958,7 @@ func IsAppServerRunning() (bool, int, error) {
 // IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
 func IsCoinDaemonRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return false, pid, err
 	}
@@ -998,7 +998,7 @@ func RunAppServer(displayOutput bool) error {
 		// Already running...
 		return nil
 	}
-	gwconf, err := GetCLIConfigStruct(false)
+	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return err
 	}
