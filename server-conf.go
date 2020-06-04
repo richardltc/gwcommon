@@ -17,6 +17,7 @@ const (
 // ServerConfStruct - The server application config struct
 type ServerConfStruct struct {
 	BinFolder                 string      // The folder that contains the coin binary files
+	FirstTimeRun              bool        // Is this the first time the server has run? If so, we need to store the BinFolder
 	ProjectType               ProjectType // The project type
 	Port                      string      // The port that the server should run on
 	Token                     string      // Stored after generation and is checked to be equal with the clients
