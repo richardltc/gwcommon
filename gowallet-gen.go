@@ -310,6 +310,15 @@ func findProcess(key string) (int, string, error) {
 
 // GetAppsBinFolder - Returns the directory of where the apps binary files are stored
 func GetAppsBinFolder() (string, error) {
+	sConf, err := GetServerConfStruct()
+	if err != nil {
+		return "", err
+	}
+	return sConf.BinFolder, nil
+}
+
+// GetActualAppsBinFolder - Only to be used by web server - Returns the directory of where the apps binary files are stored
+func GetActualAppsBinFolder() (string, error) {
 	var s string
 	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
