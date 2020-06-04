@@ -7,11 +7,13 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/spf13/viper"
 )
 
 const (
 	// CServerConfFile - To be used only by GoDeploy
-	CServerConfFile string = "server-config.json"
+	CServerConfFile string = "server-config"
 )
 
 // ServerConfStruct - The server application config struct
@@ -50,9 +52,26 @@ func CreateDefaultServerConfFile(confDir string, pt ProjectType) error {
 	return nil
 }
 
+// GetServerConfStruct - Retrieve the server config struct via viper
+func GetServerConfStruct() (ServerConfStruct, error) {
+
+	viper.SetConfigName(CServerConfFile)
+	viper.SetConfigType("toml")
+	viper.AddConfigPath(".")
+	var cs ServerConfStruct
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file, %s", err)
+	}
+	err := viper.Unmarshal(&cs)
+	if err != nil {
+		log.Fatalf("unable to decode into struct, %v", err)
+	}
+	return cs, nil
+}
+
 // GetServerConfigStruct - Retrieve the application config struct
 func GetServerConfigStruct(refreshFields bool) (ServerConfStruct, error) {
-
 	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
 
 	// Create the file if it doesn't already exist
@@ -130,5 +149,31 @@ func SetServerConfigStruct(dir string, cs ServerConfStruct) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// SetServerConfStruct - Save the server config struct via viper
+func SetServerConfStruct(cs ServerConfStruct) error {
+
+	viper.SetConfigName(CServerConfFile)
+	viper.SetConfigType("toml")
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file, %s", err)
+	}
+
+	viper.Set("BinFolder", cs.BinFolder)
+	viper.Set("FirstTimeRun", cs.FirstTimeRun)
+	viper.Set("ProjectType", cs.ProjectType)
+	viper.Set("Port", cs.Port)
+	viper.Set("Token", cs.Token)
+	viper.Set("UserConfirmedSeedRecovery", cs.UserConfirmedSeedRecovery)
+
+	err := viper.WriteConfig()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
