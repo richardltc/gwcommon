@@ -45,7 +45,7 @@ const (
 
 	cGoDiviExportPath         string = "export PATH=$PATH:"
 	CUninstallConfirmationStr string = "Confirm"
-	cSeedStoredSafelyStr      string = "Confirm"
+	CSeedStoredSafelyStr      string = "Confirm"
 
 	// CMinRequiredMemoryMB - Needed by install command
 	CMinRequiredMemoryMB int = 920
