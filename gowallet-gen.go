@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/inconshreveable/go-update"
+	"github.com/mitchellh/go-ps"
 )
 
 const (
@@ -288,6 +289,23 @@ func doUpdate(url string) error {
 		// error handling
 	}
 	return err
+}
+
+func findProcess(key string) (int, string, error) {
+	pname := ""
+	pid := 0
+	err := errors.New("not found")
+	ps, _ := ps.Processes()
+
+	for i := range ps {
+		if ps[i].Executable() == key {
+			pid = ps[i].Pid()
+			pname = ps[i].Executable()
+			err = nil
+			break
+		}
+	}
+	return pid, pname, err
 }
 
 // GetAppsBinFolder - Returns the directory of where the apps binary files are stored
@@ -705,7 +723,7 @@ func GetCoinName() (string, error) {
 }
 
 // GetGoWalletDownloadLink - Used by updater and installer Returns a link of both the url and file
-func GetGoWalletDownloadLink(ostype gwc.OSType) (url, file string, err error) {
+func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 	gwconf, err := GetCLIConfigStruct(false)
 	if err != nil {
 		return "", "", err
