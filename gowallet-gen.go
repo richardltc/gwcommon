@@ -320,7 +320,7 @@ func GetAppsBinFolder() (string, error) {
 // GetActualAppsBinFolder - Only to be used by web server - Returns the directory of where the apps binary files are stored
 func GetActualAppsBinFolder() (string, error) {
 	var s string
-	gwconf, err := GetCLIConfStruct()
+	gwconf, err := GetServerConfStruct()
 	if err != nil {
 		return "", err
 	}
