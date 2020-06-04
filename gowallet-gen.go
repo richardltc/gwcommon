@@ -704,6 +704,52 @@ func GetCoinName() (string, error) {
 	return "", nil
 }
 
+// GetGoWalletDownloadLink - Used by updater and installer Returns a link of both the url and file
+func GetGoWalletDownloadLink(ostype gwc.OSType) (url, file string, err error) {
+	gwconf, err := GetCLIConfigStruct(false)
+	if err != nil {
+		return "", "", err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		switch ostype {
+		case OSTArm:
+			return CDownloadURLGD, CDFileGodiviLatetsARM, nil
+		case OSTLinux:
+			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
+		case OSTWindows:
+			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
+		}
+	case PTPIVX:
+		switch ostype {
+		case OSTArm:
+			return CDownloadURLGD, CDFileGoPIVXLatetsARM, nil
+		case OSTLinux:
+			return CDownloadURLGD, CDFileGoPIVXLatetsLinux, nil
+		case OSTWindows:
+			return CDownloadURLGD, CDFileGoPIVXLatetsWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
+		}
+	case PTTrezarcoin:
+		switch ostype {
+		case OSTArm:
+			return CDownloadURLGD, CDFileGoTrezarcoinLatetsARM, nil
+		case OSTLinux:
+			return CDownloadURLGD, CDFileGoTrezarcoinLatetsLinux, nil
+		case OSTWindows:
+			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
+		default:
+			err = errors.New("Unable to determine OSType")
+		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
+	}
+	return "", "", nil
+}
+
 func GetNextProgMNIndicator(LIndicator string) string {
 	if LIndicator == cProgress1 {
 		lastMNSyncStatus = cProgress2
