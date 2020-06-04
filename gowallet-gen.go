@@ -946,6 +946,42 @@ func IsAppServerRunning() (bool, int, error) {
 	}
 }
 
+// IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
+func IsCoinDaemonRunning() (bool, int, error) {
+	var pid int
+	gwconf, err := GetCLIConfigStruct(false)
+	if err != nil {
+		return false, pid, err
+	}
+	switch gwconf.ProjectType {
+	case PTDivi:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CDiviDFileWin)
+		} else {
+			pid, _, err = findProcess(CDiviDFile)
+		}
+	case PTPIVX:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CPIVXDFileWin)
+		} else {
+			pid, _, err = findProcess(CPIVXDFile)
+		}
+	case PTTrezarcoin:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CTrezarcoinDFileWin)
+		} else {
+			pid, _, err = findProcess(CTrezarcoinDFile)
+		}
+	default:
+		err = errors.New("Unable to determine ProjectType")
+	}
+
+	if err == nil {
+		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
+	}
+	return false, 0, err
+}
+
 // RunAppServer - Runs the App Server
 func RunAppServer(displayOutput bool) error {
 	idr, _, _ := IsAppServerRunning()
