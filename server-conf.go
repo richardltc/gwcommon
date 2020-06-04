@@ -1,12 +1,7 @@
 package gwcommon
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/spf13/viper"
 )
@@ -29,36 +24,36 @@ type ServerConfStruct struct {
 }
 
 // CreateDefaultServerConfFile - Only to be used by GoDeploy
-func CreateDefaultServerConfFile(confDir string, pt ProjectType) error {
-	conf, err := newServerConfStruct(pt)
-	if err != nil {
-		return err
-	}
+// func CreateDefaultServerConfFile(confDir string, pt ProjectType) error {
+// 	conf, err := newServerConfStruct(pt)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	jssb, err := json.MarshalIndent(conf, "", "  ")
-	if err != nil {
-		return err
-	}
+// 	jssb, err := json.MarshalIndent(conf, "", "  ")
+// 	if err != nil {
+// 		return err
+// 	}
 
-	f, err := os.Create(confDir + CServerConfFile)
-	if err != nil {
-		return err
-	}
+// 	f, err := os.Create(confDir + CServerConfFile)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	log.Println("Creating default server config file " + f.Name())
-	_, err = f.WriteString(string(jssb))
-	err = f.Close()
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// 	log.Println("Creating default server config file " + f.Name())
+// 	_, err = f.WriteString(string(jssb))
+// 	err = f.Close()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
 // GetServerConfStruct - Retrieve the server config struct via viper
 func GetServerConfStruct() (ServerConfStruct, error) {
 
 	viper.SetConfigName(CServerConfFile)
-	viper.SetConfigType("toml")
+	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	var cs ServerConfStruct
 
@@ -72,93 +67,93 @@ func GetServerConfStruct() (ServerConfStruct, error) {
 	return cs, nil
 }
 
-// GetServerConfigStruct - Retrieve the application config struct
-func GetServerConfigStruct(refreshFields bool) (ServerConfStruct, error) {
-	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
+// // GetServerConfigStruct - Retrieve the application config struct
+// func GetServerConfigStruct(refreshFields bool) (ServerConfStruct, error) {
+// 	// We can't do the below, because we don't know what project we currently are, as that's dictated by GoDeploy
 
-	// Create the file if it doesn't already exist
-	// dir := AddTrailingSlash(confDir)
-	// if _, err := os.Stat(dir + cConfFile); os.IsNotExist(err) {
-	// 	createDefaultConfFile(confDir, pt)
-	// }
+// 	// Create the file if it doesn't already exist
+// 	// dir := AddTrailingSlash(confDir)
+// 	// if _, err := os.Stat(dir + cConfFile); os.IsNotExist(err) {
+// 	// 	createDefaultConfFile(confDir, pt)
+// 	// }
 
-	// Get the config file
-	dir, err := GetRunningDir()
-	if err != nil {
-		return ServerConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v", err)
-	}
-	file, err := ioutil.ReadFile(dir + CServerConfFile)
-	if err != nil {
-		return ServerConfStruct{}, err
-	}
+// 	// Get the config file
+// 	dir, err := GetRunningDir()
+// 	if err != nil {
+// 		return ServerConfStruct{}, fmt.Errorf("Unable to GetRunningDir - %v", err)
+// 	}
+// 	file, err := ioutil.ReadFile(dir + CServerConfFile)
+// 	if err != nil {
+// 		return ServerConfStruct{}, err
+// 	}
 
-	cs := ServerConfStruct{}
+// 	cs := ServerConfStruct{}
 
-	err = json.Unmarshal([]byte(file), &cs)
-	if err != nil {
-		return ServerConfStruct{}, err
-	}
+// 	err = json.Unmarshal([]byte(file), &cs)
+// 	if err != nil {
+// 		return ServerConfStruct{}, err
+// 	}
 
-	// Now, let's write the file back because it may have some new fields
-	if refreshFields {
-		SetServerConfigStruct(dir, cs)
-	}
+// 	// Now, let's write the file back because it may have some new fields
+// 	if refreshFields {
+// 		SetServerConfigStruct(dir, cs)
+// 	}
 
-	return cs, nil
-}
+// 	return cs, nil
+// }
 
-func newServerConfStruct(pt ProjectType) (ServerConfStruct, error) {
-	cnf := ServerConfStruct{}
-	var err error
+// func newServerConfStruct(pt ProjectType) (ServerConfStruct, error) {
+// 	cnf := ServerConfStruct{}
+// 	var err error
 
-	switch pt {
-	case PTDivi:
-		cnf.ProjectType = PTDivi
-	case PTPhore:
-		cnf.ProjectType = PTPhore
-	case PTPIVX:
-		cnf.ProjectType = PTPIVX
-	case PTTrezarcoin:
-		cnf.ProjectType = PTTrezarcoin
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
+// 	switch pt {
+// 	case PTDivi:
+// 		cnf.ProjectType = PTDivi
+// 	case PTPhore:
+// 		cnf.ProjectType = PTPhore
+// 	case PTPIVX:
+// 		cnf.ProjectType = PTPIVX
+// 	case PTTrezarcoin:
+// 		cnf.ProjectType = PTTrezarcoin
+// 	default:
+// 		err = errors.New("Unable to determine ProjectType")
+// 	}
 
-	cnf.Port = "4000"
+// 	cnf.Port = "4000"
 
-	cnf.UserConfirmedSeedRecovery = false
+// 	cnf.UserConfirmedSeedRecovery = false
 
-	if err != nil {
-		return cnf, err
-	}
+// 	if err != nil {
+// 		return cnf, err
+// 	}
 
-	return cnf, nil
-}
+// 	return cnf, nil
+// }
 
-// SetServerConfigStruct - Save the application config struct
-func SetServerConfigStruct(dir string, cs ServerConfStruct) error {
-	jssb, _ := json.MarshalIndent(cs, "", "  ")
-	dir = AddTrailingSlash(dir)
-	sFile := dir + CServerConfFile
+// // SetServerConfigStruct - Save the application config struct
+// func SetServerConfigStruct(dir string, cs ServerConfStruct) error {
+// 	jssb, _ := json.MarshalIndent(cs, "", "  ")
+// 	dir = AddTrailingSlash(dir)
+// 	sFile := dir + CServerConfFile
 
-	f, err := os.Create(sFile)
-	if err != nil {
-		return err
-	}
+// 	f, err := os.Create(sFile)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	_, err = f.WriteString(string(jssb))
-	err = f.Close()
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// 	_, err = f.WriteString(string(jssb))
+// 	err = f.Close()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
 // SetServerConfStruct - Save the server config struct via viper
 func SetServerConfStruct(cs ServerConfStruct) error {
 
 	viper.SetConfigName(CServerConfFile)
-	viper.SetConfigType("toml")
+	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
