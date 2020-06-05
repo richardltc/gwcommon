@@ -612,12 +612,13 @@ func GetAppLogfileName() (string, error) {
 }
 
 // GetAppServerName - Returns the application Server name e.g. GoDivi Server
-func GetAppServerName() (string, error) {
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
-		return "", err
-	}
-	switch gwconf.ProjectType {
+func GetAppServerName(pt ProjectType) (string, error) {
+	// gwconf, err := GetCLIConfStruct()
+	// if err != nil {
+	// 	return "", err
+	// }
+	var err error
+	switch pt {
 	case PTDivi:
 		return CAppNameServerGoDivi, nil
 	case PTPIVX:
@@ -626,7 +627,9 @@ func GetAppServerName() (string, error) {
 		return CAppNameServerGoTrezarcoin, nil
 	default:
 		err = errors.New("Unable to determine ProjectType")
-
+	}
+	if err != nil {
+		return "", err
 	}
 	return "", nil
 }
