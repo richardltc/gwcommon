@@ -308,8 +308,49 @@ func findProcess(key string) (int, string, error) {
 	return pid, pname, err
 }
 
-// GetAppsBinFolder - Returns the directory of where the apps binary files are stored
-func GetAppsBinFolder() (string, error) {
+// GetAppsBinFolderForC - Returns the directory of where the apps binary files are stored
+func GetAppsBinFolderForC() (string, error) {
+	var s string
+	gwconf, err := GetCLIConfStruct()
+	if err != nil {
+		return "", err
+	}
+	u, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+	//hd := getUserHomeDir()
+	hd := u.HomeDir
+	if runtime.GOOS == "windows" {
+		// add the "appdata\roaming" part.
+		switch gwconf.ProjectType {
+		case PTDivi:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+		case PTPIVX:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
+		case PTTrezarcoin:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
+		default:
+			err = errors.New("Unable to determine ProjectType")
+		}
+
+	} else {
+		switch gwconf.ProjectType {
+		case PTDivi:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+		case PTPIVX:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
+		case PTTrezarcoin:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
+		default:
+			err = errors.New("Unable to determine ProjectType")
+		}
+	}
+	return s, nil
+}
+
+// GetAppsBinFolderForS - Returns the directory of where the apps binary files are stored
+func GetAppsBinFolderForS() (string, error) {
 	sConf, err := GetServerConfStruct()
 	if err != nil {
 		return "", err
