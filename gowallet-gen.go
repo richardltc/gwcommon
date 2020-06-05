@@ -236,7 +236,7 @@ func AddProjectPath() error {
 			return err
 		}
 		sProfile := AddTrailingSlash(u.HomeDir) + ".profile"
-		gdf, err := GetAppsBinFolder()
+		gdf, err := GetAppsBinFolderForC()
 		if err != nil {
 			return fmt.Errorf("Unable to GetAppsBinFolder: %v ", err)
 		}
@@ -912,7 +912,7 @@ func getYesNoResp(msg string) string {
 // IsGoWalletInstalled - Returns bool if GoWallet has been installed
 func IsGoWalletInstalled() bool {
 	// First, let's make sure that we have our divi bin folder
-	dbf, _ := GetAppsBinFolder()
+	dbf, _ := GetAppsBinFolderForC()
 
 	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
 		// e.g. /home/user/godivi/ bin folder exists..
@@ -1046,7 +1046,7 @@ func RunAppServer(displayOutput bool) error {
 	if err != nil {
 		return err
 	}
-	abf, _ := GetAppsBinFolder()
+	abf, _ := GetAppsBinFolderForC()
 
 	switch gwconf.ProjectType {
 	case PTDivi:
