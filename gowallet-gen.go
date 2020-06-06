@@ -696,22 +696,39 @@ func GetAppName() (string, error) {
 }
 
 // GetCoinDaemonFilename - Return the coin daemon file name e.g. divid
-func GetCoinDaemonFilename() (string, error) {
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
+func GetCoinDaemonFilename(at APPType) (string, error) {
+	// TODO Get the config file type, depending on what app type was passed in
+	var pt ProjectType
+	switch at {
+	case APPTCLI:
+		conf, err := GetCLIConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	case APPTServer:
+		conf, err := GetServerConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	default:
+		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
-	switch gwconf.ProjectType {
+
+	switch pt {
 	case PTDivi:
 		return CDiviDFile, nil
 	case PTPIVX:
-		return CDiviDFile, nil
+		return CPIVXDFile, nil
 	case PTTrezarcoin:
 		return CTrezarcoinDFile, nil
 	default:
-		err = errors.New("Unable to determine ProjectType")
-
+		err := errors.New("Unable to determine ProjectType")
+		return "", err
 	}
+
 	return "", nil
 }
 
