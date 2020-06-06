@@ -697,7 +697,6 @@ func GetAppName() (string, error) {
 
 // GetCoinDaemonFilename - Return the coin daemon file name e.g. divid
 func GetCoinDaemonFilename(at APPType) (string, error) {
-	// TODO Get the config file type, depending on what app type was passed in
 	var pt ProjectType
 	switch at {
 	case APPTCLI:
@@ -733,12 +732,27 @@ func GetCoinDaemonFilename(at APPType) (string, error) {
 }
 
 // GetCoinHomeFolder - Returns the ome folder for the coin e.g. .divi
-func GetCoinHomeFolder() (string, error) {
-	var s string
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
+func GetCoinHomeFolder(at APPType) (string, error) {
+	var pt ProjectType
+	switch at {
+	case APPTCLI:
+		conf, err := GetCLIConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	case APPTServer:
+		conf, err := GetServerConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	default:
+		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
+
+	var s string
 	u, err := user.Current()
 	if err != nil {
 		return "", err
@@ -746,7 +760,7 @@ func GetCoinHomeFolder() (string, error) {
 	hd := u.HomeDir
 	if runtime.GOOS == "windows" {
 		// add the "appdata\roaming" part.
-		switch gwconf.ProjectType {
+		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
 		case PTPIVX:
@@ -758,7 +772,7 @@ func GetCoinHomeFolder() (string, error) {
 
 		}
 	} else {
-		switch gwconf.ProjectType {
+		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
 		case PTPIVX:
