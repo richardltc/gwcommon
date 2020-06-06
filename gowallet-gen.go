@@ -909,10 +909,22 @@ func getYesNoResp(msg string) string {
 	return resp
 }
 
-// IsGoWalletInstalled - Returns bool if GoWallet has been installed
-func IsGoWalletInstalled() bool {
+// IsGoWalletInstalledForC - Returns bool if GoWallet has been installed
+func IsGoWalletInstalledForC() bool {
 	// First, let's make sure that we have our divi bin folder
 	dbf, _ := GetAppsBinFolderForC()
+
+	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
+		// e.g. /home/user/godivi/ bin folder exists..
+		return true
+	}
+	return false
+}
+
+// IsGoWalletInstalledForS - Returns bool if GoWallet has been installed
+func IsGoWalletInstalledForS() bool {
+	// First, let's make sure that we have our divi bin folder
+	dbf, _ := GetAppsBinFolderForS()
 
 	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
 		// e.g. /home/user/godivi/ bin folder exists..
