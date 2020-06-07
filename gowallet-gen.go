@@ -236,7 +236,7 @@ func AddProjectPath() error {
 			return err
 		}
 		sProfile := AddTrailingSlash(u.HomeDir) + ".profile"
-		gdf, err := GetAppsBinFolderForC()
+		gdf, err := GetAppsBinFolder(APPTCLI)
 		if err != nil {
 			return fmt.Errorf("Unable to GetAppsBinFolder: %v ", err)
 		}
@@ -309,12 +309,27 @@ func findProcess(key string) (int, string, error) {
 }
 
 // GetAppsBinFolderForC - Returns the directory of where the apps binary files are stored
-func GetAppsBinFolderForC() (string, error) {
-	var s string
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
+func GetAppsBinFolder(at APPType) (string, error) {
+	var pt ProjectType
+	switch at {
+	case APPTCLI:
+		conf, err := GetCLIConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	case APPTServer:
+		conf, err := GetServerConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	default:
+		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
+
+	var s string
 	u, err := user.Current()
 	if err != nil {
 		return "", err
@@ -323,7 +338,7 @@ func GetAppsBinFolderForC() (string, error) {
 	hd := u.HomeDir
 	if runtime.GOOS == "windows" {
 		// add the "appdata\roaming" part.
-		switch gwconf.ProjectType {
+		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
 		case PTPIVX:
@@ -335,7 +350,7 @@ func GetAppsBinFolderForC() (string, error) {
 		}
 
 	} else {
-		switch gwconf.ProjectType {
+		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
 		case PTPIVX:
@@ -349,65 +364,65 @@ func GetAppsBinFolderForC() (string, error) {
 	return s, nil
 }
 
-// GetAppsBinFolderForS - Returns the directory of where the apps binary files are stored
-func GetAppsBinFolderForS() (string, error) {
-	sConf, err := GetServerConfStruct()
-	if err != nil {
-		return "", err
-	}
-	return sConf.BinFolder, nil
-}
+// // GetAppsBinFolderForS - Returns the directory of where the apps binary files are stored
+// func GetAppsBinFolderForS() (string, error) {
+// 	sConf, err := GetServerConfStruct()
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return sConf.BinFolder, nil
+// }
 
-// GetActualAppsBinFolder - Only to be used by web server - Returns the directory of where the apps binary files are stored
-func GetActualAppsBinFolder() (string, error) {
-	var s string
-	gwconf, err := GetServerConfStruct()
-	if err != nil {
-		return "", err
-	}
-	u, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	//hd := getUserHomeDir()
-	hd := u.HomeDir
-	if runtime.GOOS == "windows" {
-		// add the "appdata\roaming" part.
-		switch gwconf.ProjectType {
-		case PTDivi:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
-		case PTPIVX:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
-		case PTTrezarcoin:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
-		default:
-			err = errors.New("Unable to determine ProjectType")
-		}
+// // GetActualAppsBinFolder - Only to be used by web server - Returns the directory of where the apps binary files are stored
+// func GetActualAppsBinFolder() (string, error) {
+// 	var s string
+// 	gwconf, err := GetServerConfStruct()
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	u, err := user.Current()
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	//hd := getUserHomeDir()
+// 	hd := u.HomeDir
+// 	if runtime.GOOS == "windows" {
+// 		// add the "appdata\roaming" part.
+// 		switch gwconf.ProjectType {
+// 		case PTDivi:
+// 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+// 		case PTPIVX:
+// 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
+// 		case PTTrezarcoin:
+// 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
+// 		default:
+// 			err = errors.New("Unable to determine ProjectType")
+// 		}
 
-	} else {
-		switch gwconf.ProjectType {
-		case PTDivi:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
-		case PTPIVX:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
-		case PTTrezarcoin:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
-		default:
-			err = errors.New("Unable to determine ProjectType")
-		}
-	}
-	return s, nil
-}
+// 	} else {
+// 		switch gwconf.ProjectType {
+// 		case PTDivi:
+// 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+// 		case PTPIVX:
+// 			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
+// 		case PTTrezarcoin:
+// 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
+// 		default:
+// 			err = errors.New("Unable to determine ProjectType")
+// 		}
+// 	}
+// 	return s, nil
+// }
 
 // GetAppFileName - Returns the name of the app binary file e.g. godivi, godivis, godivi-installer
-func GetAppFileName(an APPType) (string, error) {
+func GetAppFileName(at APPType) (string, error) {
 	gwconf, err := GetCLIConfStruct()
 	if err != nil {
 		return "", err
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		switch an {
+		switch at {
 		case APPTCLI:
 			switch runtime.GOOS {
 			case "arm":
@@ -474,7 +489,7 @@ func GetAppFileName(an APPType) (string, error) {
 			err = errors.New("Unable to determine ProjectType")
 		}
 	case PTPIVX:
-		switch an {
+		switch at {
 		case APPTCLI:
 			switch runtime.GOOS {
 			case "arm":
@@ -541,7 +556,7 @@ func GetAppFileName(an APPType) (string, error) {
 			err = errors.New("Unable to determine ProjectType")
 		}
 	case PTTrezarcoin:
-		switch an {
+		switch at {
 		case APPTCLI:
 			switch runtime.GOOS {
 			case "arm":
@@ -614,12 +629,26 @@ func GetAppFileName(an APPType) (string, error) {
 }
 
 // GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
-func GetAppCLIName() (string, error) {
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
+func GetAppCLIName(at APPType) (string, error) {
+	var pt ProjectType
+	switch at {
+	case APPTCLI:
+		conf, err := GetCLIConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	case APPTServer:
+		conf, err := GetServerConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	default:
+		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
-	switch gwconf.ProjectType {
+	switch pt {
 	case PTDivi:
 		return CAppNameCLIGoDivi, nil
 	case PTPIVX:
@@ -627,7 +656,8 @@ func GetAppCLIName() (string, error) {
 	case PTTrezarcoin:
 		return CAppNameCLIGoTrezarcoin, nil
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err := errors.New("Unable to determine ProjectType")
+		return "", err
 	}
 	return "", nil
 }
@@ -654,12 +684,11 @@ func GetAppLogfileName() (string, error) {
 
 // GetAppServerName - Returns the application Server name e.g. GoDivi Server
 func GetAppServerName(pt ProjectType) (string, error) {
-	// gwconf, err := GetCLIConfStruct()
-	// if err != nil {
-	// 	return "", err
-	// }
-	var err error
-	switch pt {
+	gwconf, err := GetCLIConfStruct()
+	if err != nil {
+		return "", err
+	}
+	switch gwconf.ProjectType {
 	case PTDivi:
 		return CAppNameServerGoDivi, nil
 	case PTPIVX:
@@ -676,12 +705,26 @@ func GetAppServerName(pt ProjectType) (string, error) {
 }
 
 // GetAppName - Returns the application name e.g. GoDivi
-func GetAppName() (string, error) {
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
+func GetAppName(at APPType) (string, error) {
+	var pt ProjectType
+	switch at {
+	case APPTCLI:
+		conf, err := GetCLIConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	case APPTServer:
+		conf, err := GetServerConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	default:
+		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
-	switch gwconf.ProjectType {
+	switch pt {
 	case PTDivi:
 		return CAppNameGoDivi, nil
 	case PTPIVX:
@@ -689,8 +732,8 @@ func GetAppName() (string, error) {
 	case PTTrezarcoin:
 		return CAppNameGoTrezarcoin, nil
 	default:
-		err = errors.New("Unable to determine ProjectType")
-
+		err := errors.New("Unable to determine ProjectType")
+		return "", err
 	}
 	return "", nil
 }
@@ -788,12 +831,27 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 }
 
 // GetCoinName - Returns the name of the coin e.g. Divi
-func GetCoinName() (string, error) {
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
+func GetCoinName(at APPType) (string, error) {
+	var pt ProjectType
+	switch at {
+	case APPTCLI:
+		conf, err := GetCLIConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	case APPTServer:
+		conf, err := GetServerConfStruct()
+		if err != nil {
+			return "", err
+		}
+		pt = conf.ProjectType
+	default:
+		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
-	switch gwconf.ProjectType {
+
+	switch pt {
 	case PTDivi:
 		return cCoinNameDivi, nil
 	case PTPIVX:
@@ -801,8 +859,10 @@ func GetCoinName() (string, error) {
 	case PTTrezarcoin:
 		return cCoinNameTrezarcoin, nil
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err := errors.New("Unable to determine ProjectType")
+		return "", err
 	}
+
 	return "", nil
 }
 
@@ -940,10 +1000,10 @@ func getYesNoResp(msg string) string {
 	return resp
 }
 
-// IsGoWalletInstalledForC - Returns bool if GoWallet has been installed
-func IsGoWalletInstalledForC() bool {
+// IsGoWalletInstalled - Returns bool if GoWallet has been installed
+func IsGoWalletInstalled(at APPType) bool {
 	// First, let's make sure that we have our divi bin folder
-	dbf, _ := GetAppsBinFolderForC()
+	dbf, _ := GetAppsBinFolder(at)
 
 	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
 		// e.g. /home/user/godivi/ bin folder exists..
@@ -952,17 +1012,17 @@ func IsGoWalletInstalledForC() bool {
 	return false
 }
 
-// IsGoWalletInstalledForS - Returns bool if GoWallet has been installed
-func IsGoWalletInstalledForS() bool {
-	// First, let's make sure that we have our divi bin folder
-	dbf, _ := GetAppsBinFolderForS()
+// // IsGoWalletInstalledForS - Returns bool if GoWallet has been installed
+// func IsGoWalletInstalledForS() bool {
+// 	// First, let's make sure that we have our divi bin folder
+// 	dbf, _ := GetAppsBinFolderForS()
 
-	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
-		// e.g. /home/user/godivi/ bin folder exists..
-		return true
-	}
-	return false
-}
+// 	if _, err := os.Stat(dbf); !os.IsNotExist(err) {
+// 		// e.g. /home/user/godivi/ bin folder exists..
+// 		return true
+// 	}
+// 	return false
+// }
 
 // IsAppCLIRunning - Will then work out what wallet this relates to, and return bool whether the CLI app is running
 func IsAppCLIRunning() (bool, int, error) {
@@ -1089,7 +1149,7 @@ func RunAppServer(displayOutput bool) error {
 	if err != nil {
 		return err
 	}
-	abf, _ := GetAppsBinFolderForC()
+	abf, _ := GetAppsBinFolder(APPTCLI)
 
 	switch gwconf.ProjectType {
 	case PTDivi:
