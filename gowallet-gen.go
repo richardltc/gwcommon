@@ -149,9 +149,10 @@ type args struct {
 type ServerResponse int
 
 const (
-	NotRequired      ServerResponse = 0
-	MalformedRequest ServerResponse = 1
-	NoServerError    ServerResponse = 2
+	NotRequired               ServerResponse = 0
+	MalformedRequest          ServerResponse = 1
+	NoServerError             ServerResponse = 2
+	WalletDidNotRespondInTime ServerResponse = 30
 )
 
 // Server Request COnstants
