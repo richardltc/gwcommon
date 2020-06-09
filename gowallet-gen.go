@@ -155,10 +155,16 @@ const (
 	WalletDidNotRespondInTime ServerResponse = 30
 )
 
-// Server Request COnstants
+// Server Request Constants
 const (
 	CServRequestGenerateToken  string = "GenerateToken"
 	CServRequestShutdownServer string = "ShutdownServer"
+)
+
+// Wallet Request Constants
+const (
+	CWalletRequestGetPrivateKey   string = "GetPrivateKey"
+	CWalletRequestGetWalletStatus string = "GetWalletStatus"
 )
 
 type listTransactions []struct {
