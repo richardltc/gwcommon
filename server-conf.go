@@ -8,7 +8,7 @@ import (
 
 const (
 	// CServerConfFile - To be used only by GoDeploy
-	CServerConfFile string = "server-config"
+	CServerConfFile string = "server"
 	// CServerConfFileExt - To be used only by GoDeploy
 	CServerConfFileExt string = ".yaml"
 )

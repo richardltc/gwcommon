@@ -8,7 +8,7 @@ import (
 
 const (
 	// CCLIConfFile - To be used only by GoDeploy
-	CCLIConfFile    string = "cli-config"
+	CCLIConfFile    string = "cli"
 	CCLIConfFileExt string = ".yaml"
 )
 
