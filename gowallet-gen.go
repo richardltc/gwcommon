@@ -11,7 +11,6 @@ import (
 	"os/user"
 	"runtime"
 	"strings"
-	"time"
 
 	"github.com/inconshreveable/go-update"
 	"github.com/mitchellh/go-ps"
@@ -167,71 +166,6 @@ const (
 	CWalletRequestGetWalletStatus   string = "GetWalletStatus"
 	CWalletRequestSetPrivSeedStored string = "SetPrivSeedStored"
 )
-
-type listTransactions []struct {
-	Account         string        `json:"account"`
-	Address         string        `json:"address"`
-	Category        string        `json:"category"`
-	Amount          float64       `json:"amount"`
-	Vout            int           `json:"vout"`
-	Confirmations   int           `json:"confirmations"`
-	Bcconfirmations int           `json:"bcconfirmations"`
-	Blockhash       string        `json:"blockhash"`
-	Blockindex      int           `json:"blockindex"`
-	Blocktime       int           `json:"blocktime"`
-	Txid            string        `json:"txid"`
-	Walletconflicts []interface{} `json:"walletconflicts"`
-	Time            int           `json:"time"`
-	Timereceived    int           `json:"timereceived"`
-}
-
-type stakingStatusStruct struct {
-	Validtime       bool `json:"validtime"`
-	Haveconnections bool `json:"haveconnections"`
-	Walletunlocked  bool `json:"walletunlocked"`
-	Mintablecoins   bool `json:"mintablecoins"`
-	Enoughcoins     bool `json:"enoughcoins"`
-	Mnsync          bool `json:"mnsync"`
-	StakingStatus   bool `json:"staking status"`
-}
-
-type tickerStruct struct {
-	DIVI struct {
-		ID                int         `json:"id"`
-		Name              string      `json:"name"`
-		Symbol            string      `json:"symbol"`
-		Slug              string      `json:"slug"`
-		NumMarketPairs    int         `json:"num_market_pairs"`
-		DateAdded         time.Time   `json:"date_added"`
-		Tags              []string    `json:"tags"`
-		MaxSupply         interface{} `json:"max_supply"`
-		CirculatingSupply float64     `json:"circulating_supply"`
-		TotalSupply       float64     `json:"total_supply"`
-		Platform          interface{} `json:"platform"`
-		CmcRank           int         `json:"cmc_rank"`
-		LastUpdated       time.Time   `json:"last_updated"`
-		Quote             struct {
-			BTC struct {
-				Price            float64   `json:"price"`
-				Volume24H        float64   `json:"volume_24h"`
-				PercentChange1H  float64   `json:"percent_change_1h"`
-				PercentChange24H float64   `json:"percent_change_24h"`
-				PercentChange7D  float64   `json:"percent_change_7d"`
-				MarketCap        float64   `json:"market_cap"`
-				LastUpdated      time.Time `json:"last_updated"`
-			} `json:"BTC"`
-			USD struct {
-				Price            float64   `json:"price"`
-				Volume24H        float64   `json:"volume_24h"`
-				PercentChange1H  float64   `json:"percent_change_1h"`
-				PercentChange24H float64   `json:"percent_change_24h"`
-				PercentChange7D  float64   `json:"percent_change_7d"`
-				MarketCap        float64   `json:"market_cap"`
-				LastUpdated      time.Time `json:"last_updated"`
-			} `json:"USD"`
-		} `json:"quote"`
-	} `json:"DIVI"`
-}
 
 var lastBCSyncStatus string = ""
 var lastMNSyncStatus string = ""
