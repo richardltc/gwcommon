@@ -163,8 +163,9 @@ const (
 
 // Wallet Request Constants
 const (
-	CWalletRequestGetPrivateKey   string = "GetPrivateKey"
-	CWalletRequestGetWalletStatus string = "GetWalletStatus"
+	CWalletRequestGetPrivateKey     string = "GetPrivateKey"
+	CWalletRequestGetWalletStatus   string = "GetWalletStatus"
+	CWalletRequestSetPrivSeedStored string = "SetPrivSeedStored"
 )
 
 type listTransactions []struct {
