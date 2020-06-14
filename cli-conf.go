@@ -140,10 +140,13 @@ func SetCLIConfStruct(cs CLIConfStruct) error {
 		log.Fatalf("Error reading config file, %s", err)
 	}
 
+	viper.Set("BinFolder", cs.BinFolder)
+	viper.Set("FirstTimeRun", cs.FirstTimeRun)
 	viper.Set("ProjectType", cs.ProjectType)
 	viper.Set("ServerIP", cs.ServerIP)
 	viper.Set("Port", cs.Port)
 	viper.Set("Token", cs.Token)
+	viper.Set("UserConfirmedSeedRecovery", cs.UserConfirmedSeedRecovery)
 
 	err := viper.WriteConfig()
 	if err != nil {
