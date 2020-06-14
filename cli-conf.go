@@ -18,6 +18,8 @@ type CLIConfStruct struct {
 	FirstTimeRun              bool        // Is this the first time the server has run? If so, we need to store the BinFolder
 	ProjectType               ProjectType // The project type
 	Port                      string      // The port that the server should run on
+	rpcuser                   string      // The rpcuser
+	rpcpassword               string      // The rpc password
 	ServerIP                  string      // The IP address of the coin daemon server
 	Token                     string      // Stored after generation and is checked to be equal with the clients
 	UserConfirmedSeedRecovery bool        // Whether or not the user has said they've stored their recovery seed has been stored
@@ -143,6 +145,8 @@ func SetCLIConfStruct(cs CLIConfStruct) error {
 	viper.Set("BinFolder", cs.BinFolder)
 	viper.Set("FirstTimeRun", cs.FirstTimeRun)
 	viper.Set("ProjectType", cs.ProjectType)
+	viper.Set("rpcuser", cs.rpcuser)
+	viper.Set("rpcpassword", cs.rpcpassword)
 	viper.Set("ServerIP", cs.ServerIP)
 	viper.Set("Port", cs.Port)
 	viper.Set("Token", cs.Token)
