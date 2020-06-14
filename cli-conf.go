@@ -14,10 +14,13 @@ const (
 
 // CLIConfStruct - The CLI application config struct
 type CLIConfStruct struct {
-	ProjectType ProjectType
-	ServerIP    string
-	Port        string
-	Token       string
+	BinFolder                 string      // The folder that contains the coin binary files
+	FirstTimeRun              bool        // Is this the first time the server has run? If so, we need to store the BinFolder
+	ProjectType               ProjectType // The project type
+	Port                      string      // The port that the server should run on
+	ServerIP                  string      // The IP address of the coin daemon server
+	Token                     string      // Stored after generation and is checked to be equal with the clients
+	UserConfirmedSeedRecovery bool        // Whether or not the user has said they've stored their recovery seed has been stored
 }
 
 // CreateDefaultCLIConfFile - Only to be used by GoDeploy
