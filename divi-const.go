@@ -1,10 +1,10 @@
 package gwcommon
 
 const (
-	cCoinNameDivi   string = "Divi"
+	cCoinNameDivi string = "Divi"
 
 	// CDiviAppVersion - The app version of Divi
-	CDiviAppVersion string = "1.08"
+	CDiviAppVersion string = "1.1.2"
 	cDiviHomeDir    string = ".divi"
 	cDiviHomeDirWin string = "DIVI"
 	cDiviBinDir     string = "godivi"
@@ -21,13 +21,13 @@ const (
 	CAppNameCLIGoDivi     string = "GoDivi CLI"
 	CAppNameServerGoDivi  string = "GoDivi Server"
 
-	CDiviConfFile     string = "divi.conf"
-	CDiviCliFile      string = "divi-cli"
-	CDiviCliFileWin   string = "divi-cli.exe"
-	CDiviDFile        string = "divid"
-	CDiviDFileWin     string = "divid.exe"
-	CDiviTxFile       string = "divi-tx"
-	CDiviTxFileWin    string = "divi-tx.exe"
+	CDiviConfFile   string = "divi.conf"
+	CDiviCliFile    string = "divi-cli"
+	CDiviCliFileWin string = "divi-cli.exe"
+	CDiviDFile      string = "divid"
+	CDiviDFileWin   string = "divid.exe"
+	CDiviTxFile     string = "divi-tx"
+	CDiviTxFileWin  string = "divi-tx.exe"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileGoDivi             string = "godivi"

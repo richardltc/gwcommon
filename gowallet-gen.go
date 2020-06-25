@@ -58,6 +58,7 @@ const (
 	CWalletStatusUnEncrypted string = "unencrypted"
 
 	// Progress constants
+	
 	cProgress1  string = ">     "
 	cProgress2  string = "=>    "
 	cProgress3  string = "==>   "
@@ -869,45 +870,6 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 	return "", "", nil
 }
 
-func GetNextProgMNIndicator(LIndicator string) string {
-	if LIndicator == cProgress1 {
-		lastMNSyncStatus = cProgress2
-		return cProgress2
-	} else if LIndicator == cProgress2 {
-		lastMNSyncStatus = cProgress3
-		return cProgress3
-	} else if LIndicator == cProgress3 {
-		lastMNSyncStatus = cProgress4
-		return cProgress4
-	} else if LIndicator == cProgress4 {
-		lastMNSyncStatus = cProgress5
-		return cProgress5
-	} else if LIndicator == cProgress5 {
-		lastMNSyncStatus = cProgress6
-		return cProgress6
-	} else if LIndicator == cProgress6 {
-		lastMNSyncStatus = cProgress7
-		return cProgress7
-	} else if LIndicator == cProgress7 {
-		lastMNSyncStatus = cProgress8
-		return cProgress8
-	} else if LIndicator == cProgress8 {
-		lastMNSyncStatus = cProgress9
-		return cProgress9
-	} else if LIndicator == cProgress9 {
-		lastMNSyncStatus = cProgress10
-		return cProgress10
-	} else if LIndicator == cProgress10 {
-		lastMNSyncStatus = cProgress11
-		return cProgress11
-	} else if LIndicator == cProgress11 || LIndicator == "" {
-		lastMNSyncStatus = cProgress1
-		return cProgress1
-	} else {
-		lastMNSyncStatus = cProgress1
-		return cProgress1
-	}
-}
 
 func GetEncryptWalletResp() string {
 	reader := bufio.NewReader(os.Stdin)
