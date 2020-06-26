@@ -18,7 +18,7 @@ import (
 
 const (
 	// CAppVersion - The app version of the suite of apps
-	CAppVersion string = "0.30.4" // All of the individual apps will have the same version to make it easier for the user
+	CAppVersion string = "0.30.5" // All of the individual apps will have the same version to make it easier for the user
 	cUnknown    string = "Unknown"
 	// CDownloadURLGD - The download file lotcation for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
@@ -58,7 +58,7 @@ const (
 	CWalletStatusUnEncrypted string = "unencrypted"
 
 	// Progress constants
-	
+
 	cProgress1  string = ">     "
 	cProgress2  string = "=>    "
 	cProgress3  string = "==>   "
@@ -869,7 +869,6 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 	}
 	return "", "", nil
 }
-
 
 func GetEncryptWalletResp() string {
 	reader := bufio.NewReader(os.Stdin)
