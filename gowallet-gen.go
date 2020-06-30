@@ -1023,7 +1023,7 @@ func IsAppServerRunning() (bool, int, error) {
 // IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
 func IsCoinDaemonRunning() (bool, int, error) {
 	var pid int
-	gwconf, err := GetServerConfStruct()
+	gwconf, err := GetCLIConfStruct() //ServerConfStruct()
 	if err != nil {
 		return false, pid, err
 	}
