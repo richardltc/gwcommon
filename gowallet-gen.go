@@ -18,7 +18,7 @@ import (
 
 const (
 	// CAppVersion - The app version of the suite of apps
-	CAppVersion string = "0.30.7" // All of the individual apps will have the same version to make it easier for the user
+	CAppVersion string = "0.30.8" // All of the individual apps will have the same version to make it easier for the user
 	cUnknown    string = "Unknown"
 	// CDownloadURLGD - The download file location for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
@@ -309,56 +309,6 @@ func GetAppsBinFolder(at APPType) (string, error) {
 	}
 	return s, nil
 }
-
-// // GetAppsBinFolderForS - Returns the directory of where the apps binary files are stored
-// func GetAppsBinFolderForS() (string, error) {
-// 	sConf, err := GetServerConfStruct()
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return sConf.BinFolder, nil
-// }
-
-// // GetActualAppsBinFolder - Only to be used by web server - Returns the directory of where the apps binary files are stored
-// func GetActualAppsBinFolder() (string, error) {
-// 	var s string
-// 	gwconf, err := GetServerConfStruct()
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	u, err := user.Current()
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	//hd := getUserHomeDir()
-// 	hd := u.HomeDir
-// 	if runtime.GOOS == "windows" {
-// 		// add the "appdata\roaming" part.
-// 		switch gwconf.ProjectType {
-// 		case PTDivi:
-// 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
-// 		case PTPIVX:
-// 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
-// 		case PTTrezarcoin:
-// 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
-// 		default:
-// 			err = errors.New("Unable to determine ProjectType")
-// 		}
-
-// 	} else {
-// 		switch gwconf.ProjectType {
-// 		case PTDivi:
-// 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
-// 		case PTPIVX:
-// 			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
-// 		case PTTrezarcoin:
-// 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
-// 		default:
-// 			err = errors.New("Unable to determine ProjectType")
-// 		}
-// 	}
-// 	return s, nil
-// }
 
 // GetAppFileName - Returns the name of the app binary file e.g. godivi, godivis, godivi-installer
 func GetAppFileName(at APPType) (string, error) {
