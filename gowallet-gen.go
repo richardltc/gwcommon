@@ -18,7 +18,7 @@ import (
 
 const (
 	// CAppVersion - The app version of the suite of apps
-	CAppVersion string = "0.30.8" // All of the individual apps will have the same version to make it easier for the user
+	CAppVersion string = "0.31.0" // All of the individual apps will have the same version to make it easier for the user
 	cUnknown    string = "Unknown"
 	// CDownloadURLGD - The download file location for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
