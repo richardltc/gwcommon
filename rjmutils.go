@@ -387,9 +387,7 @@ func createTarball(tarballFilePath string, filePaths []string) error {
 	return nil
 }
 
-// Private methods
-
-func stringExistsInFile(str, file string) (bool, error) {
+func StringExistsInFile(str, file string) (bool, error) {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Fatal(err)

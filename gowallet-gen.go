@@ -189,7 +189,7 @@ func AddProjectPath() error {
 
 		if FileExists(sProfile) {
 			// First make sure that the path hasn't already been added
-			seif, err := stringExistsInFile(cGoDiviExportPath+gdf, sProfile)
+			seif, err := StringExistsInFile(cGoDiviExportPath+gdf, sProfile)
 			if err != nil {
 				return fmt.Errorf("err checking profile: %v ", err)
 			}
