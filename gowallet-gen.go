@@ -86,20 +86,20 @@ const (
 type APPType int
 
 const (
-	// APPTCLI - e.g. godivi
+	// APPTCLI - e.g. boxdivi
 	APPTCLI APPType = iota
 	// APPTCLICompiled - e.g. cli
 	APPTCLICompiled
 	// APPTInstaller e.g. godivi-installer
-	APPTInstaller
+	//APPTInstaller
 	// APPTUpdater e.g. update-godivi
 	APPTUpdater
 	// APPTUpdaterCompiled e.g. updater
 	APPTUpdaterCompiled
-	// APPTServer e.g. godivis
-	APPTServer
+	// APPTServer e.g. boxdivis
+	//APPTServer
 	// APPTServerCompiled e.g. web
-	APPTServerCompiled
+	//APPTServerCompiled
 )
 
 // OSType - either ostArm, ostLinux or ostWindows
@@ -264,12 +264,12 @@ func GetAppsBinFolder(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
 		err := errors.New("Unable to determine AppType")
 		return "", err
@@ -310,7 +310,7 @@ func GetAppsBinFolder(at APPType) (string, error) {
 	return s, nil
 }
 
-// GetAppFileName - Returns the name of the app binary file e.g. godivi, godivis, godivi-installer
+// GetAppFileName - Returns the name of the app binary file e.g. boxdivi
 func GetAppFileName(at APPType) (string, error) {
 	gwconf, err := GetCLIConfStruct()
 	if err != nil {
@@ -339,39 +339,6 @@ func GetAppFileName(at APPType) (string, error) {
 				return CAppCLIFileCompiled, nil
 			case "windows":
 				return CAppCLIFileCompiledWin, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTInstaller:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppCLIFileInstallerGoDivi, nil
-			case "linux":
-				return CAppCLIFileInstallerGoDivi, nil
-			case "windows":
-				return CAppCLIFileInstallerWinGoDivi, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTServer:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppServerFileGoDivi, nil
-			case "linux":
-				return CAppServerFileGoDivi, nil
-			case "windows":
-				return CAppServerFileWinGoDivi, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTServerCompiled:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppServerFileCompiled, nil
-			case "linux":
-				return CAppServerFileCompiled, nil
-			case "windows":
-				return CAppServerFileCompiledWin, nil
 			default:
 				err = errors.New("Unable to determine runtime.GOOS")
 			}
@@ -409,39 +376,6 @@ func GetAppFileName(at APPType) (string, error) {
 			default:
 				err = errors.New("Unable to determine runtime.GOOS")
 			}
-		case APPTInstaller:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppCLIFileInstallerGoPIVX, nil
-			case "linux":
-				return CAppCLIFileInstallerGoPIVX, nil
-			case "windows":
-				return CAppCLIFileInstallerWinGoPIVX, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTServer:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppServerFileGoPIVX, nil
-			case "linux":
-				return CAppServerFileGoPIVX, nil
-			case "windows":
-				return CAppServerFileWinGoPIVX, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTServerCompiled:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppServerFileCompiled, nil
-			case "linux":
-				return CAppServerFileCompiled, nil
-			case "windows":
-				return CAppServerFileCompiledWin, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
 				return CAppUpdaterFileWinGoPIVX, nil
@@ -475,39 +409,6 @@ func GetAppFileName(at APPType) (string, error) {
 			default:
 				err = errors.New("Unable to determine runtime.GOOS")
 			}
-		case APPTInstaller:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppCLIFileInstallerGoTrezarcoin, nil
-			case "linux":
-				return CAppCLIFileInstallerGoTrezarcoin, nil
-			case "windows":
-				return CAppCLIFileInstallerWinGoTrezarcoin, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTServer:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppServerFileGoTrezarcoin, nil
-			case "linux":
-				return CAppServerFileGoTrezarcoin, nil
-			case "windows":
-				return CAppServerFileWinGoTrezarcoin, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
-		case APPTServerCompiled:
-			switch runtime.GOOS {
-			case "arm":
-				return CAppServerFileCompiled, nil
-			case "linux":
-				return CAppServerFileCompiled, nil
-			case "windows":
-				return CAppServerFileCompiledWin, nil
-			default:
-				err = errors.New("Unable to determine runtime.GOOS")
-			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
 				return CAppUpdaterFileWinGoPIVX, nil
@@ -524,7 +425,7 @@ func GetAppFileName(at APPType) (string, error) {
 	return "", nil
 }
 
-// GetAppCLIName - Returns the application CLI name e.g. GoDivi CLI
+// GetAppCLIName - Returns the application CLI name e.g. BoxDivi CLI
 func GetAppCLIName(at APPType) (string, error) {
 	var pt ProjectType
 	switch at {
@@ -534,12 +435,12 @@ func GetAppCLIName(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
 		err := errors.New("Unable to determine AppType")
 		return "", err
@@ -578,7 +479,7 @@ func GetAppLogfileName() (string, error) {
 	return "", nil
 }
 
-// GetAppServerName - Returns the application Server name e.g. GoDivi Server
+// GetAppServerName - Returns the application Server name e.g. BoxDivi Server
 func GetAppServerName(at APPType) (string, error) {
 	var pt ProjectType
 	switch at {
@@ -588,19 +489,19 @@ func GetAppServerName(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
 		err := errors.New("Unable to determine AppType")
 		return "", err
 	}
 	switch pt {
-	case PTDivi:
-		return CAppNameServerGoDivi, nil
+	//case PTDivi:
+	//	return CAppNameServerGoDivi, nil
 	case PTPIVX:
 		return CAppNameServerGoPIVX, nil
 	case PTTrezarcoin:
@@ -622,12 +523,12 @@ func GetAppName(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
 		err := errors.New("Unable to determine AppType")
 		return "", err
@@ -656,12 +557,12 @@ func GetCoinDaemonFilename(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
 		err := errors.New("Unable to determine AppType")
 		return "", err
@@ -692,12 +593,12 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
 		err := errors.New("Unable to determine AppType")
 		return "", err
@@ -748,14 +649,14 @@ func GetCoinName(at APPType) (string, error) {
 			return "", err
 		}
 		pt = conf.ProjectType
-	case APPTServer:
-		conf, err := GetServerConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
+	//case APPTServer:
+	//	conf, err := GetServerConfStruct()
+	//	if err != nil {
+	//		return "", err
+	//	}
+	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 
@@ -767,7 +668,7 @@ func GetCoinName(at APPType) (string, error) {
 	case PTTrezarcoin:
 		return cCoinNameTrezarcoin, nil
 	default:
-		err := errors.New("Unable to determine ProjectType")
+		err := errors.New("unable to determine ProjectType")
 		return "", err
 	}
 
@@ -790,7 +691,7 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
 		default:
-			err = errors.New("Unable to determine OSType")
+			err = errors.New("unable to determine OSType")
 		}
 	case PTPIVX:
 		switch ostype {
@@ -801,7 +702,7 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGoPIVXLatetsWindows, nil
 		default:
-			err = errors.New("Unable to determine OSType")
+			err = errors.New("unable to determine OSType")
 		}
 	case PTTrezarcoin:
 		switch ostype {
@@ -812,7 +713,7 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 		case OSTWindows:
 			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
 		default:
-			err = errors.New("Unable to determine OSType")
+			err = errors.New("unable to determine OSType")
 		}
 	default:
 		err = errors.New("Unable to determine ProjectType")
@@ -932,43 +833,43 @@ func IsAppCLIRunning() (bool, int, error) {
 }
 
 // IsAppServerRunning - Will then work out what wallet this relates to, and return accurate info
-func IsAppServerRunning() (bool, int, error) {
-	var pid int
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
-		return false, pid, err
-	}
-	switch gwconf.ProjectType {
-	case PTDivi:
-		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CAppServerFileWinGoDivi)
-		} else {
-			pid, _, err = findProcess(CAppServerFileGoDivi)
-		}
-	case PTPIVX:
-		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CAppServerFileWinGoPIVX)
-		} else {
-			pid, _, err = findProcess(CAppServerFileGoPIVX)
-		}
-	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CAppServerFileWinGoTrezarcoin)
-		} else {
-			pid, _, err = findProcess(CAppServerFileGoTrezarcoin)
-		}
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-
-	if err == nil {
-		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
-	} else if err.Error() == "not found" {
-		return false, 0, nil
-	} else {
-		return false, 0, err
-	}
-}
+//func IsAppServerRunning() (bool, int, error) {
+//	var pid int
+//	gwconf, err := GetCLIConfStruct()
+//	if err != nil {
+//		return false, pid, err
+//	}
+//	switch gwconf.ProjectType {
+//	case PTDivi:
+//		if runtime.GOOS == "windows" {
+//			pid, _, err = findProcess(CAppServerFileWinGoDivi)
+//		} else {
+//			pid, _, err = findProcess(CAppServerFileGoDivi)
+//		}
+//	case PTPIVX:
+//		if runtime.GOOS == "windows" {
+//			pid, _, err = findProcess(CAppServerFileWinGoPIVX)
+//		} else {
+//			pid, _, err = findProcess(CAppServerFileGoPIVX)
+//		}
+//	case PTTrezarcoin:
+//		if runtime.GOOS == "windows" {
+//			pid, _, err = findProcess(CAppServerFileWinGoTrezarcoin)
+//		} else {
+//			pid, _, err = findProcess(CAppServerFileGoTrezarcoin)
+//		}
+//	default:
+//		err = errors.New("Unable to determine ProjectType")
+//	}
+//
+//	if err == nil {
+//		return true, pid, nil //fmt.Printf ("Pid:%d, Pname:%s\n", pid, s)
+//	} else if err.Error() == "not found" {
+//		return false, 0, nil
+//	} else {
+//		return false, 0, err
+//	}
+//}
 
 // IsCoinDaemonRunning - Works out whether the coin Daemon is running e.g. divid
 func IsCoinDaemonRunning() (bool, int, error) {
@@ -1007,73 +908,73 @@ func IsCoinDaemonRunning() (bool, int, error) {
 }
 
 // RunAppServer - Runs the App Server
-func RunAppServer(displayOutput bool) error {
-	idr, _, _ := IsAppServerRunning()
-	if idr == true {
-		// Already running...
-		return nil
-	}
-	gwconf, err := GetCLIConfStruct()
-	if err != nil {
-		return err
-	}
-	abf, _ := GetAppsBinFolder(APPTCLI)
-
-	switch gwconf.ProjectType {
-	case PTDivi:
-		if runtime.GOOS == "windows" {
-			fp := abf + CAppServerFileWinGoDivi
-			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-			if err := cmd.Run(); err != nil {
-				return err
-			}
-		} else {
-			if displayOutput {
-				fmt.Println("Attempting to run " + CAppNameServerGoDivi + "...")
-			}
-
-			cmdRun := exec.Command(abf + CAppServerFileGoDivi)
-			if err := cmdRun.Start(); err != nil {
-				return fmt.Errorf("Failed to start cmd: %v", err)
-			}
-		}
-	case PTPIVX:
-		if runtime.GOOS == "windows" {
-			fp := abf + CAppServerFileWinGoPIVX
-			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-			if err := cmd.Run(); err != nil {
-				return err
-			}
-		} else {
-			if displayOutput {
-				fmt.Println("Attempting to run " + CAppNameServerGoPIVX + "...")
-			}
-
-			cmdRun := exec.Command(abf + CAppServerFileGoPIVX)
-			if err := cmdRun.Start(); err != nil {
-				return fmt.Errorf("Failed to start cmd: %v", err)
-			}
-		}
-	case PTTrezarcoin:
-		if runtime.GOOS == "windows" {
-			fp := abf + CAppServerFileWinGoTrezarcoin
-			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
-			if err := cmd.Run(); err != nil {
-				return err
-			}
-		} else {
-			if displayOutput {
-				fmt.Println("Attempting to run " + CAppNameServerGoTrezarcoin + "...")
-			}
-
-			cmdRun := exec.Command(abf + CAppServerFileGoTrezarcoin)
-			if err := cmdRun.Start(); err != nil {
-				return fmt.Errorf("Failed to start cmd: %v", err)
-			}
-		}
-	default:
-		err = errors.New("Unable to determine ProjectType")
-	}
-
-	return nil
-}
+//func RunAppServer(displayOutput bool) error {
+//	idr, _, _ := IsAppServerRunning()
+//	if idr == true {
+//		// Already running...
+//		return nil
+//	}
+//	gwconf, err := GetCLIConfStruct()
+//	if err != nil {
+//		return err
+//	}
+//	abf, _ := GetAppsBinFolder(APPTCLI)
+//
+//	switch gwconf.ProjectType {
+//	case PTDivi:
+//		if runtime.GOOS == "windows" {
+//			fp := abf + CAppServerFileWinGoDivi
+//			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+//			if err := cmd.Run(); err != nil {
+//				return err
+//			}
+//		} else {
+//			if displayOutput {
+//				fmt.Println("Attempting to run " + CAppNameServerGoDivi + "...")
+//			}
+//
+//			cmdRun := exec.Command(abf + CAppServerFileGoDivi)
+//			if err := cmdRun.Start(); err != nil {
+//				return fmt.Errorf("Failed to start cmd: %v", err)
+//			}
+//		}
+//	case PTPIVX:
+//		if runtime.GOOS == "windows" {
+//			fp := abf + CAppServerFileWinGoPIVX
+//			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+//			if err := cmd.Run(); err != nil {
+//				return err
+//			}
+//		} else {
+//			if displayOutput {
+//				fmt.Println("Attempting to run " + CAppNameServerGoPIVX + "...")
+//			}
+//
+//			cmdRun := exec.Command(abf + CAppServerFileGoPIVX)
+//			if err := cmdRun.Start(); err != nil {
+//				return fmt.Errorf("Failed to start cmd: %v", err)
+//			}
+//		}
+//	case PTTrezarcoin:
+//		if runtime.GOOS == "windows" {
+//			fp := abf + CAppServerFileWinGoTrezarcoin
+//			cmd := exec.Command("cmd.exe", "/C", "start", "/b", fp)
+//			if err := cmd.Run(); err != nil {
+//				return err
+//			}
+//		} else {
+//			if displayOutput {
+//				fmt.Println("Attempting to run " + CAppNameServerGoTrezarcoin + "...")
+//			}
+//
+//			cmdRun := exec.Command(abf + CAppServerFileGoTrezarcoin)
+//			if err := cmdRun.Start(); err != nil {
+//				return fmt.Errorf("Failed to start cmd: %v", err)
+//			}
+//		}
+//	default:
+//		err = errors.New("Unable to determine ProjectType")
+//	}
+//
+//	return nil
+//}
