@@ -271,7 +271,7 @@ func GetAppsBinFolder(at APPType) (string, error) {
 	//	}
 	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 
@@ -287,24 +287,28 @@ func GetAppsBinFolder(at APPType) (string, error) {
 		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+		case PTPhore:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPhoreBinDirWin)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 		}
 
 	} else {
 		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+		case PTPhore:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cPhoreBinDir)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 		}
 	}
 	return s, nil
