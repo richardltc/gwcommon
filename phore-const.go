@@ -5,19 +5,19 @@ const (
 	CPhoreAppVersion string = "1.6.3"
 	cPhoreHomeDir    string = ".phore"
 	cPhoreHomeDirWin string = "PHORE"
-	cPhoreBinDir     string = "gophore"
-	cPhoreBinDirWin  string = "GoPhore"
+	cPhoreBinDir     string = "boxphore"
+	cPhoreBinDirWin  string = "BoxPhore"
 
 	// Phore Public download files
-	CDFileGoPhoreLatetsARM     string = "gophore-arm-latest.zip"
-	CDFileGoPhoreLatetsLinux   string = "gophore-linux-latest.zip"
-	CDFileGoPhoreLatetsWindows string = "gophore-windows-latest.zip"
+	CDFileGoPhoreLatetsARM     string = "boxphore-arm-latest.zip"
+	CDFileGoPhoreLatetsLinux   string = "boxphore-linux-latest.zip"
+	CDFileGoPhoreLatetsWindows string = "boxphore-windows-latest.zip"
 
 	// Phore file constants
-	CAppNameGoPhore        string = "GoPhore"
-	CAppNameUpdaterGoPhore string = "GoPhore Updater"
-	CAppNameCLIGoPhore     string = "GoPhore CLI"
-	CAppNameServerGoPhore  string = "GoPhore Server"
+	CAppNameGoPhore        string = "BoxPhore"
+	CAppNameUpdaterGoPhore string = "BoxPhore Updater"
+	CAppNameCLIGoPhore     string = "BoxPhore CLI"
+	CAppNameServerGoPhore  string = "BoxPhore Server"
 
 	cPhoreConfFile   string = "phore.conf"
 	cPhoreCliFile    string = "phore-cli"
@@ -28,19 +28,18 @@ const (
 	cPhoreTxFileWin  string = "phore-tx.exe"
 
 	// Phore public download files
-	// TODO Update these for phore
-	cDFPhoreFileRPi     string = "divi-1.0.8-RPi2.tar.gz"
-	cDFPhoreFileLinux   string = "divi-1.0.8-x86_64-linux-gnu.tar.gz"
-	cDFPhoreFileWindows string = "divi-1.0.8-win64.zip"
+	cDFPhoreFileRPi     string = "phore-1.6.5-arm-linux-gnueabihf.tar.gz"
+	cDFPhoreFileLinux   string = "phore-1.6.5-x86_64-linux-gnu.tar.gz"
+	cDFPhoreFileWindows string = "phore-1.6.5-win64.zip"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
-	CAppCLIFileGoPhore             string = "gophore"
-	CAppCLIFileWinGoPhore          string = "gophore.exe"
-	CAppCLIFileInstallerGoPhore    string = "gophore-installer"
-	CAppCLIFileInstallerWinGoPhore string = "gophore-installer.exe"
-	CAppServerFileGoPhore          string = "gophores"
-	CAppServerFileWinGoPhore       string = "gophores.exe"
-	CAppUpdaterFileGoPhore         string = "update-gophore"
-	CAppUpdaterFileWinGoPhore      string = "update-gophore.exe"
-	CAppCLILogfileGoPhore          string = "gophore.log"
+	CAppCLIFileGoPhore             string = "boxphore"
+	CAppCLIFileWinGoPhore          string = "boxphore.exe"
+	CAppCLIFileInstallerGoPhore    string = "boxphore-installer"
+	CAppCLIFileInstallerWinGoPhore string = "boxphore-installer.exe"
+	CAppServerFileGoPhore          string = "boxphores"
+	CAppServerFileWinGoPhore       string = "boxphores.exe"
+	CAppUpdaterFileGoPhore         string = "update-boxphore"
+	CAppUpdaterFileWinGoPhore      string = "update-boxphore.exe"
+	CAppCLILogfileGoPhore          string = "boxphore.log"
 )
