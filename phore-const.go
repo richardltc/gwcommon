@@ -5,10 +5,10 @@ const (
 
 	// Phore Wallet Constants
 	CPhoreAppVersion string = "1.6.3"
-	cPhoreHomeDir    string = ".phore"
-	cPhoreHomeDirWin string = "PHORE"
-	cPhoreBinDir     string = "boxphore"
-	cPhoreBinDirWin  string = "BoxPhore"
+	CPhoreHomeDir    string = ".phore"
+	CPhoreHomeDirWin string = "PHORE"
+	CPhoreBinDir     string = "boxphore"
+	CPhoreBinDirWin  string = "BoxPhore"
 
 	// Phore Public download files
 	CDFileGoPhoreLatetsARM     string = "boxphore-arm-latest.zip"
@@ -21,18 +21,18 @@ const (
 	CAppNameCLIBoxPhore     string = "BoxPhore CLI"
 	CAppNameServerBoxPhore  string = "BoxPhore Server"
 
-	cPhoreConfFile   string = "phore.conf"
-	cPhoreCliFile    string = "phore-cli"
-	cPhoreCliFileWin string = "phore-cli.exe"
+	CPhoreConfFile   string = "phore.conf"
+	CPhoreCliFile    string = "phore-cli"
+	CPhoreCliFileWin string = "phore-cli.exe"
 	CPhoreDFile      string = "phored"
 	CPhoreDFileWin   string = "phored.exe"
-	cPhoreTxFile     string = "phore-tx"
-	cPhoreTxFileWin  string = "phore-tx.exe"
+	CPhoreTxFile     string = "phore-tx"
+	CPhoreTxFileWin  string = "phore-tx.exe"
 
 	// Phore public download files
-	cDFPhoreFileRPi     string = "phore-1.6.5-arm-linux-gnueabihf.tar.gz"
-	cDFPhoreFileLinux   string = "phore-1.6.5-x86_64-linux-gnu.tar.gz"
-	cDFPhoreFileWindows string = "phore-1.6.5-win64.zip"
+	CDFPhoreFileRPi     string = "phore-1.6.5-arm-linux-gnueabihf.tar.gz"
+	CDFPhoreFileLinux   string = "phore-1.6.5-x86_64-linux-gnu.tar.gz"
+	CDFPhoreFileWindows string = "phore-1.6.5-win64.zip"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
 	CAppCLIFileBoxPhore             string = "boxphore"
