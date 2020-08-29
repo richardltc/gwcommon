@@ -288,7 +288,7 @@ func GetAppsBinFolder(at APPType) (string, error) {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
 		case PTPhore:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPhoreBinDirWin)
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CPhoreBinDirWin)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
 		case PTTrezarcoin:
@@ -302,7 +302,7 @@ func GetAppsBinFolder(at APPType) (string, error) {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
 		case PTPhore:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cPhoreBinDir)
+			s = AddTrailingSlash(hd) + AddTrailingSlash(CPhoreBinDir)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
 		case PTTrezarcoin:
@@ -662,7 +662,7 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
 		case PTPhore:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPhoreHomeDirWin)
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CPhoreHomeDirWin)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXHomeDirWin)
 		case PTTrezarcoin:
@@ -676,7 +676,7 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
 		case PTPhore:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cPhoreHomeDir)
+			s = AddTrailingSlash(hd) + AddTrailingSlash(CPhoreHomeDir)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXHomeDir)
 		case PTTrezarcoin:
