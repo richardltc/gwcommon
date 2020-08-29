@@ -16,9 +16,9 @@ const (
 	CDFileGodiviLatetsWindows string = "boxdivi-windows-latest.zip"
 
 	// Divi project file constants
-	CAppNameGoDivi        string = "BoxDivi"
+	CAppNameBoxDivi       string = "BoxDivi"
 	CAppNameUpdaterGoDivi string = "BoxDivi Updater"
-	CAppNameCLIGoDivi     string = "BoxDivi CLI"
+	CAppNameCLIBoxDivi    string = "BoxDivi CLI"
 	//CAppNameServerGoDivi  string = "BoxDivi Server"
 
 	CDiviConfFile   string = "divi.conf"
@@ -30,13 +30,13 @@ const (
 	CDiviTxFileWin  string = "divi-tx.exe"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
-	CAppCLIFileGoDivi    string = "boxdivi"
-	CAppCLIFileWinGoDivi string = "boxdivi.exe"
+	CAppCLIFileBoxDivi    string = "boxdivi"
+	CAppCLIFileWinBoxDivi string = "boxdivi.exe"
 	//CAppCLIFileInstallerGoDivi    string = "godivi-installer"
 	//CAppCLIFileInstallerWinGoDivi string = "godivi-installer.exe"
 	//CAppServerFileGoDivi          string = "godivis"
 	//CAppServerFileWinGoDivi       string = "godivis.exe"
-	CAppUpdaterFileGoDivi    string = "update-boxdivi"
-	CAppUpdaterFileWinGoDivi string = "update-boxdivi.exe"
-	CAppCLILogfileGoDivi     string = "boxdivi.log"
+	CAppUpdaterFileBoxDivi    string = "update-boxdivi"
+	CAppUpdaterFileWinBoxDivi string = "update-boxdivi.exe"
+	CAppCLILogfileBoxDivi     string = "boxdivi.log"
 )

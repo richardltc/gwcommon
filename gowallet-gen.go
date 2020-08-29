@@ -326,13 +326,13 @@ func GetAppFileName(at APPType) (string, error) {
 		case APPTCLI:
 			switch runtime.GOOS {
 			case "arm":
-				return CAppCLIFileGoDivi, nil
+				return CAppCLIFileBoxDivi, nil
 			case "linux":
-				return CAppCLIFileGoDivi, nil
+				return CAppCLIFileBoxDivi, nil
 			case "windows":
-				return CAppCLIFileWinGoDivi, nil
+				return CAppCLIFileWinBoxDivi, nil
 			default:
-				err = errors.New("Unable to determine runtime.GOOS")
+				err = errors.New("unable to determine runtime.GOOS")
 			}
 
 		case APPTCLICompiled:
@@ -344,13 +344,47 @@ func GetAppFileName(at APPType) (string, error) {
 			case "windows":
 				return CAppCLIFileCompiledWin, nil
 			default:
-				err = errors.New("Unable to determine runtime.GOOS")
+				err = errors.New("unable to determine runtime.GOOS")
 			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
-				return CAppUpdaterFileWinGoDivi, nil
+				return CAppUpdaterFileWinBoxDivi, nil
 			} else {
-				return CAppUpdaterFileGoDivi, nil
+				return CAppUpdaterFileBoxDivi, nil
+			}
+		default:
+			err = errors.New("unable to determine ProjectType")
+		}
+	case PTPhore:
+		switch at {
+		case APPTCLI:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileBoxPhore, nil
+			case "linux":
+				return CAppCLIFileBoxPhore, nil
+			case "windows":
+				return CAppCLIFileWinBoxPhore, nil
+			default:
+				err = errors.New("unable to determine runtime.GOOS")
+			}
+
+		case APPTCLICompiled:
+			switch runtime.GOOS {
+			case "arm":
+				return CAppCLIFileCompiled, nil
+			case "linux":
+				return CAppCLIFileCompiled, nil
+			case "windows":
+				return CAppCLIFileCompiledWin, nil
+			default:
+				err = errors.New("unable to determine runtime.GOOS")
+			}
+		case APPTUpdater:
+			if runtime.GOOS == "windows" {
+				return CAppUpdaterFileWinBoxPhore, nil
+			} else {
+				return CAppUpdaterFileBoxPhore, nil
 			}
 		default:
 			err = errors.New("Unable to determine ProjectType")
@@ -451,7 +485,9 @@ func GetAppCLIName(at APPType) (string, error) {
 	}
 	switch pt {
 	case PTDivi:
-		return CAppNameCLIGoDivi, nil
+		return CAppNameCLIBoxDivi, nil
+	case PTPhore:
+		return CAppNameCLIBoxPhore, nil
 	case PTPIVX:
 		return CAppNameCLIGoPIVX, nil
 	case PTTrezarcoin:
@@ -471,7 +507,9 @@ func GetAppLogfileName() (string, error) {
 	}
 	switch gwconf.ProjectType {
 	case PTDivi:
-		return CAppCLILogfileGoDivi, nil
+		return CAppCLILogfileBoxDivi, nil
+	case PTPhore:
+		return CAppCLILogfileBoxPhore, nil
 	case PTPIVX:
 		return CAppCLILogfileGoPIVX, nil
 	case PTTrezarcoin:
@@ -534,18 +572,20 @@ func GetAppName(at APPType) (string, error) {
 	//	}
 	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 	switch pt {
 	case PTDivi:
-		return CAppNameGoDivi, nil
+		return CAppNameBoxDivi, nil
+	case PTPhore:
+		return CAppNameBoxPhore, nil
 	case PTPIVX:
 		return CAppNameGoPIVX, nil
 	case PTTrezarcoin:
 		return CAppNameGoTrezarcoin, nil
 	default:
-		err := errors.New("Unable to determine ProjectType")
+		err := errors.New("unable to determine ProjectType")
 		return "", err
 	}
 	return "", nil
@@ -568,19 +608,21 @@ func GetCoinDaemonFilename(at APPType) (string, error) {
 	//	}
 	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 
 	switch pt {
 	case PTDivi:
 		return CDiviDFile, nil
+	case PTPhore:
+		return CPhoreDFile, nil
 	case PTPIVX:
 		return CPIVXDFile, nil
 	case PTTrezarcoin:
 		return CTrezarcoinDFile, nil
 	default:
-		err := errors.New("Unable to determine ProjectType")
+		err := errors.New("unable to determine ProjectType")
 		return "", err
 	}
 
@@ -604,7 +646,7 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 	//	}
 	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 
@@ -619,6 +661,8 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviHomeDirWin)
+		case PTPhore:
+			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPhoreHomeDirWin)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXHomeDirWin)
 		case PTTrezarcoin:
@@ -631,6 +675,8 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 		switch pt {
 		case PTDivi:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviHomeDir)
+		case PTPhore:
+			s = AddTrailingSlash(hd) + AddTrailingSlash(cPhoreHomeDir)
 		case PTPIVX:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXHomeDir)
 		case PTTrezarcoin:
@@ -667,6 +713,8 @@ func GetCoinName(at APPType) (string, error) {
 	switch pt {
 	case PTDivi:
 		return cCoinNameDivi, nil
+	case PTPhore:
+		return cCoinNamePhore, nil
 	case PTPIVX:
 		return cCoinNamePIVX, nil
 	case PTTrezarcoin:
@@ -807,9 +855,15 @@ func IsAppCLIRunning() (bool, int, error) {
 	switch gwconf.ProjectType {
 	case PTDivi:
 		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CAppCLIFileWinGoDivi)
+			pid, _, err = findProcess(CAppCLIFileWinBoxDivi)
 		} else {
-			pid, _, err = findProcess(CAppCLIFileGoDivi)
+			pid, _, err = findProcess(CAppCLIFileBoxDivi)
+		}
+	case PTPhore:
+		if runtime.GOOS == "windows" {
+			pid, _, err = findProcess(CAppCLIFileWinBoxPhore)
+		} else {
+			pid, _, err = findProcess(CAppCLIFileBoxPhore)
 		}
 	case PTPIVX:
 		if runtime.GOOS == "windows" {
