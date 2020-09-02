@@ -1,10 +1,10 @@
 package gwcommon
 
 const (
-	cCoinNamePhore string = "Divi"
+	cCoinNamePhore string = "Phore"
 
 	// Phore Wallet Constants
-	CPhoreAppVersion string = "1.6.3"
+	CPhoreAppVersion string = "1.6.5"
 	CPhoreHomeDir    string = ".phore"
 	CPhoreHomeDirWin string = "PHORE"
 	CPhoreBinDir     string = "boxphore"
