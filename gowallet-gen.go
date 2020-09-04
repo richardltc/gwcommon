@@ -18,7 +18,7 @@ import (
 
 const (
 	// CAppVersion - The app version of the suite of apps
-	CAppVersion string = "0.31.6" // All of the individual apps will have the same version to make it easier for the user
+	CAppVersion string = "0.31.7" // All of the individual apps will have the same version to make it easier for the user
 	cUnknown    string = "Unknown"
 	// CDownloadURLGD - The download file location for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
@@ -36,7 +36,7 @@ const (
 	// CAppUpdaterFileCompiledWin - Should only be used by GoDeploy
 	CAppUpdaterFileCompiledWin string = "updater.exe"
 
-	cWalletSeedFileGoDivi string = "unsecure-divi-seed.txt"
+	cWalletSeedFileBoxDivi string = "unsecure-divi-seed.txt"
 
 	// Divid Responses
 	cDiviDNotRunningError     string = "error: couldn't connect to server"
@@ -387,20 +387,20 @@ func GetAppFileName(at APPType) (string, error) {
 				return CAppUpdaterFileBoxPhore, nil
 			}
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 		}
 	case PTPIVX:
 		switch at {
 		case APPTCLI:
 			switch runtime.GOOS {
 			case "arm":
-				return CAppCLIFileGoPIVX, nil
+				return CAppCLIFileBoxPIVX, nil
 			case "linux":
-				return CAppCLIFileGoPIVX, nil
+				return CAppCLIFileBoxPIVX, nil
 			case "windows":
-				return CAppCLIFileWinGoPIVX, nil
+				return CAppCLIFileWinBoxPIVX, nil
 			default:
-				err = errors.New("Unable to determine runtime.GOOS")
+				err = errors.New("unable to determine runtime.GOOS")
 			}
 
 		case APPTCLICompiled:
@@ -412,29 +412,29 @@ func GetAppFileName(at APPType) (string, error) {
 			case "windows":
 				return CAppCLIFileCompiledWin, nil
 			default:
-				err = errors.New("Unable to determine runtime.GOOS")
+				err = errors.New("unable to determine runtime.GOOS")
 			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
-				return CAppUpdaterFileWinGoPIVX, nil
+				return CAppUpdaterFileWinBoxPIVX, nil
 			} else {
-				return CAppUpdaterFileGoPIVX, nil
+				return CAppUpdaterFileBoxPIVX, nil
 			}
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 		}
 	case PTTrezarcoin:
 		switch at {
 		case APPTCLI:
 			switch runtime.GOOS {
 			case "arm":
-				return CAppCLIFileGoTrezarcoin, nil
+				return CAppCLIFileBoxTrezarcoin, nil
 			case "linux":
-				return CAppCLIFileGoTrezarcoin, nil
+				return CAppCLIFileBoxTrezarcoin, nil
 			case "windows":
-				return CAppCLIFileWinGoTrezarcoin, nil
+				return CAppCLIFileWinBoxTrezarcoin, nil
 			default:
-				err = errors.New("Unable to determine runtime.GOOS")
+				err = errors.New("unable to determine runtime.GOOS")
 			}
 		case APPTCLICompiled:
 			switch runtime.GOOS {
@@ -445,19 +445,19 @@ func GetAppFileName(at APPType) (string, error) {
 			case "windows":
 				return CAppCLIFileCompiledWin, nil
 			default:
-				err = errors.New("Unable to determine runtime.GOOS")
+				err = errors.New("unable to determine runtime.GOOS")
 			}
 		case APPTUpdater:
 			if runtime.GOOS == "windows" {
-				return CAppUpdaterFileWinGoPIVX, nil
+				return CAppUpdaterFileWinBoxTrezarcoin, nil
 			} else {
-				return CAppUpdaterFileGoPIVX, nil
+				return CAppUpdaterFileBoxTrezarcoin, nil
 			}
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 		}
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err = errors.New("unable to determine ProjectType")
 
 	}
 	return "", nil
@@ -480,7 +480,7 @@ func GetAppCLIName(at APPType) (string, error) {
 	//	}
 	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 	switch pt {
@@ -489,11 +489,11 @@ func GetAppCLIName(at APPType) (string, error) {
 	case PTPhore:
 		return CAppNameCLIBoxPhore, nil
 	case PTPIVX:
-		return CAppNameCLIGoPIVX, nil
+		return CAppNameCLIBoxPIVX, nil
 	case PTTrezarcoin:
-		return CAppNameCLIGoTrezarcoin, nil
+		return CAppNameCLIBoxTrezarcoin, nil
 	default:
-		err := errors.New("Unable to determine ProjectType")
+		err := errors.New("unable to determine ProjectType")
 		return "", err
 	}
 	return "", nil
@@ -511,11 +511,11 @@ func GetAppLogfileName() (string, error) {
 	case PTPhore:
 		return CAppCLILogfileBoxPhore, nil
 	case PTPIVX:
-		return CAppCLILogfileGoPIVX, nil
+		return CAppCLILogfileBoxPIVX, nil
 	case PTTrezarcoin:
-		return CAppCLILogfileGoTrezarcoin, nil
+		return CAppCLILogfileBoxTrezarcoin, nil
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err = errors.New("unable to determine ProjectType")
 
 	}
 	return "", nil
@@ -538,18 +538,18 @@ func GetAppServerName(at APPType) (string, error) {
 	//	}
 	//	pt = conf.ProjectType
 	default:
-		err := errors.New("Unable to determine AppType")
+		err := errors.New("unable to determine AppType")
 		return "", err
 	}
 	switch pt {
 	//case PTDivi:
 	//	return CAppNameServerGoDivi, nil
 	case PTPIVX:
-		return CAppNameServerGoPIVX, nil
+		return CAppNameServerBoxPIVX, nil
 	case PTTrezarcoin:
-		return CAppNameServerGoTrezarcoin, nil
+		return CAppNameServerBoxTrezarcoin, nil
 	default:
-		err := errors.New("Unable to determine ProjectType")
+		err := errors.New("unable to determine ProjectType")
 		return "", err
 	}
 	return "", nil
@@ -581,9 +581,9 @@ func GetAppName(at APPType) (string, error) {
 	case PTPhore:
 		return CAppNameBoxPhore, nil
 	case PTPIVX:
-		return CAppNameGoPIVX, nil
+		return CAppNameBoxPIVX, nil
 	case PTTrezarcoin:
-		return CAppNameGoTrezarcoin, nil
+		return CAppNameBoxTrezarcoin, nil
 	default:
 		err := errors.New("unable to determine ProjectType")
 		return "", err
@@ -668,7 +668,7 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinHomeDirWin)
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 
 		}
 	} else {
@@ -682,7 +682,7 @@ func GetCoinHomeFolder(at APPType) (string, error) {
 		case PTTrezarcoin:
 			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinHomeDir)
 		default:
-			err = errors.New("Unable to determine ProjectType")
+			err = errors.New("unable to determine ProjectType")
 
 		}
 	}
@@ -737,38 +737,38 @@ func GetGoWalletDownloadLink(ostype OSType) (url, file string, err error) {
 	case PTDivi:
 		switch ostype {
 		case OSTArm:
-			return CDownloadURLGD, CDFileGodiviLatetsARM, nil
+			return CDownloadURLGD, CDFileGodiviLatestARM, nil
 		case OSTLinux:
-			return CDownloadURLGD, CDFileGodiviLatetsLinux, nil
+			return CDownloadURLGD, CDFileGodiviLatestLinux, nil
 		case OSTWindows:
-			return CDownloadURLGD, CDFileGodiviLatetsWindows, nil
+			return CDownloadURLGD, CDFileGodiviLatestWindows, nil
 		default:
 			err = errors.New("unable to determine OSType")
 		}
 	case PTPIVX:
 		switch ostype {
 		case OSTArm:
-			return CDownloadURLGD, CDFileGoPIVXLatetsARM, nil
+			return CDownloadURLGD, CDFileBoxPIVXLatetsARM, nil
 		case OSTLinux:
-			return CDownloadURLGD, CDFileGoPIVXLatetsLinux, nil
+			return CDownloadURLGD, CDFileBoxPIVXLatetsLinux, nil
 		case OSTWindows:
-			return CDownloadURLGD, CDFileGoPIVXLatetsWindows, nil
+			return CDownloadURLGD, CDFileBoxPIVXLatetsWindows, nil
 		default:
 			err = errors.New("unable to determine OSType")
 		}
 	case PTTrezarcoin:
 		switch ostype {
 		case OSTArm:
-			return CDownloadURLGD, CDFileGoTrezarcoinLatetsARM, nil
+			return CDownloadURLGD, CDFileBoxTrezarcoinLatestARM, nil
 		case OSTLinux:
-			return CDownloadURLGD, CDFileGoTrezarcoinLatetsLinux, nil
+			return CDownloadURLGD, CDFileBoxTrezarcoinLatestLinux, nil
 		case OSTWindows:
-			return CDownloadURLGD, CDFileGoTrezarcoinLatetsWindows, nil
+			return CDownloadURLGD, CDFileBoxTrezarcoinLatestWindows, nil
 		default:
 			err = errors.New("unable to determine OSType")
 		}
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err = errors.New("unable to determine ProjectType")
 	}
 	return "", "", nil
 }
@@ -867,18 +867,18 @@ func IsAppCLIRunning() (bool, int, error) {
 		}
 	case PTPIVX:
 		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CAppCLIFileWinGoPIVX)
+			pid, _, err = findProcess(CAppCLIFileWinBoxPIVX)
 		} else {
-			pid, _, err = findProcess(CAppCLIFileGoPIVX)
+			pid, _, err = findProcess(CAppCLIFileBoxPIVX)
 		}
 	case PTTrezarcoin:
 		if runtime.GOOS == "windows" {
-			pid, _, err = findProcess(CAppCLIFileWinGoTrezarcoin)
+			pid, _, err = findProcess(CAppCLIFileWinBoxTrezarcoin)
 		} else {
-			pid, _, err = findProcess(CAppCLIFileGoTrezarcoin)
+			pid, _, err = findProcess(CAppCLIFileBoxTrezarcoin)
 		}
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err = errors.New("unable to determine ProjectType")
 	}
 
 	if err == nil {
@@ -956,7 +956,7 @@ func IsCoinDaemonRunning() (bool, int, error) {
 			pid, _, err = findProcess(CTrezarcoinDFile)
 		}
 	default:
-		err = errors.New("Unable to determine ProjectType")
+		err = errors.New("unable to determine ProjectType")
 	}
 
 	if err == nil {

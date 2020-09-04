@@ -7,19 +7,19 @@ const (
 	CTrezarcoinAppVersion string = "2.01"
 	cTrezarcoinHomeDir    string = ".trezarcoin"
 	cTrezarcoinHomeDirWin string = "TREZARCOIN"
-	cTrezarcoinBinDir     string = "gotrezarcoin"
-	cTrezarcoinBinDirWin  string = "GoTrezarcoin"
+	cTrezarcoinBinDir     string = "boxtrezarcoin"
+	cTrezarcoinBinDirWin  string = "BoxTrezarcoin"
 
 	// GoTrezarcoin Public download files
-	CDFileGoTrezarcoinLatetsARM     string = "gotrezarcoin-arm-latest.zip"
-	CDFileGoTrezarcoinLatetsLinux   string = "gotrezarcoin-linux-latest.zip"
-	CDFileGoTrezarcoinLatetsWindows string = "gotrezarcoin-windows-latest.zip"
+	CDFileBoxTrezarcoinLatestARM     string = "boxtrezarcoin-arm-latest.zip"
+	CDFileBoxTrezarcoinLatestLinux   string = "boxtrezarcoin-linux-latest.zip"
+	CDFileBoxTrezarcoinLatestWindows string = "boxtrezarcoin-windows-latest.zip"
 
 	// Trezarcoin file constants
-	CAppNameGoTrezarcoin        string = "GoTrezarcoin"
-	CAppNameUpdaterGoTrezarcoin string = "GoTrezarcoin Updater"
-	CAppNameCLIGoTrezarcoin     string = "GoTrezarcoin CLI"
-	CAppNameServerGoTrezarcoin  string = "GoTrezarcoin Server"
+	CAppNameBoxTrezarcoin       string = "BoxTrezarcoin"
+	CAppNameUpdaterGoTrezarcoin string = "BoxTrezarcoin Updater"
+	CAppNameCLIBoxTrezarcoin    string = "BoxTrezarcoin CLI"
+	CAppNameServerBoxTrezarcoin string = "BoxTrezarcoin Server"
 
 	CTrezarcoinConfFile   string = "trezarcoin.conf"
 	CTrezarcoinCliFile    string = "trezarcoin-cli"
@@ -30,13 +30,13 @@ const (
 	CTrezarcoinTxFileWin  string = "trezarcoin-tx.exe"
 
 	// GoDivi - Only to be used by GoDeploy
-	CAppCLIFileGoTrezarcoin             string = "gotrezarcoin"
-	CAppCLIFileWinGoTrezarcoin          string = "gotrezarcoin.exe"
-	CAppCLIFileInstallerGoTrezarcoin    string = "gotrezarcoin-installer"
-	CAppCLIFileInstallerWinGoTrezarcoin string = "gotrezarcoin-installer.exe"
-	CAppServerFileGoTrezarcoin          string = "gotrezarcoins"
-	CAppServerFileWinGoTrezarcoin       string = "gotrezarcoins.exe"
-	CAppUpdaterFileGoTrezarcoin         string = "update-gotrezarcoin"
-	CAppUpdaterFileWinGoTrezarcoin      string = "update-gotrezarcoin.exe"
-	CAppCLILogfileGoTrezarcoin          string = "gotrezarcoin.log"
+	CAppCLIFileBoxTrezarcoin             string = "boxtrezarcoin"
+	CAppCLIFileWinBoxTrezarcoin          string = "boxtrezarcoin.exe"
+	CAppCLIFileInstallerBoxTrezarcoin    string = "boxtrezarcoin-installer"
+	CAppCLIFileInstallerWinBoxTrezarcoin string = "boxtrezarcoin-installer.exe"
+	CAppServerFileBoxTrezarcoin          string = "boxtrezarcoins"
+	CAppServerFileWinBoxTrezarcoin       string = "boxtrezarcoins.exe"
+	CAppUpdaterFileBoxTrezarcoin         string = "update-boxtrezarcoin"
+	CAppUpdaterFileWinBoxTrezarcoin      string = "update-boxtrezarcoin.exe"
+	CAppCLILogfileBoxTrezarcoin          string = "boxtrezarcoin.log"
 )

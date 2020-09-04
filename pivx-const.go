@@ -4,22 +4,22 @@ const (
 	cCoinNamePIVX string = "PIVX"
 
 	// PIVX Wallet Constants
-	CPIVXAppVersion string = "4.1.0"
+	CPIVXAppVersion string = "4.2.0"
 	cPIVXHomeDir    string = ".pivx"
 	cPIVXHomeDirWin string = "PIVX"
-	cPIVXBinDir     string = "gopivx"
-	cPIVXBinDirWin  string = "GoPIVX"
+	cPIVXBinDir     string = "boxpivx"
+	cPIVXBinDirWin  string = "BoxPIVX"
 
 	// PIVX Public download files
-	CDFileGoPIVXLatetsARM     string = "gopivx-arm-latest.zip"
-	CDFileGoPIVXLatetsLinux   string = "gopivx-linux-latest.zip"
-	CDFileGoPIVXLatetsWindows string = "gopivx-windows-latest.zip"
+	CDFileBoxPIVXLatetsARM     string = "boxpivx-arm-latest.zip"
+	CDFileBoxPIVXLatetsLinux   string = "boxpivx-linux-latest.zip"
+	CDFileBoxPIVXLatetsWindows string = "boxpivx-windows-latest.zip"
 
 	// PIVX file constants
-	CAppNameGoPIVX        string = "GoPIVX"
-	CAppNameUpdaterGoPIVX string = "GoPIVX Updater"
-	CAppNameCLIGoPIVX     string = "GoPIVX CLI"
-	CAppNameServerGoPIVX  string = "GoPIVX Server"
+	CAppNameBoxPIVX       string = "BoxPIVX"
+	CAppNameUpdaterGoPIVX string = "BoxPIVX Updater"
+	CAppNameCLIBoxPIVX    string = "BoxPIVX CLI"
+	CAppNameServerBoxPIVX string = "BoxPIVX Server"
 
 	CPIVXConfFile   string = "pivx.conf"
 	CPIVXCliFile    string = "pivx-cli"
@@ -30,13 +30,13 @@ const (
 	CPIVXTxFileWin  string = "pivx-tx.exe"
 
 	// CAppCLIFileGoDivi - Only to be used by GoDeploy
-	CAppCLIFileGoPIVX             string = "gopivx"
-	CAppCLIFileWinGoPIVX          string = "gopivx.exe"
-	CAppCLIFileInstallerGoPIVX    string = "gopivx-installer"
-	CAppCLIFileInstallerWinGoPIVX string = "gopivx-installer.exe"
-	CAppServerFileGoPIVX          string = "gopivxs"
-	CAppServerFileWinGoPIVX       string = "gopivxs.exe"
-	CAppUpdaterFileGoPIVX         string = "update-gopivx"
-	CAppUpdaterFileWinGoPIVX      string = "update-gopivx.exe"
-	CAppCLILogfileGoPIVX          string = "gopivx.log"
+	CAppCLIFileBoxPIVX            string = "boxpivx"
+	CAppCLIFileWinBoxPIVX         string = "boxpivx.exe"
+	CAppCLIFileInstallerGoPIVX    string = "boxpivx-installer"
+	CAppCLIFileInstallerWinGoPIVX string = "boxpivx-installer.exe"
+	CAppServerFileGoPIVX          string = "boxpivxs"
+	CAppServerFileWinGoPIVX       string = "boxpivxs.exe"
+	CAppUpdaterFileBoxPIVX        string = "update-boxpivx"
+	CAppUpdaterFileWinBoxPIVX     string = "update-boxpivx.exe"
+	CAppCLILogfileBoxPIVX         string = "boxpivx.log"
 )

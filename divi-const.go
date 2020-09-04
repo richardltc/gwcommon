@@ -11,9 +11,9 @@ const (
 	cDiviBinDirWin  string = "BoxDivi"
 
 	// GoDivi Public download files
-	CDFileGodiviLatetsARM     string = "boxdivi-arm-latest.zip"
-	CDFileGodiviLatetsLinux   string = "boxdivi-linux-latest.zip"
-	CDFileGodiviLatetsWindows string = "boxdivi-windows-latest.zip"
+	CDFileGodiviLatestARM     string = "boxdivi-arm-latest.zip"
+	CDFileGodiviLatestLinux   string = "boxdivi-linux-latest.zip"
+	CDFileGodiviLatestWindows string = "boxdivi-windows-latest.zip"
 
 	// Divi project file constants
 	CAppNameBoxDivi       string = "BoxDivi"
