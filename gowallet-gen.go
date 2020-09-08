@@ -17,9 +17,7 @@ import (
 )
 
 const (
-	// CAppVersion - The app version of the suite of apps
-	CAppVersion string = "0.31.7" // All of the individual apps will have the same version to make it easier for the user
-	cUnknown    string = "Unknown"
+	cUnknown string = "Unknown"
 	// CDownloadURLGD - The download file location for GoDivi
 	CDownloadURLGD string = "https://bitbucket.org/rmace/godivi/downloads/"
 
@@ -69,26 +67,6 @@ const (
 	cUtfLock string = "\u1F512"
 )
 
-// APPType - either APPTCLI, APPTCLICompiled, APPTInstaller, APPTUpdater, APPTServer
-type APPType int
-
-const (
-	// APPTCLI - e.g. boxdivi
-	APPTCLI APPType = iota
-	// APPTCLICompiled - e.g. cli
-	APPTCLICompiled
-	// APPTInstaller e.g. godivi-installer
-	//APPTInstaller
-	// APPTUpdater e.g. update-godivi
-	APPTUpdater
-	// APPTUpdaterCompiled e.g. updater
-	APPTUpdaterCompiled
-	// APPTServer e.g. boxdivis
-	//APPTServer
-	// APPTServerCompiled e.g. web
-	//APPTServerCompiled
-)
-
 // OSType - either ostArm, ostLinux or ostWindows
 type OSType int
 
@@ -99,20 +77,6 @@ const (
 	OSTLinux
 	// OSTWindows - Windows
 	OSTWindows
-)
-
-// ProjectType - To allow external to determine what kind of wallet we are working with
-type ProjectType int
-
-const (
-	// PTDivi - Divi
-	PTDivi ProjectType = iota
-	// PTPhore - Phore
-	PTPhore
-	// PTPIVX - PIVX
-	PTPIVX
-	// PTTrezarcoin - TrezarCoin
-	PTTrezarcoin
 )
 
 type progressBarType int
@@ -241,65 +205,65 @@ func findProcess(key string) (int, string, error) {
 	return pid, pname, err
 }
 
-// GetAppsBinFolderForC - Returns the directory of where the apps binary files are stored
-func GetAppsBinFolder(at APPType) (string, error) {
-	var pt ProjectType
-	switch at {
-	case APPTCLI:
-		conf, err := GetCLIConfStruct()
-		if err != nil {
-			return "", err
-		}
-		pt = conf.ProjectType
-	//case APPTServer:
-	//	conf, err := GetServerConfStruct()
-	//	if err != nil {
-	//		return "", err
-	//	}
-	//	pt = conf.ProjectType
-	default:
-		err := errors.New("unable to determine AppType")
-		return "", err
-	}
-
-	var s string
-	u, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	//hd := getUserHomeDir()
-	hd := u.HomeDir
-	if runtime.GOOS == "windows" {
-		// add the "appdata\roaming" part.
-		switch pt {
-		case PTDivi:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
-		case PTPhore:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CPhoreBinDirWin)
-		case PTPIVX:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
-		case PTTrezarcoin:
-			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
-		default:
-			err = errors.New("unable to determine ProjectType")
-		}
-
-	} else {
-		switch pt {
-		case PTDivi:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
-		case PTPhore:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(CPhoreBinDir)
-		case PTPIVX:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
-		case PTTrezarcoin:
-			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
-		default:
-			err = errors.New("unable to determine ProjectType")
-		}
-	}
-	return s, nil
-}
+//// GetAppsBinFolderForC - Returns the directory of where the apps binary files are stored
+//func GetAppsBinFolder(at APPType) (string, error) {
+//	var pt ProjectType
+//	switch at {
+//	case APPTCLI:
+//		conf, err := GetCLIConfStruct()
+//		if err != nil {
+//			return "", err
+//		}
+//		pt = conf.ProjectType
+//	//case APPTServer:
+//	//	conf, err := GetServerConfStruct()
+//	//	if err != nil {
+//	//		return "", err
+//	//	}
+//	//	pt = conf.ProjectType
+//	default:
+//		err := errors.New("unable to determine AppType")
+//		return "", err
+//	}
+//
+//	var s string
+//	u, err := user.Current()
+//	if err != nil {
+//		return "", err
+//	}
+//	//hd := getUserHomeDir()
+//	hd := u.HomeDir
+//	if runtime.GOOS == "windows" {
+//		// add the "appdata\roaming" part.
+//		switch pt {
+//		case PTDivi:
+//			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cDiviBinDirWin)
+//		case PTPhore:
+//			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(CPhoreBinDirWin)
+//		case PTPIVX:
+//			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cPIVXBinDirWin)
+//		case PTTrezarcoin:
+//			s = AddTrailingSlash(hd) + "appdata\\roaming\\" + AddTrailingSlash(cTrezarcoinBinDirWin)
+//		default:
+//			err = errors.New("unable to determine ProjectType")
+//		}
+//
+//	} else {
+//		switch pt {
+//		case PTDivi:
+//			s = AddTrailingSlash(hd) + AddTrailingSlash(cDiviBinDir)
+//		case PTPhore:
+//			s = AddTrailingSlash(hd) + AddTrailingSlash(CPhoreBinDir)
+//		case PTPIVX:
+//			s = AddTrailingSlash(hd) + AddTrailingSlash(cPIVXBinDir)
+//		case PTTrezarcoin:
+//			s = AddTrailingSlash(hd) + AddTrailingSlash(cTrezarcoinBinDir)
+//		default:
+//			err = errors.New("unable to determine ProjectType")
+//		}
+//	}
+//	return s, nil
+//}
 
 //// GetAppFileName - Returns the name of the app binary file e.g. boxdivi
 //func GetAppFileName(at APPType) (string, error) {
